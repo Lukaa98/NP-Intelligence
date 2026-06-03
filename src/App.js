@@ -101,9 +101,9 @@ function App() {
         h('label', null, 'Game number'),
         h('input', { value: gameNumber, onChange: (event) => setGameNumber(event.target.value), placeholder: '7744' }),
         h('label', null, 'API key'),
-        h('input', { value: apiKey, onChange: (event) => setApiKey(event.target.value), placeholder: 'YOUR_GAME_API_KEY', type: 'password' }),
+        h('input', { value: apiKey, onChange: (event) => setApiKey(event.target.value), placeholder: 'YOUR_GAME_API_KEY', type: 'text', spellCheck: 'false', autoComplete: 'off' }),
         h('button', { disabled: loading || !gameNumber || !apiKey, onClick: fetchAndStore }, 'Fetch NP scan'),
-        h('p', { className: 'hint' }, "No backend yet. Keys stay in this browser's IndexedDB. When the tab is opened later, fetch again to add the next snapshot.")
+        h('p', { className: 'hint' }, "Local dev proxy avoids browser CORS. API key is visible here because NP lets you regenerate game keys; snapshots still stay in this browser's IndexedDB.")
       ),
       h('div', { className: 'card' },
         h('h2', null, 'Postman / CORS fallback'),
