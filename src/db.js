@@ -49,11 +49,21 @@ export async function listGames() {
   return req(db.transaction(GAMES).objectStore(GAMES).getAll());
 }
 
+export async function getGame(gameNumber) {
+  if (!gameNumber) return undefined;
+  const db = await openDb();
+  return req(db.transaction(GAMES).objectStore(GAMES).get(String(gameNumber)));
+}
+
 export async function saveSnapshot({ gameNumber, apiKey, scanningData, source = 'api' }) {
+  const normalizedGameNumber = String(gameNumber);
+  const db = await openDb();
+  const existingGame = await req(db.transaction(GAMES).objectStore(GAMES).get(normalizedGameNumber));
+  const savedApiKey = apiKey || existingGame?.apiKey || '';
   const snapshot = {
-    id: `${gameNumber}-${scanningData.tick ?? 'unknown'}-${Date.now()}`,
-    gameNumber,
-    apiKeyPreview: maskKey(apiKey),
+    id: `${normalizedGameNumber}-${scanningData.tick ?? 'unknown'}-${Date.now()}`,
+    gameNumber: normalizedGameNumber,
+    apiKeyPreview: maskKey(savedApiKey),
     source,
     capturedAt: new Date().toISOString(),
     tick: Number(scanningData.tick ?? 0),
@@ -64,15 +74,19 @@ export async function saveSnapshot({ gameNumber, apiKey, scanningData, source = 
     data: scanningData,
   };
 
-  const db = await openDb();
   const tx = db.transaction([GAMES, SNAPSHOTS], 'readwrite');
   tx.objectStore(GAMES).put({
-    gameNumber,
-    apiKey,
+    ...existingGame,
+    gameNumber: normalizedGameNumber,
+    apiKey: savedApiKey,
+    apiKeyPreview: maskKey(savedApiKey),
+    keyStatus: savedApiKey ? 'valid' : 'missing',
+    keyStatusMessage: savedApiKey ? 'Saved key worked on the last successful scan.' : 'No API key saved for this game yet.',
     name: snapshot.gameName,
     playerUid: snapshot.playerUid,
     lastTick: snapshot.tick,
     lastSyncAt: snapshot.capturedAt,
+    lastErrorAt: '',
   });
   tx.objectStore(SNAPSHOTS).put(snapshot);
   await txDone(tx);
@@ -82,8 +96,25 @@ export async function saveSnapshot({ gameNumber, apiKey, scanningData, source = 
 export async function listSnapshots(gameNumber) {
   const db = await openDb();
   const index = db.transaction(SNAPSHOTS).objectStore(SNAPSHOTS).index('by_game');
-  const snapshots = await req(index.getAll(gameNumber));
+  const snapshots = await req(index.getAll(String(gameNumber)));
   return snapshots.sort((a, b) => b.tick - a.tick || Date.parse(b.capturedAt) - Date.parse(a.capturedAt));
+}
+
+export async function markGameKeyProblem({ gameNumber, message }) {
+  const db = await openDb();
+  const existingGame = await req(db.transaction(GAMES).objectStore(GAMES).get(String(gameNumber)));
+  const tx = db.transaction(GAMES, 'readwrite');
+  tx.objectStore(GAMES).put({
+    ...existingGame,
+    gameNumber: String(gameNumber),
+    name: existingGame?.name || `Game ${gameNumber}`,
+    apiKey: existingGame?.apiKey || '',
+    apiKeyPreview: maskKey(existingGame?.apiKey || ''),
+    keyStatus: 'needs_fresh_key',
+    keyStatusMessage: message || 'The saved API key did not work. Generate a fresh NP key and save it here.',
+    lastErrorAt: new Date().toISOString(),
+  });
+  await txDone(tx);
 }
 
 export async function clearAllData() {

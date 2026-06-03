@@ -159,3 +159,29 @@ select {
 @media (max-width: 900px) {
   .compare-controls { grid-template-columns: 1fr; }
 }
+.key-status {
+  border-radius: 12px;
+  font-size: 0.9rem;
+  margin: 12px 0 0;
+  padding: 10px 12px;
+}
+.key-status.ok {
+  background: rgba(34, 197, 94, 0.1);
+  color: #bbf7d0;
+}
+.key-status.warning,
+.needs-key {
+  color: #fde68a;
+}
+.key-status.warning {
+  background: rgba(251, 191, 36, 0.12);
+}
+.tab-button strong,
+.tab-button span {
+  display: block;
+}
+.tab-button span {
+  color: #bfdbfe;
+  font-size: 0.78rem;
+  margin-top: 3px;
+}

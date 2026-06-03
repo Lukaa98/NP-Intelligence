@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { clearAllData, listGames, listSnapshots, saveSnapshot } from './db.js';
+import { clearAllData, getGame, listGames, listSnapshots, markGameKeyProblem, saveSnapshot } from './db.js';
 import { diffSnapshots, summarize } from './intel.js';
 import { fetchScanningData } from './npApi.js';
 
@@ -70,16 +70,33 @@ function App() {
   }
 
   async function fetchAndStore() {
+    const targetGameNumber = gameNumber || selectedGame;
+    const savedGame = selectedGameMeta?.gameNumber === targetGameNumber ? selectedGameMeta : await getGame(targetGameNumber);
+    const keyToUse = apiKey || savedGame?.apiKey || '';
+
+    if (!targetGameNumber || !keyToUse) {
+      setStatus('Pick a game and enter an API key once. After a successful scan, NP Intelligence will reuse the saved key for that game.');
+      return;
+    }
+
     setLoading(true);
     try {
-      const data = await fetchScanningData({ gameNumber, apiKey });
-      const snapshot = await saveSnapshot({ gameNumber, apiKey, scanningData: data });
-      setSelectedGame(gameNumber);
+      const data = await fetchScanningData({ gameNumber: targetGameNumber, apiKey: keyToUse });
+      const snapshot = await saveSnapshot({ gameNumber: targetGameNumber, apiKey: keyToUse, scanningData: data });
+      setSelectedGame(targetGameNumber);
+      setGameNumber(targetGameNumber);
+      setApiKey(keyToUse);
       await refreshGames();
-      await refreshSnapshots(gameNumber);
-      setStatus(`Saved scan for ${snapshot.gameName}, tick ${snapshot.tick}.`);
+      await refreshSnapshots(targetGameNumber);
+      setStatus(`Saved scan for ${snapshot.gameName}, tick ${snapshot.tick}. Saved key ${snapshot.apiKeyPreview} will be reused next time.`);
     } catch (error) {
-      setStatus(`${error.message} If the browser blocks CORS, paste the Postman JSON below and save it.`);
+      if (error.needsFreshKey) {
+        await markGameKeyProblem({ gameNumber: targetGameNumber, message: error.message });
+        await refreshGames();
+        setStatus(`The saved API key for game #${targetGameNumber} looks expired or invalid. Generate a fresh NP key, paste it here, and fetch again. (${error.message})`);
+      } else {
+        setStatus(`${error.message} If the browser blocks CORS, paste the Postman JSON below and save it.`);
+      }
     } finally {
       setLoading(false);
     }
@@ -129,7 +146,8 @@ function App() {
     h('nav', { className: 'game-tabs card' },
       h('span', { className: 'tab-label' }, 'Games'),
       games.length === 0 ? h('span', { className: 'empty' }, 'No games saved yet.') : games.map((game) => h('button', { className: `tab-button ${selectedGame === game.gameNumber ? 'active' : ''}`, key: game.gameNumber, onClick: () => selectGame(game) },
-        `${game.name || `Game ${game.gameNumber}`} · #${game.gameNumber}`
+        h('strong', null, game.name || `Game ${game.gameNumber}`),
+        h('span', null, `#${game.gameNumber} · ${gameKeyLabel(game)}`)
       ))
     ),
     h('section', { className: 'grid two' },
@@ -139,8 +157,9 @@ function App() {
         h('input', { value: gameNumber, onChange: (event) => setGameNumber(event.target.value), placeholder: '7744' }),
         h('label', null, 'API key'),
         h('input', { value: apiKey, onChange: (event) => setApiKey(event.target.value), placeholder: 'YOUR_GAME_API_KEY', type: 'text', spellCheck: 'false', autoComplete: 'off' }),
-        h('button', { disabled: loading || !gameNumber || !apiKey, onClick: fetchAndStore }, 'Fetch NP scan'),
-        h('p', { className: 'hint' }, "Local dev proxy avoids browser CORS. API key is visible here because NP lets you regenerate game keys; snapshots still stay in this browser's IndexedDB.")
+        h('button', { disabled: loading || !(gameNumber || selectedGame) || !(apiKey || selectedGameMeta?.apiKey), onClick: fetchAndStore }, selectedGameMeta?.apiKey && !apiKey ? 'Refresh with saved key' : 'Fetch NP scan'),
+        h('p', { className: `key-status ${selectedGameMeta?.keyStatus === 'needs_fresh_key' ? 'warning' : 'ok'}` }, keyStatusText(selectedGameMeta)),
+        h('p', { className: 'hint' }, "Local dev proxy avoids browser CORS. Enter an API key once per game; after a successful scan it is saved in this browser's IndexedDB and reused for future refreshes.")
       ),
       h('div', { className: 'card' },
         h('h2', null, 'Postman / CORS fallback'),
@@ -154,7 +173,8 @@ function App() {
         h('h2', null, 'Tracked games'),
         games.length === 0 ? h('p', { className: 'empty' }, 'No local games yet.') : games.map((game) => h('button', { className: `game-button ${selectedGame === game.gameNumber ? 'active' : ''}`, key: game.gameNumber, onClick: () => selectGame(game) },
           h('strong', null, game.name || `Game ${game.gameNumber}`),
-          h('span', null, `#${game.gameNumber} · tick ${game.lastTick}`)
+          h('span', null, `#${game.gameNumber} · tick ${game.lastTick}`),
+          h('span', { className: game.keyStatus === 'needs_fresh_key' ? 'needs-key' : '' }, gameKeyLabel(game))
         )),
         h('button', { className: 'danger', onClick: resetData }, 'Clear local data')
       ),
@@ -190,6 +210,21 @@ function App() {
       )
     )
   );
+}
+
+function keyStatusText(game) {
+  if (!game) return 'No saved game selected yet.';
+  if (game.keyStatus === 'needs_fresh_key') {
+    return `Saved key ${game.apiKeyPreview || 'unknown'} failed. Paste a fresh generated key for this game.`;
+  }
+  if (game.apiKeyPreview) return `Saved key for this game: ${game.apiKeyPreview}. You can refresh without pasting it again.`;
+  return 'No key saved for this game yet. Paste a key once, then fetch successfully to save it.';
+}
+
+function gameKeyLabel(game) {
+  if (game.keyStatus === 'needs_fresh_key') return `Key needs refresh · ${game.apiKeyPreview || 'no saved key'}`;
+  if (game.apiKeyPreview) return `Saved key ${game.apiKeyPreview}`;
+  return 'No saved key';
 }
 
 function defaultPreviousSnapshot(snapshots, currentId) {
