@@ -13,6 +13,8 @@ function App() {
   const [games, setGames] = useState([]);
   const [snapshots, setSnapshots] = useState([]);
   const [selectedGame, setSelectedGame] = useState('');
+  const [compareFromId, setCompareFromId] = useState('');
+  const [compareToId, setCompareToId] = useState('');
   const [status, setStatus] = useState('Ready. Add a game number and API key, then fetch a scan.');
   const [loading, setLoading] = useState(false);
 
@@ -24,20 +26,47 @@ function App() {
     if (selectedGame) refreshSnapshots(selectedGame);
   }, [selectedGame]);
 
+  useEffect(() => {
+    if (!snapshots.length) {
+      setCompareFromId('');
+      setCompareToId('');
+      return;
+    }
+
+    const currentExists = snapshots.some((snapshot) => snapshot.id === compareToId);
+    const previousExists = snapshots.some((snapshot) => snapshot.id === compareFromId);
+    const nextCurrent = currentExists ? compareToId : snapshots[0]?.id || '';
+    const nextPrevious = previousExists ? compareFromId : defaultPreviousSnapshot(snapshots, nextCurrent)?.id || '';
+
+    if (nextCurrent !== compareToId) setCompareToId(nextCurrent);
+    if (nextPrevious !== compareFromId) setCompareFromId(nextPrevious);
+  }, [snapshots]);
+
   const latest = snapshots[0];
-  const previous = snapshots[1];
   const summary = useMemo(() => summarize(latest), [latest]);
-  const events = useMemo(() => diffSnapshots(previous, latest), [previous, latest]);
+  const compareCurrent = snapshots.find((snapshot) => snapshot.id === compareToId) || snapshots[0];
+  const comparePrevious = snapshots.find((snapshot) => snapshot.id === compareFromId) || defaultPreviousSnapshot(snapshots, compareCurrent?.id);
+  const events = useMemo(() => diffSnapshots(comparePrevious, compareCurrent), [comparePrevious, compareCurrent]);
+  const selectedGameMeta = games.find((game) => game.gameNumber === selectedGame);
 
   async function refreshGames() {
     const nextGames = await listGames();
-    setGames(nextGames.sort((a, b) => Date.parse(b.lastSyncAt || 0) - Date.parse(a.lastSyncAt || 0)));
-    if (!selectedGame && nextGames[0]) setSelectedGame(nextGames[0].gameNumber);
+    const sortedGames = nextGames.sort((a, b) => Date.parse(b.lastSyncAt || 0) - Date.parse(a.lastSyncAt || 0));
+    setGames(sortedGames);
+    if (!selectedGame && sortedGames[0]) selectGame(sortedGames[0]);
   }
 
   async function refreshSnapshots(nextGame = selectedGame) {
     if (!nextGame) return;
     setSnapshots(await listSnapshots(nextGame));
+  }
+
+  function selectGame(game) {
+    const nextGameNumber = typeof game === 'string' ? game : game.gameNumber;
+    const nextGame = typeof game === 'string' ? games.find((item) => item.gameNumber === game) : game;
+    setSelectedGame(nextGameNumber);
+    setGameNumber(nextGameNumber);
+    if (nextGame?.apiKey) setApiKey(nextGame.apiKey);
   }
 
   async function fetchAndStore() {
@@ -79,6 +108,8 @@ function App() {
     setGames([]);
     setSnapshots([]);
     setSelectedGame('');
+    setGameNumber('');
+    setApiKey('');
     setStatus('Local IndexedDB data cleared.');
   }
 
@@ -95,9 +126,15 @@ function App() {
         h(Stat, { label: 'Players', value: summary.players.length || '—' })
       )
     ),
+    h('nav', { className: 'game-tabs card' },
+      h('span', { className: 'tab-label' }, 'Games'),
+      games.length === 0 ? h('span', { className: 'empty' }, 'No games saved yet.') : games.map((game) => h('button', { className: `tab-button ${selectedGame === game.gameNumber ? 'active' : ''}`, key: game.gameNumber, onClick: () => selectGame(game) },
+        `${game.name || `Game ${game.gameNumber}`} · #${game.gameNumber}`
+      ))
+    ),
     h('section', { className: 'grid two' },
       h('div', { className: 'card' },
-        h('h2', null, 'Add / refresh game'),
+        h('h2', null, selectedGameMeta ? `Refresh ${selectedGameMeta.name}` : 'Add / refresh game'),
         h('label', null, 'Game number'),
         h('input', { value: gameNumber, onChange: (event) => setGameNumber(event.target.value), placeholder: '7744' }),
         h('label', null, 'API key'),
@@ -115,7 +152,7 @@ function App() {
     h('section', { className: 'grid sidebar-layout' },
       h('aside', { className: 'card' },
         h('h2', null, 'Tracked games'),
-        games.length === 0 ? h('p', { className: 'empty' }, 'No local games yet.') : games.map((game) => h('button', { className: `game-button ${selectedGame === game.gameNumber ? 'active' : ''}`, key: game.gameNumber, onClick: () => setSelectedGame(game.gameNumber) },
+        games.length === 0 ? h('p', { className: 'empty' }, 'No local games yet.') : games.map((game) => h('button', { className: `game-button ${selectedGame === game.gameNumber ? 'active' : ''}`, key: game.gameNumber, onClick: () => selectGame(game) },
           h('strong', null, game.name || `Game ${game.gameNumber}`),
           h('span', null, `#${game.gameNumber} · tick ${game.lastTick}`)
         )),
@@ -133,8 +170,14 @@ function App() {
         ),
         h('section', { className: 'grid two' },
           h('div', { className: 'card' },
-            h('h2', null, 'Derived events'),
-            events.length === 0 ? h('p', { className: 'empty' }, 'Need at least two snapshots to show deltas.') : events.map((item, index) => h('div', { className: `event ${item.tone}`, key: `${item.type}-${index}` }, item.message))
+            h('h2', null, 'Snapshot comparison / notifications'),
+            h('p', { className: 'hint' }, 'Pick two saved scans for this game. The app turns the difference into event-style notifications.'),
+            h('div', { className: 'compare-controls' },
+              h(SnapshotSelect, { label: 'From', value: compareFromId, snapshots, onChange: setCompareFromId }),
+              h(SnapshotSelect, { label: 'To', value: compareToId, snapshots, onChange: setCompareToId })
+            ),
+            h('p', { className: 'compare-summary' }, comparisonLabel(comparePrevious, compareCurrent)),
+            renderEvents(events, comparePrevious, compareCurrent)
           ),
           h('div', { className: 'card' },
             h('h2', null, 'Snapshot history'),
@@ -147,6 +190,41 @@ function App() {
       )
     )
   );
+}
+
+function defaultPreviousSnapshot(snapshots, currentId) {
+  if (snapshots.length < 2) return undefined;
+  const current = snapshots.find((snapshot) => snapshot.id === currentId) || snapshots[0];
+  return snapshots.find((snapshot) => snapshot.id !== current.id && snapshot.tick !== current.tick)
+    || snapshots.find((snapshot) => snapshot.id !== current.id);
+}
+
+function SnapshotSelect({ label, value, snapshots, onChange }) {
+  return h('label', { className: 'compact-label' },
+    label,
+    h('select', { value, onChange: (event) => onChange(event.target.value) },
+      snapshots.map((snapshot) => h('option', { key: snapshot.id, value: snapshot.id }, snapshotOption(snapshot)))
+    )
+  );
+}
+
+function snapshotOption(snapshot) {
+  return `Tick ${snapshot.tick} · ${new Date(snapshot.capturedAt).toLocaleTimeString()} · ${snapshot.source}`;
+}
+
+function comparisonLabel(previous, current) {
+  if (!previous || !current) return 'Save at least two snapshots for this game to compare changes.';
+  return `Comparing tick ${previous.tick} (${new Date(previous.capturedAt).toLocaleString()}) → tick ${current.tick} (${new Date(current.capturedAt).toLocaleString()}).`;
+}
+
+function renderEvents(events, previous, current) {
+  if (!previous || !current) return h('p', { className: 'empty' }, 'Need at least two snapshots to show deltas.');
+  if (previous.id === current.id) return h('p', { className: 'empty' }, 'Choose two different snapshots.');
+  if (events.length === 0) {
+    return h('p', { className: 'empty' }, 'No changes detected between these two snapshots. If both are tick 110, that is normal: NP only updates most strategic stats once the game advances.');
+  }
+
+  return events.map((item, index) => h('div', { className: `event ${item.tone}`, key: `${item.type}-${index}` }, item.message));
 }
 
 function PlayerRow({ player }) {

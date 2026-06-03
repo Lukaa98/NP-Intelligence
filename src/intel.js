@@ -78,11 +78,27 @@ function diffStars(events, previous, current) {
 
   for (const [uid, star] of Object.entries(currStars)) {
     const prev = prevStars[uid];
-    if (!prev) continue;
-    if (prev.playerUid !== star.playerUid && prev.puid !== star.puid) {
-      const beforeOwner = ownerName(prev.playerUid ?? prev.puid, prevPlayers);
-      const afterOwner = ownerName(star.playerUid ?? star.puid, currPlayers);
-      events.push(event('star_owner', `${star.n || star.name || `Star ${uid}`} changed owner from ${beforeOwner} to ${afterOwner}.`, 'warning'));
+    const name = starName(star, uid);
+    if (!prev) {
+      events.push(event('star_seen', `${name} appeared in scan data under ${ownerName(starOwner(star), currPlayers)} control.`, 'info'));
+      continue;
+    }
+
+    const beforeOwnerUid = starOwner(prev);
+    const afterOwnerUid = starOwner(star);
+    if (beforeOwnerUid !== afterOwnerUid) {
+      const beforeOwner = ownerName(beforeOwnerUid, prevPlayers);
+      const afterOwner = ownerName(afterOwnerUid, currPlayers);
+      events.push(event('star_owner', `${name} changed owner from ${beforeOwner} to ${afterOwner}.`, 'warning'));
+    }
+
+    const beforeShips = starShips(prev);
+    const afterShips = starShips(star);
+    if (beforeShips !== undefined && afterShips !== undefined && beforeShips !== afterShips) {
+      const delta = afterShips - beforeShips;
+      const verb = delta > 0 ? 'gained' : 'lost';
+      const tone = delta > 0 ? 'success' : 'danger';
+      events.push(event('star_ships', `${name} ${verb} ${Math.abs(delta)} stationed ships.`, tone));
     }
   }
 }
@@ -105,6 +121,19 @@ function diffFleets(events, previous, current) {
 function firstDestination(fleet) {
   const firstOrder = Array.isArray(fleet.o) ? fleet.o[0] : Array.isArray(fleet.orders) ? fleet.orders[0] : undefined;
   return firstOrder?.[1] ?? firstOrder?.starId ?? firstOrder?.planetId;
+}
+
+function starOwner(star) {
+  return star?.playerUid ?? star?.puid ?? star?.playerId ?? star?.owner ?? star?.ownedBy;
+}
+
+function starShips(star) {
+  const value = star?.ships ?? star?.st ?? star?.totalStrength;
+  return value === undefined ? undefined : Number(value);
+}
+
+function starName(star, uid) {
+  return star?.n || star?.name || `Star ${uid}`;
 }
 
 function ownerName(uid, players) {
