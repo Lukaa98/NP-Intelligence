@@ -1,10 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { clearAllData, getGame, listGames, listSnapshots, markGameKeyProblem, saveSnapshot } from './db.js';
-import { diffSnapshots, summarize } from './intel.js';
+import { diffSnapshots, strategicIntel, summarize } from './intel.js';
 import { fetchScanningData } from './npApi.js';
 
 const h = React.createElement;
+const AUTO_FETCH_MS = 60 * 60 * 1000;
+const AUTO_REFRESH_STORAGE_KEY = 'np-intelligence-auto-refresh';
 
 function App() {
   const [gameNumber, setGameNumber] = useState('');
@@ -16,10 +18,15 @@ function App() {
   const [compareFromId, setCompareFromId] = useState('');
   const [compareToId, setCompareToId] = useState('');
   const [status, setStatus] = useState('Ready. Add a game number and API key, then fetch a scan.');
+  const [autoStatus, setAutoStatus] = useState('Hourly auto scan is on while this tab is open.');
+  const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(() => isAutoRefreshEnabled());
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     refreshGames();
+    const startupDelay = setTimeout(() => autoFetchDueGames('startup'), 5000);
+    const hourlyInterval = setInterval(() => autoFetchDueGames('hourly'), AUTO_FETCH_MS);
+    window.__npAutoRefreshTimers = { startupDelay, hourlyInterval };
   }, []);
 
   useEffect(() => {
@@ -47,6 +54,7 @@ function App() {
   const compareCurrent = snapshots.find((snapshot) => snapshot.id === compareToId) || snapshots[0];
   const comparePrevious = snapshots.find((snapshot) => snapshot.id === compareFromId) || defaultPreviousSnapshot(snapshots, compareCurrent?.id);
   const events = useMemo(() => diffSnapshots(comparePrevious, compareCurrent), [comparePrevious, compareCurrent]);
+  const intelItems = useMemo(() => strategicIntel(summary, events), [summary, events]);
   const selectedGameMeta = games.find((game) => game.gameNumber === selectedGame);
 
   async function refreshGames() {
@@ -67,6 +75,43 @@ function App() {
     setSelectedGame(nextGameNumber);
     setGameNumber(nextGameNumber);
     if (nextGame?.apiKey) setApiKey(nextGame.apiKey);
+  }
+
+  async function autoFetchDueGames(reason) {
+    if (!isAutoRefreshEnabled()) return;
+
+    const trackedGames = await listGames();
+    const dueGames = trackedGames.filter((game) => game.apiKey && game.keyStatus !== 'needs_fresh_key' && isAutoFetchDue(game));
+    if (!dueGames.length) {
+      setAutoStatus('Hourly auto scan is on. No tracked games are due yet.');
+      return;
+    }
+
+    setAutoStatus(`Auto scan checking ${dueGames.length} due game${dueGames.length === 1 ? '' : 's'}...`);
+    let savedCount = 0;
+    for (const game of dueGames) {
+      try {
+        const data = await fetchScanningData({ gameNumber: game.gameNumber, apiKey: game.apiKey });
+        await saveSnapshot({ gameNumber: game.gameNumber, apiKey: game.apiKey, scanningData: data, source: 'auto' });
+        savedCount += 1;
+      } catch (error) {
+        if (error.needsFreshKey) {
+          await markGameKeyProblem({ gameNumber: game.gameNumber, message: error.message });
+        } else {
+          console.warn(`Auto scan failed for game ${game.gameNumber}`, error);
+        }
+      }
+    }
+
+    await refreshGames();
+    setAutoStatus(`Auto scan ${reason} finished: saved ${savedCount} new snapshot${savedCount === 1 ? '' : 's'}.`);
+  }
+
+  function toggleAutoRefresh() {
+    const nextValue = !autoRefreshEnabled;
+    setAutoRefreshEnabled(nextValue);
+    localStorage.setItem(AUTO_REFRESH_STORAGE_KEY, nextValue ? 'on' : 'off');
+    setAutoStatus(nextValue ? 'Hourly auto scan is on while this tab is open.' : 'Hourly auto scan is paused.');
   }
 
   async function fetchAndStore() {
@@ -158,8 +203,12 @@ function App() {
         h('label', null, 'API key'),
         h('input', { value: apiKey, onChange: (event) => setApiKey(event.target.value), placeholder: 'YOUR_GAME_API_KEY', type: 'text', spellCheck: 'false', autoComplete: 'off' }),
         h('button', { disabled: loading || !(gameNumber || selectedGame) || !(apiKey || selectedGameMeta?.apiKey), onClick: fetchAndStore }, selectedGameMeta?.apiKey && !apiKey ? 'Refresh with saved key' : 'Fetch NP scan'),
+        h('div', { className: 'auto-row' },
+          h('button', { className: `secondary ${autoRefreshEnabled ? 'active' : ''}`, onClick: toggleAutoRefresh }, autoRefreshEnabled ? 'Hourly auto scan: on' : 'Hourly auto scan: off'),
+          h('span', null, autoStatus)
+        ),
         h('p', { className: `key-status ${selectedGameMeta?.keyStatus === 'needs_fresh_key' ? 'warning' : 'ok'}` }, keyStatusText(selectedGameMeta)),
-        h('p', { className: 'hint' }, "Local dev proxy avoids browser CORS. Enter an API key once per game; after a successful scan it is saved in this browser's IndexedDB and reused for future refreshes.")
+        h('p', { className: 'hint' }, "Local dev proxy avoids browser CORS. Enter an API key once per game; after a successful scan it is saved in this browser's IndexedDB and reused while this tab is open.")
       ),
       h('div', { className: 'card' },
         h('h2', null, 'Postman / CORS fallback'),
@@ -180,13 +229,9 @@ function App() {
       ),
       h('div', { className: 'stack' },
         h('section', { className: 'card' },
-          h('h2', null, 'Growth and diplomacy radar'),
-          h('div', { className: 'table-wrap' },
-            h('table', null,
-              h('thead', null, h('tr', null, ['Player', 'Stars', 'Ships', 'Eco', 'Ind', 'Sci', 'Weapons', 'War info'].map((head) => h('th', { key: head }, head)))),
-              h('tbody', null, summary.players.map((player) => h(PlayerRow, { key: player.uid, player })))
-            )
-          )
+          h('h2', null, 'Strategic intel'),
+          h('p', { className: 'hint' }, 'Less scoreboard, more interpretation: captures, pressure, combat losses, investment focus, tech shifts, and visible war signals.'),
+          h('div', { className: 'intel-grid' }, intelItems.map((item, index) => h(IntelCard, { key: `${item.type}-${index}`, item })))
         ),
         h('section', { className: 'grid two' },
           h('div', { className: 'card' },
@@ -262,19 +307,21 @@ function renderEvents(events, previous, current) {
   return events.map((item, index) => h('div', { className: `event ${item.tone}`, key: `${item.type}-${index}` }, item.message));
 }
 
-function PlayerRow({ player }) {
-  const weapons = player.tech?.[5]?.level ?? '—';
-  const warCount = Object.entries(player.war || {}).filter(([, value]) => Number(value) > 0).length;
-  return h('tr', null,
-    h('td', null, h('strong', null, player.alias || `Player ${player.uid}`)),
-    h('td', null, player.totalStars ?? '—'),
-    h('td', null, player.totalStrength ?? '—'),
-    h('td', null, player.totalEconomy ?? '—'),
-    h('td', null, player.totalIndustry ?? '—'),
-    h('td', null, player.totalScience ?? '—'),
-    h('td', null, weapons),
-    h('td', null, warCount ? `${warCount} visible wars` : 'No direct war data')
+function IntelCard({ item }) {
+  return h('article', { className: `intel-card ${item.tone}` },
+    h('span', null, item.type),
+    h('strong', null, item.title),
+    h('p', null, item.detail)
   );
+}
+
+function isAutoRefreshEnabled() {
+  return localStorage.getItem(AUTO_REFRESH_STORAGE_KEY) !== 'off';
+}
+
+function isAutoFetchDue(game) {
+  if (!game.lastSyncAt) return true;
+  return Date.now() - Date.parse(game.lastSyncAt) >= AUTO_FETCH_MS;
 }
 
 function Stat({ label, value }) {

@@ -35,7 +35,7 @@ export function diffSnapshots(previous, current) {
   for (const [uid, player] of Object.entries(currPlayers)) {
     const prev = prevPlayers[uid];
     if (!prev) {
-      events.push(event('player_new', `${player.alias || `Player ${uid}`} appeared in scan data.`, 'info'));
+      events.push(event('player_new', `${player.alias || `Player ${uid}`} appeared in scan data.`, 'info', { playerUid: uid }));
       continue;
     }
 
@@ -48,7 +48,13 @@ export function diffSnapshots(previous, current) {
     for (const [kind, tech] of Object.entries(player.tech || {})) {
       const prevLevel = prev.tech?.[kind]?.level;
       if (typeof prevLevel === 'number' && tech.level > prevLevel) {
-        events.push(event('tech_up', `${player.alias || `Player ${uid}`} upgraded ${TECH_NAMES[kind] || `Tech ${kind}`} from ${prevLevel} to ${tech.level}.`, 'success'));
+        events.push(event('tech_up', `${player.alias || `Player ${uid}`} upgraded ${TECH_NAMES[kind] || `Tech ${kind}`} from ${prevLevel} to ${tech.level}.`, 'success', {
+          playerUid: uid,
+          playerName: player.alias || `Player ${uid}`,
+          tech: TECH_NAMES[kind] || `Tech ${kind}`,
+          from: prevLevel,
+          to: tech.level,
+        }));
       }
     }
   }
@@ -59,6 +65,61 @@ export function diffSnapshots(previous, current) {
   return events.slice(0, 80);
 }
 
+export function strategicIntel(summary, events) {
+  const players = summary.players || [];
+  const insights = [];
+
+  const captures = events.filter((item) => item.type === 'star_owner' && item.details?.beforeOwnerUid !== item.details?.afterOwnerUid);
+  const playerDeltaEvents = events.filter((item) => item.details?.playerName);
+
+  const capturesByPlayer = groupCounts(captures, (item) => item.details.afterOwnerName);
+  for (const [name, count] of capturesByPlayer) {
+    insights.push(intel('offensive', `${name} is expanding by conquest.`, `${name} captured ${count} known star${count === 1 ? '' : 's'} in the selected comparison window.`, 'danger'));
+  }
+
+  const lossesByPlayer = groupCounts(captures, (item) => item.details.beforeOwnerName);
+  for (const [name, count] of lossesByPlayer) {
+    if (name === 'unowned') continue;
+    insights.push(intel('pressure', `${name} is under pressure.`, `${name} lost ${count} known star${count === 1 ? '' : 's'} in the selected comparison window.`, 'warning'));
+  }
+
+  const shipLosses = playerDeltaEvents
+    .filter((item) => item.type === 'totalStrength' && item.details.delta < 0)
+    .sort((a, b) => a.details.delta - b.details.delta);
+  for (const item of shipLosses.slice(0, 3)) {
+    insights.push(intel('combat', `${item.details.playerName} probably fought or overextended.`, `${item.details.playerName} lost ${Math.abs(item.details.delta)} total ships between the selected scans.`, 'warning'));
+  }
+
+  const builders = playerDeltaEvents
+    .filter((item) => ['totalEconomy', 'totalIndustry', 'totalScience'].includes(item.type) && item.details.delta > 0)
+    .reduce((acc, item) => {
+      const entry = acc.get(item.details.playerName) || { name: item.details.playerName, economy: 0, industry: 0, science: 0 };
+      if (item.type === 'totalEconomy') entry.economy += item.details.delta;
+      if (item.type === 'totalIndustry') entry.industry += item.details.delta;
+      if (item.type === 'totalScience') entry.science += item.details.delta;
+      acc.set(item.details.playerName, entry);
+      return acc;
+    }, new Map());
+  for (const entry of [...builders.values()].filter((item) => item.economy + item.industry + item.science > 0).slice(0, 4)) {
+    const focus = topInvestment(entry);
+    insights.push(intel('economy', `${entry.name} is investing in ${focus}.`, investmentSummary(entry), 'success'));
+  }
+
+  for (const item of events.filter((eventItem) => eventItem.type === 'tech_up').slice(0, 5)) {
+    insights.push(intel('tech', `${item.details.playerName} changed strategic capability.`, `${item.details.tech} advanced from ${item.details.from} to ${item.details.to}.`, 'info'));
+  }
+
+  for (const relation of visibleWarRelations(players).slice(0, 8)) {
+    insights.push(intel('war', `${relation.player} has visible war/diplomacy tension.`, relation.description, relation.tone));
+  }
+
+  if (insights.length === 0) {
+    insights.push(intel('quiet', 'No major strategic change detected yet.', 'Once hourly scans capture different ticks, this panel will highlight captures, pressure, ship losses, investment focus, tech spikes, and visible wars.', 'info'));
+  }
+
+  return insights.slice(0, 12);
+}
+
 function addNumberDelta(events, player, prev, field, label) {
   const before = Number(prev[field] ?? 0);
   const after = Number(player[field] ?? 0);
@@ -66,7 +127,15 @@ function addNumberDelta(events, player, prev, field, label) {
   if (delta !== 0) {
     const sign = delta > 0 ? 'gained' : 'lost';
     const tone = delta > 0 ? 'success' : 'danger';
-    events.push(event(field, `${player.alias || `Player ${player.uid}`} ${sign} ${Math.abs(delta)} ${label} since last scan.`, tone));
+    events.push(event(field, `${player.alias || `Player ${player.uid}`} ${sign} ${Math.abs(delta)} ${label} since last scan.`, tone, {
+      playerUid: player.uid,
+      playerName: player.alias || `Player ${player.uid}`,
+      field,
+      label,
+      before,
+      after,
+      delta,
+    }));
   }
 }
 
@@ -80,7 +149,13 @@ function diffStars(events, previous, current) {
     const prev = prevStars[uid];
     const name = starName(star, uid);
     if (!prev) {
-      events.push(event('star_seen', `${name} appeared in scan data under ${ownerName(starOwner(star), currPlayers)} control.`, 'info'));
+      const ownerUid = starOwner(star);
+      events.push(event('star_seen', `${name} appeared in scan data under ${ownerName(ownerUid, currPlayers)} control.`, 'info', {
+        starUid: uid,
+        starName: name,
+        ownerUid,
+        ownerName: ownerName(ownerUid, currPlayers),
+      }));
       continue;
     }
 
@@ -89,7 +164,14 @@ function diffStars(events, previous, current) {
     if (beforeOwnerUid !== afterOwnerUid) {
       const beforeOwner = ownerName(beforeOwnerUid, prevPlayers);
       const afterOwner = ownerName(afterOwnerUid, currPlayers);
-      events.push(event('star_owner', `${name} changed owner from ${beforeOwner} to ${afterOwner}.`, 'warning'));
+      events.push(event('star_owner', `${name} changed owner from ${beforeOwner} to ${afterOwner}.`, 'warning', {
+        starUid: uid,
+        starName: name,
+        beforeOwnerUid,
+        afterOwnerUid,
+        beforeOwnerName: beforeOwner,
+        afterOwnerName: afterOwner,
+      }));
     }
 
     const beforeShips = starShips(prev);
@@ -98,7 +180,13 @@ function diffStars(events, previous, current) {
       const delta = afterShips - beforeShips;
       const verb = delta > 0 ? 'gained' : 'lost';
       const tone = delta > 0 ? 'success' : 'danger';
-      events.push(event('star_ships', `${name} ${verb} ${Math.abs(delta)} stationed ships.`, tone));
+      events.push(event('star_ships', `${name} ${verb} ${Math.abs(delta)} stationed ships.`, tone, {
+        starUid: uid,
+        starName: name,
+        before: beforeShips,
+        after: afterShips,
+        delta,
+      }));
     }
   }
 }
@@ -113,9 +201,51 @@ function diffFleets(events, previous, current) {
     const prevDestination = firstDestination(prev);
     const currDestination = firstDestination(fleet);
     if (prevDestination && currDestination && prevDestination !== currDestination) {
-      events.push(event('fleet_route', `${fleet.n || fleet.name || `Fleet ${uid}`} changed destination from Star ${prevDestination} to Star ${currDestination}.`, 'warning'));
+      events.push(event('fleet_route', `${fleet.n || fleet.name || `Fleet ${uid}`} changed destination from Star ${prevDestination} to Star ${currDestination}.`, 'warning', {
+        fleetUid: uid,
+        fleetName: fleet.n || fleet.name || `Fleet ${uid}`,
+        from: prevDestination,
+        to: currDestination,
+      }));
     }
   }
+}
+
+function visibleWarRelations(players) {
+  return players.flatMap((player) => Object.entries(player.war || {})
+    .filter(([, value]) => Number(value) > 0)
+    .map(([otherUid, value]) => ({
+      player: player.alias || `Player ${player.uid}`,
+      description: `Visible relation toward Player ${otherUid}: war state ${value}.`,
+      tone: Number(value) >= 3 ? 'danger' : 'warning',
+    })));
+}
+
+function topInvestment(entry) {
+  const choices = [
+    ['economy', entry.economy],
+    ['industry', entry.industry],
+    ['science', entry.science],
+  ].sort((a, b) => b[1] - a[1]);
+  return choices[0][0];
+}
+
+function investmentSummary(entry) {
+  const parts = [];
+  if (entry.economy) parts.push(`economy +${entry.economy}`);
+  if (entry.industry) parts.push(`industry +${entry.industry}`);
+  if (entry.science) parts.push(`science +${entry.science}`);
+  return parts.join(', ');
+}
+
+function groupCounts(items, getKey) {
+  const counts = new Map();
+  for (const item of items) {
+    const key = getKey(item);
+    if (!key) continue;
+    counts.set(key, (counts.get(key) || 0) + 1);
+  }
+  return [...counts.entries()].sort((a, b) => b[1] - a[1]);
 }
 
 function firstDestination(fleet) {
@@ -141,6 +271,10 @@ function ownerName(uid, players) {
   return players?.[uid]?.alias || `Player ${uid}`;
 }
 
-function event(type, message, tone) {
-  return { type, message, tone };
+function intel(type, title, detail, tone) {
+  return { type, title, detail, tone };
+}
+
+function event(type, message, tone, details = {}) {
+  return { type, message, tone, details };
 }

@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { diffSnapshots, summarize } from '../src/intel.js';
+import { diffSnapshots, strategicIntel, summarize } from '../src/intel.js';
 
 const previous = {
   data: {
@@ -28,10 +28,16 @@ const current = {
 };
 
 assert.equal(summarize(current).tick, 11);
-const messages = diffSnapshots(previous, current).map((event) => event.message);
+const events = diffSnapshots(previous, current);
+const messages = events.map((event) => event.message);
 assert(messages.includes('Luka gained 46 ships since last scan.'));
 assert(messages.includes('Luka gained 1 stars since last scan.'));
 assert(messages.includes('Luka upgraded Weapons from 2 to 3.'));
 assert(messages.includes('Vega changed owner from Luka to Bob.'));
 assert(messages.includes('Vega lost 8 stationed ships.'));
+
+const intel = strategicIntel(summarize(current), events);
+assert(intel.some((item) => item.title === 'Bob is expanding by conquest.'));
+assert(intel.some((item) => item.title === 'Luka is under pressure.'));
+assert(intel.some((item) => item.title === 'Bob probably fought or overextended.'));
 console.log('Intel diff tests passed.');

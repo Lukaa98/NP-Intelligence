@@ -8,8 +8,10 @@ A local-first React-style dashboard for Neptune's Pride 4 scan intelligence.
 - Fetches scan data through the same-origin local proxy `/api/np-scan`, which forwards to `https://np.ironhelmet.com/api?game_number=X&code=Y` to avoid browser CORS blocking.
 - Stores every scan as an immutable snapshot in browser IndexedDB.
 - Provides a Postman / paste-JSON fallback for debugging or if the local proxy cannot reach the upstream API.
-- Shows player growth stats, visible war metadata, snapshot history, and a snapshot comparison panel that turns any two saved scans into event-style notifications.
+- Shows strategic intel cards for captures, pressure, combat losses, investment focus, tech shifts, and visible war signals instead of just repeating Neptune's Pride scoreboard totals.
+- Provides snapshot history and a snapshot comparison panel that turns any two saved scans into event-style notifications.
 - Adds game tabs so multiple Neptune's Pride games can be tracked and switched independently in the same browser, including saved-key previews and stale-key warnings.
+- Auto-fetches due tracked games once per hour while the app tab is open, using saved local API keys.
 - Runs without npm-installed dependencies in this sandbox by using a tiny local React-compatible shim; swap to real React/Vite once registry access is available.
 
 ## Why IndexedDB first?
@@ -43,3 +45,11 @@ The app stores each fetch or pasted scan separately. Use the **Snapshot comparis
 ## Saved game keys
 
 After a successful API fetch, the game number, raw API key, masked key preview, latest tick, player UID, and key status are stored locally with that tracked game. Select a game tab later to refill the game number/key and fetch again without copying the token from NP. If the NP API returns a credential-looking failure, the game is marked as needing a fresh key so the user knows to regenerate and paste a new code.
+
+## Hourly auto scan
+
+Auto scan runs in the browser while the app tab is open. It checks saved games on startup and then once per hour, fetching only games with saved keys that are not marked as needing a fresh key. This version does not use Puppeteer/headless Chrome because snapshots live in browser IndexedDB; always-on scans while the tab is closed should be a future backend worker that stores data server-side rather than a headless browser pretending to be the UI.
+
+## Intel direction
+
+The goal is not to duplicate Neptune's Pride totals. The useful layer is interpretation: who captured from whom, who is losing ships, who is investing, who advanced dangerous tech, and which visible relations suggest active wars or diplomacy pressure.
