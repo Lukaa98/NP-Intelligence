@@ -13,6 +13,7 @@ A local-first React-style dashboard for Neptune's Pride 4 scan intelligence.
 - Adds game tabs so multiple Neptune's Pride games can be tracked and switched independently in the same browser, including saved-key previews and stale-key warnings.
 - Auto-fetches due tracked games once per hour while the app tab is open, using saved local API keys.
 - Includes a GitHub Actions scheduled scanner that can fetch saved game targets hourly while the browser is closed, cache the previous scan for comparison, and upload a summary artifact.
+- Generates the `NP_SCAN_TARGETS` JSON in the UI from locally saved games so the same static workflow can scan many games without editing YAML.
 - Runs without npm-installed dependencies in this sandbox by using a tiny local React-compatible shim; swap to real React/Vite once registry access is available.
 
 ## Why IndexedDB first?
@@ -55,7 +56,9 @@ Auto scan runs in the browser while the app tab is open. It checks saved games o
 
 For closed-tab polling, this repo includes `.github/workflows/hourly-scan.yml`. It runs once per hour, calls the official NP API directly from Node.js, caches the previous snapshot, compares it with the new scan, and uploads `summary.md` and `summary.json` artifacts with strategic intel and event notifications.
 
-Create a repository secret named `NP_SCAN_TARGETS` with JSON like:
+The workflow file should stay static. It does not need one YAML job per player or per game. Instead, the scheduled worker loops over every target in `NP_SCAN_TARGETS`, so 10 saved games can be scanned independently inside the same hourly workflow run.
+
+In the browser UI, fetch each game once, then use the **GitHub hourly scheduler** card to copy the generated JSON for all saved games. Create a repository secret named `NP_SCAN_TARGETS` with JSON like:
 
 ```json
 [
@@ -72,6 +75,8 @@ NP_SCAN_TARGETS='[{"game_number":"7744","code":"YOUR_CODE","name":"Pi Zavijava"}
 ```
 
 This uses plain Node `fetch`, not Puppeteer. Puppeteer/headless Chrome would be useful for scraping a page, but the NP scan endpoint already returns JSON. A headless browser would add complexity and still would not write into the app's browser IndexedDB. The scheduled worker stores its comparison cache in GitHub Actions cache instead.
+
+A browser-only static UI cannot safely rewrite repository secrets or workflow files by itself. To make scheduler enrollment fully automatic for many unrelated users, the next architecture step would be a backend or GitHub OAuth app that accepts a saved game from the UI and updates that user's repository secret/server-side schedule. For this repo-first version, the UI generates the exact secret JSON and the static workflow reads it.
 
 Security note: in a public repo, GitHub secrets hide the API key from logs. The workflow uploads only summaries by default; the raw snapshot cache is used for comparisons and is not uploaded as an artifact.
 

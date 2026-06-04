@@ -20,6 +20,7 @@ function App() {
   const [status, setStatus] = useState('Ready. Add a game number and API key, then fetch a scan.');
   const [autoStatus, setAutoStatus] = useState('Hourly auto scan is on while this tab is open.');
   const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(() => isAutoRefreshEnabled());
+  const [schedulerStatus, setSchedulerStatus] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -56,6 +57,8 @@ function App() {
   const events = useMemo(() => diffSnapshots(comparePrevious, compareCurrent), [comparePrevious, compareCurrent]);
   const intelItems = useMemo(() => strategicIntel(summary, events), [summary, events]);
   const selectedGameMeta = games.find((game) => game.gameNumber === selectedGame);
+  const schedulerTargets = useMemo(() => buildSchedulerTargets(games), [games]);
+  const schedulerTargetsJson = useMemo(() => JSON.stringify(schedulerTargets, null, 2), [schedulerTargets]);
 
   async function refreshGames() {
     const nextGames = await listGames();
@@ -165,6 +168,15 @@ function App() {
     }
   }
 
+  async function copySchedulerTargets() {
+    try {
+      await navigator.clipboard.writeText(schedulerTargetsJson);
+      setSchedulerStatus(`Copied ${schedulerTargets.length} scheduler target${schedulerTargets.length === 1 ? '' : 's'} for the NP_SCAN_TARGETS GitHub secret.`);
+    } catch (error) {
+      setSchedulerStatus(`Could not copy automatically: ${error.message}. Select and copy the JSON manually.`);
+    }
+  }
+
   async function resetData() {
     await clearAllData();
     setGames([]);
@@ -215,6 +227,18 @@ function App() {
         h('textarea', { value: pasteJson, onChange: (event) => setPasteJson(event.target.value), placeholder: 'Paste { "scanning_data": ... } here' }),
         h('button', { disabled: loading || !pasteJson.trim(), onClick: savePastedJson }, 'Save pasted JSON as snapshot'),
         h('p', { className: 'status' }, status)
+      )
+    ),
+    h('section', { className: 'card scheduler-card' },
+      h('div', null,
+        h('h2', null, 'GitHub hourly scheduler'),
+        h('p', { className: 'hint' }, 'The workflow stays static. It scans every saved game listed in the NP_SCAN_TARGETS secret, so one hourly run can handle 1 game or 10 games without rewriting YAML.'),
+        h('p', { className: 'hint' }, 'A browser-only UI cannot safely update GitHub secrets by itself. Copy this generated JSON into Settings → Secrets and variables → Actions → NP_SCAN_TARGETS, or later we can add a real backend/GitHub OAuth flow to update it automatically.')
+      ),
+      h('pre', { className: 'scheduler-json' }, schedulerTargets.length ? schedulerTargetsJson : '[]'),
+      h('div', { className: 'auto-row' },
+        h('button', { className: 'secondary', disabled: schedulerTargets.length === 0, onClick: copySchedulerTargets }, `Copy NP_SCAN_TARGETS (${schedulerTargets.length})`),
+        h('span', null, schedulerTargets.length === 0 ? 'Fetch at least one game successfully to save a scheduler target.' : schedulerStatus || 'Paste this into the GitHub Actions secret after adding/updating games.')
       )
     ),
     h('section', { className: 'grid sidebar-layout' },
@@ -270,6 +294,16 @@ function gameKeyLabel(game) {
   if (game.keyStatus === 'needs_fresh_key') return `Key needs refresh · ${game.apiKeyPreview || 'no saved key'}`;
   if (game.apiKeyPreview) return `Saved key ${game.apiKeyPreview}`;
   return 'No saved key';
+}
+
+function buildSchedulerTargets(games) {
+  return games
+    .filter((game) => game.apiKey && game.keyStatus !== 'needs_fresh_key')
+    .map((game) => ({
+      game_number: game.gameNumber,
+      code: game.apiKey,
+      name: game.name || `Game ${game.gameNumber}`,
+    }));
 }
 
 function defaultPreviousSnapshot(snapshots, currentId) {

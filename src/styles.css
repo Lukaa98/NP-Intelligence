@@ -239,3 +239,20 @@ button.secondary.active {
 .intel-card.warning { border-color: rgba(251, 191, 36, 0.45); }
 .intel-card.danger { border-color: rgba(248, 113, 113, 0.45); }
 .intel-card.info { border-color: rgba(56, 189, 248, 0.45); }
+.scheduler-card {
+  display: grid;
+  gap: 14px;
+  margin: 0 0 20px;
+}
+.scheduler-json {
+  background: #020617;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  border-radius: 16px;
+  color: #dbeafe;
+  margin: 0;
+  max-height: 260px;
+  overflow: auto;
+  padding: 14px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
