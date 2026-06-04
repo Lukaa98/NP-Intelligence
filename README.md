@@ -12,6 +12,7 @@ A local-first React-style dashboard for Neptune's Pride 4 scan intelligence.
 - Provides snapshot history and a snapshot comparison panel that turns any two saved scans into event-style notifications.
 - Adds game tabs so multiple Neptune's Pride games can be tracked and switched independently in the same browser, including saved-key previews and stale-key warnings.
 - Auto-fetches due tracked games once per hour while the app tab is open, using saved local API keys.
+- Includes a GitHub Actions scheduled scanner that can fetch saved game targets hourly while the browser is closed, cache the previous scan for comparison, and upload a summary artifact.
 - Runs without npm-installed dependencies in this sandbox by using a tiny local React-compatible shim; swap to real React/Vite once registry access is available.
 
 ## Why IndexedDB first?
@@ -48,7 +49,31 @@ After a successful API fetch, the game number, raw API key, masked key preview, 
 
 ## Hourly auto scan
 
-Auto scan runs in the browser while the app tab is open. It checks saved games on startup and then once per hour, fetching only games with saved keys that are not marked as needing a fresh key. This version does not use Puppeteer/headless Chrome because snapshots live in browser IndexedDB; always-on scans while the tab is closed should be a future backend worker that stores data server-side rather than a headless browser pretending to be the UI.
+Auto scan runs in the browser while the app tab is open. It checks saved games on startup and then once per hour, fetching only games with saved keys that are not marked as needing a fresh key.
+
+## GitHub Actions scheduled scanner
+
+For closed-tab polling, this repo includes `.github/workflows/hourly-scan.yml`. It runs once per hour, calls the official NP API directly from Node.js, caches the previous snapshot, compares it with the new scan, and uploads `summary.md` and `summary.json` artifacts with strategic intel and event notifications.
+
+Create a repository secret named `NP_SCAN_TARGETS` with JSON like:
+
+```json
+[
+  { "game_number": "7744", "code": "YOUR_REGENERATABLE_NP_CODE", "name": "Pi Zavijava" }
+]
+```
+
+Optional: add `NP_SCAN_WEBHOOK_URL` if you want the action to POST the scan summary JSON to another service.
+
+You can also test the worker locally:
+
+```bash
+NP_SCAN_TARGETS='[{"game_number":"7744","code":"YOUR_CODE","name":"Pi Zavijava"}]' npm run scan:scheduled
+```
+
+This uses plain Node `fetch`, not Puppeteer. Puppeteer/headless Chrome would be useful for scraping a page, but the NP scan endpoint already returns JSON. A headless browser would add complexity and still would not write into the app's browser IndexedDB. The scheduled worker stores its comparison cache in GitHub Actions cache instead.
+
+Security note: in a public repo, GitHub secrets hide the API key from logs. The workflow uploads only summaries by default; the raw snapshot cache is used for comparisons and is not uploaded as an artifact.
 
 ## Intel direction
 

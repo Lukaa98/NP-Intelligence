@@ -1,0 +1,52 @@
+name: Hourly NP scan
+
+on:
+  schedule:
+    - cron: "7 * * * *" # roughly once per hour, UTC; GitHub may delay scheduled runs
+  workflow_dispatch:
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Restore previous scan cache
+        id: restore-scan-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: output/np-scans/history
+          key: np-scan-history-${{ github.run_id }}
+          restore-keys: |
+            np-scan-history-
+
+      - name: Run scheduled scan
+        env:
+          NP_SCAN_TARGETS: ${{ secrets.NP_SCAN_TARGETS }}
+          NP_SCAN_WEBHOOK_URL: ${{ secrets.NP_SCAN_WEBHOOK_URL }}
+        run: node scripts/scheduled-scan.mjs
+
+      - name: Save scan cache for next comparison
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: output/np-scans/history
+          key: np-scan-history-${{ github.run_id }}
+
+      - name: Upload latest scan summary
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: np-scan-${{ github.run_id }}
+          path: |
+            output/np-scans/latest-run/summary.md
+            output/np-scans/latest-run/summary.json

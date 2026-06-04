@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "node scripts/dev-server.mjs",
-    "check": "node --check scripts/dev-server.mjs && node --check scripts/test-intel.mjs && node --check src/App.js && node --check src/db.js && node --check src/intel.js && node --check src/npApi.js && node --check src/vendor/react-lite.js && node --check src/vendor/react-dom-client-lite.js",
-    "test": "node scripts/test-intel.mjs"
+    "check": "node --check scripts/dev-server.mjs && node --check scripts/scheduled-scan.mjs && node --check scripts/test-intel.mjs && node --check src/App.js && node --check src/db.js && node --check src/intel.js && node --check src/npApi.js && node --check src/vendor/react-lite.js && node --check src/vendor/react-dom-client-lite.js",
+    "test": "node scripts/test-intel.mjs",
+    "scan:scheduled": "node scripts/scheduled-scan.mjs"
   }
 }
