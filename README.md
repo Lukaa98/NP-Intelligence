@@ -14,21 +14,34 @@ A local-first React-style dashboard for Neptune's Pride 4 scan intelligence.
 - Auto-fetches due tracked games once per hour while the app tab is open, using saved local API keys.
 - Includes a GitHub Actions scheduled scanner that can fetch saved game targets hourly while the browser is closed, cache the previous scan for comparison, and upload a summary artifact.
 - Generates the `NP_SCAN_TARGETS` JSON in the UI from locally saved games so the same static workflow can scan many games without editing YAML.
+- Adds a FastAPI backend option for Render deployment so the UI can send saved games to a server-side hourly scheduler.
 - Runs without npm-installed dependencies in this sandbox by using a tiny local React-compatible shim; swap to real React/Vite once registry access is available.
 
 ## Why IndexedDB first?
 
 No separate database is required for the first version. The local dev server only proxies scan requests around browser CORS; snapshots and saved per-game API keys stay in the user's browser. When the tab is opened later, the user can fetch again with the stored key and the app stores a new snapshot to compare against older ones.
 
-A backend can be added later if we want scheduled polling while the browser is closed, cross-device sync, or shared alliance intelligence.
+A FastAPI backend is included in `back/` for scheduled polling while the browser is closed. It stores game API keys/snapshots in SQLite and can be deployed separately on Render.
 
 ## Run locally
+
+Frontend:
 
 ```bash
 npm run dev
 ```
 
 Open <http://localhost:5173>.
+
+Backend:
+
+```bash
+cd back
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+uvicorn src.main:app --reload --port 8081
+```
 
 ## Check syntax
 
@@ -51,6 +64,12 @@ After a successful API fetch, the game number, raw API key, masked key preview, 
 ## Hourly auto scan
 
 Auto scan runs in the browser while the app tab is open. It checks saved games on startup and then once per hour, fetching only games with saved keys that are not marked as needing a fresh key.
+
+## Backend scheduler
+
+For the more scalable approach, deploy the FastAPI backend in `back/` to Render. In the UI, set the backend URL, click **Test backend**, then **Sync saved games**. The backend stores those games in SQLite and its own hourly scheduler scans them while the browser is closed.
+
+This is closer to a real multi-user platform than dynamically rewriting GitHub Actions YAML. For true multi-user production use, add authentication so users only see their own games.
 
 ## GitHub Actions scheduled scanner
 

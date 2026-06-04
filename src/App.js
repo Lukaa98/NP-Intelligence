@@ -2,11 +2,13 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { clearAllData, getGame, listGames, listSnapshots, markGameKeyProblem, saveSnapshot } from './db.js';
 import { diffSnapshots, strategicIntel, summarize } from './intel.js';
+import { checkBackendHealth, registerBackendGame } from './backendApi.js';
 import { fetchScanningData } from './npApi.js';
 
 const h = React.createElement;
 const AUTO_FETCH_MS = 60 * 60 * 1000;
 const AUTO_REFRESH_STORAGE_KEY = 'np-intelligence-auto-refresh';
+const BACKEND_URL_STORAGE_KEY = 'np-intelligence-backend-url';
 
 function App() {
   const [gameNumber, setGameNumber] = useState('');
@@ -21,6 +23,8 @@ function App() {
   const [autoStatus, setAutoStatus] = useState('Hourly auto scan is on while this tab is open.');
   const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(() => isAutoRefreshEnabled());
   const [schedulerStatus, setSchedulerStatus] = useState('');
+  const [backendUrl, setBackendUrl] = useState(() => localStorage.getItem(BACKEND_URL_STORAGE_KEY) || 'http://127.0.0.1:8081');
+  const [backendStatus, setBackendStatus] = useState('Backend not connected yet.');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -131,6 +135,7 @@ function App() {
     try {
       const data = await fetchScanningData({ gameNumber: targetGameNumber, apiKey: keyToUse });
       const snapshot = await saveSnapshot({ gameNumber: targetGameNumber, apiKey: keyToUse, scanningData: data });
+      await syncGameToBackend({ gameNumber: targetGameNumber, apiKey: keyToUse, name: snapshot.gameName, silent: true });
       setSelectedGame(targetGameNumber);
       setGameNumber(targetGameNumber);
       setApiKey(keyToUse);
@@ -165,6 +170,49 @@ function App() {
       setStatus(`Could not save pasted JSON: ${error.message}`);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function syncGameToBackend({ gameNumber: nextGameNumber, apiKey: nextApiKey, name, silent = false }) {
+    if (!backendUrl.trim()) {
+      if (!silent) setBackendStatus('Enter a backend URL first.');
+      return;
+    }
+    try {
+      localStorage.setItem(BACKEND_URL_STORAGE_KEY, backendUrl.trim());
+      await registerBackendGame({ backendUrl, gameNumber: nextGameNumber, apiKey: nextApiKey, name });
+      setBackendStatus(`Backend saved #${nextGameNumber}. Its scheduler can now scan this game while your browser is closed.`);
+    } catch (error) {
+      setBackendStatus(`Backend sync failed for #${nextGameNumber}: ${error.message}`);
+    }
+  }
+
+  async function syncAllGamesToBackend() {
+    if (!schedulerTargets.length) {
+      setBackendStatus('No saved games with valid keys to sync yet.');
+      return;
+    }
+    let synced = 0;
+    for (const target of schedulerTargets) {
+      try {
+        await registerBackendGame({ backendUrl, gameNumber: target.game_number, apiKey: target.code, name: target.name });
+        synced += 1;
+      } catch (error) {
+        setBackendStatus(`Synced ${synced}/${schedulerTargets.length}; failed on #${target.game_number}: ${error.message}`);
+        return;
+      }
+    }
+    localStorage.setItem(BACKEND_URL_STORAGE_KEY, backendUrl.trim());
+    setBackendStatus(`Synced ${synced} game${synced === 1 ? '' : 's'} to backend scheduler.`);
+  }
+
+  async function testBackend() {
+    try {
+      localStorage.setItem(BACKEND_URL_STORAGE_KEY, backendUrl.trim());
+      const health = await checkBackendHealth(backendUrl);
+      setBackendStatus(`Backend online. Scheduler ${health.schedulerEnabled ? 'enabled' : 'disabled'}, interval ${health.scanIntervalMinutes} min.`);
+    } catch (error) {
+      setBackendStatus(`Backend check failed: ${error.message}`);
     }
   }
 
@@ -227,6 +275,19 @@ function App() {
         h('textarea', { value: pasteJson, onChange: (event) => setPasteJson(event.target.value), placeholder: 'Paste { "scanning_data": ... } here' }),
         h('button', { disabled: loading || !pasteJson.trim(), onClick: savePastedJson }, 'Save pasted JSON as snapshot'),
         h('p', { className: 'status' }, status)
+      )
+    ),
+    h('section', { className: 'card scheduler-card' },
+      h('div', null,
+        h('h2', null, 'Backend scheduler'),
+        h('p', { className: 'hint' }, 'Use this when you deploy the FastAPI backend on Render. The UI sends saved game number/key pairs to the backend, and the backend scans hourly even when this browser is closed.'),
+        h('label', null, 'Backend URL'),
+        h('input', { value: backendUrl, onChange: (event) => setBackendUrl(event.target.value), placeholder: 'https://your-render-service.onrender.com', type: 'text', spellCheck: 'false', autoComplete: 'off' }),
+        h('div', { className: 'auto-row' },
+          h('button', { className: 'secondary', onClick: testBackend }, 'Test backend'),
+          h('button', { className: 'secondary', disabled: schedulerTargets.length === 0, onClick: syncAllGamesToBackend }, `Sync saved games (${schedulerTargets.length})`),
+          h('span', null, backendStatus)
+        )
       )
     ),
     h('section', { className: 'card scheduler-card' },
