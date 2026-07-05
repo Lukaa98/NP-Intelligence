@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NP Intelligence Dashboard</title>
+    <link rel="stylesheet" href="popup.css">
+  </head>
+  <body class="sidepanel-page">
+    <main class="app-shell">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Neptune's Pride Intel</p>
+          <h1>Persistent Command Deck</h1>
+          <p class="subtle">This dashboard stays open like a normal tab, so you can inspect intel without the Chrome popup closing on blur.</p>
+        </div>
+        <div class="font-controls" aria-label="Popup font controls">
+          <button id="font-decrease" class="ghost size-button" type="button">A-</button>
+          <button id="font-reset" class="ghost size-button" type="button">A</button>
+          <button id="font-increase" class="ghost size-button" type="button">A+</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <h2>Track game</h2>
+          <div class="section-actions">
+            <button id="toggle-track-form" class="ghost" type="button">Add or edit game</button>
+            <button id="capture-page" class="ghost">Try page capture</button>
+          </div>
+        </div>
+        <div id="track-game-body" class="collapsible-body">
+          <label class="field">
+            <span>Game number</span>
+            <input id="game-number" type="text" placeholder="7744">
+          </label>
+          <label class="field">
+            <span>API code</span>
+            <input id="api-key" type="password" placeholder="Paste or capture the NP code">
+          </label>
+          <label class="field">
+            <span>Name</span>
+            <input id="game-name" type="text" placeholder="Pi Zavijava">
+          </label>
+          <div class="actions">
+            <button id="save-game" class="primary">Save to backend</button>
+            <button id="scan-game" class="secondary">Scan now</button>
+          </div>
+        </div>
+        <p id="game-status" class="status">Saved games will be scanned by the Worker on demand and by cron every 6 hours.</p>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <h2>Tracked games</h2>
+          <div class="section-actions">
+            <button id="refresh-games" class="ghost">Refresh</button>
+          </div>
+        </div>
+        <div id="games-list" class="list empty">No games loaded yet.</div>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <h2>Player intel</h2>
+          <div class="section-actions">
+            <button id="window-latest" class="ghost window-button" type="button">Latest</button>
+            <button id="window-1h" class="ghost window-button" type="button">1h</button>
+            <button id="window-6h" class="ghost window-button" type="button">6h</button>
+            <button id="window-32h" class="ghost window-button" type="button">32h</button>
+            <button id="refresh-intel" class="ghost">Reload</button>
+          </div>
+        </div>
+        <div id="intel-summary" class="summary empty">Select a tracked game to see its latest backend intel.</div>
+        <div id="intel-list" class="list empty">No players loaded yet.</div>
+        <div id="player-detail-summary" class="summary empty">Select a player to see captures, losses, and stat swings.</div>
+        <div id="events-list" class="list empty">No player details yet.</div>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <h2>Fetch health</h2>
+          <div class="section-actions">
+            <span id="fetch-health-badge" class="pill">Unknown</span>
+          </div>
+        </div>
+        <div id="fetch-health-summary" class="summary empty">No fetch health data yet.</div>
+        <div id="fetch-health-list" class="list empty">No recent failures logged.</div>
+      </section>
+    </main>
+
+    <script src="config.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

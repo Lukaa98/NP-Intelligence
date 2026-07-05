@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NP Intelligence</title>
+    <link rel="stylesheet" href="popup.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Neptune's Pride Intel</p>
+          <h1>Extension Command Deck</h1>
+          <p class="subtle">Save game codes to the Worker, trigger scans, and read derived war signals without a separate desktop app.</p>
+        </div>
+        <div class="launch-controls">
+          <button id="open-dashboard" class="ghost launch-button" type="button">Open Dashboard</button>
+        </div>
+        <div class="size-controls" aria-label="Popup size controls">
+          <button id="size-medium" class="ghost size-button" type="button">Default</button>
+          <button id="size-large" class="ghost size-button" type="button">Large</button>
+          <button id="size-xl" class="ghost size-button" type="button">XL</button>
+        </div>
+        <div class="font-controls" aria-label="Popup font controls">
+          <button id="font-decrease" class="ghost size-button" type="button">A-</button>
+          <button id="font-reset" class="ghost size-button" type="button">A</button>
+          <button id="font-increase" class="ghost size-button" type="button">A+</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <h2>Backend</h2>
+          <button id="test-backend" class="ghost">Test</button>
+        </div>
+        <label class="field">
+          <span>Worker URL</span>
+          <input id="backend-url" type="text" placeholder="https://np-intelligence-backend.your-subdomain.workers.dev">
+        </label>
+        <p id="backend-status" class="status">Enter your Worker URL, then test it.</p>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <h2>Track game</h2>
+          <button id="capture-page" class="ghost">Try page capture</button>
+        </div>
+        <label class="field">
+          <span>Game number</span>
+          <input id="game-number" type="text" placeholder="7744">
+        </label>
+        <label class="field">
+          <span>API code</span>
+          <input id="api-key" type="password" placeholder="Paste or capture the NP code">
+        </label>
+        <label class="field">
+          <span>Name</span>
+          <input id="game-name" type="text" placeholder="Pi Zavijava">
+        </label>
+        <div class="actions">
+          <button id="save-game" class="primary">Save to backend</button>
+          <button id="scan-game" class="secondary">Scan now</button>
+        </div>
+        <p id="game-status" class="status">Saved games will be scanned by the Worker on demand and by cron every 12 hours.</p>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <h2>Tracked games</h2>
+          <button id="refresh-games" class="ghost">Refresh</button>
+        </div>
+        <div id="games-list" class="list empty">No games loaded yet.</div>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <h2>Strategic intel</h2>
+          <button id="refresh-intel" class="ghost">Reload</button>
+        </div>
+        <div id="intel-summary" class="summary empty">Select a tracked game to see its latest backend intel.</div>
+        <div id="intel-list" class="list empty">No intel loaded yet.</div>
+        <div id="events-list" class="list empty">No events loaded yet.</div>
+      </section>
+    </main>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

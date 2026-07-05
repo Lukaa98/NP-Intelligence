@@ -1,0 +1,40 @@
+{
+  "manifest_version": 3,
+  "name": "NP Intelligence",
+  "version": "0.2.0",
+  "description": "Track Neptune's Pride intel from a Chrome extension backed by Cloudflare Workers + D1.",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "tabs",
+    "sidePanel"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "host_permissions": [
+    "https://np.ironhelmet.com/*",
+    "https://*.neptunespride.com/*",
+    "https://*.workers.dev/*",
+    "http://127.0.0.1/*",
+    "http://localhost/*"
+  ],
+  "action": {
+    "default_title": "NP Intelligence"
+  },
+  "side_panel": {
+    "default_path": "dashboard.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://np.ironhelmet.com/*",
+        "https://*.neptunespride.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}
