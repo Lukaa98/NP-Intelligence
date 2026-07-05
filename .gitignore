@@ -8,3 +8,4 @@ back/venv/
 back/.env
 __pycache__/
 *.pyc
+backend/.wrangler/
