@@ -1,0 +1,15 @@
+name = "np-intelligence-backend"
+main = "src/index.js"
+compatibility_date = "2026-07-05"
+
+[observability]
+enabled = true
+
+[triggers]
+crons = ["0 */6 * * *"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "np-intelligence"
+database_id = "42506597-2d28-4624-945c-4a035042f538"
+migrations_dir = "migrations"
