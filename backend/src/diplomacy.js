@@ -25,6 +25,10 @@ export function buildDiplomacy({ rows, events, players, viewerUid, snapshotsProc
     return pairs.get(key);
   };
 
+  // Formal alliances are current if seen in the latest scan that reported
+  // them at all (the game-over scan doesn't).
+  const census = rows.find((row) => row.kind === "ally_census")?.lastTick ?? latestTick;
+
   for (const row of rows) {
     if (row.a === row.b) continue;
     const pair = pairFor(row.a, row.b);
@@ -32,7 +36,7 @@ export function buildDiplomacy({ rows, events, players, viewerUid, snapshotsProc
     if (row.kind === "ally_confirmed") {
       // Only an alliance present in the newest scan is current.
       pair.confirmedLastTick = Math.max(pair.confirmedLastTick, row.lastTick);
-      pair.confirmed = pair.confirmedLastTick >= latestTick;
+      pair.confirmed = pair.confirmedLastTick >= census;
     }
     if (row.kind === "contact") pair.contact += row.count;
     if (row.kind === "guest") {

@@ -101,3 +101,17 @@ const lapsed = buildDiplomacy({
 });
 assert.equal(lapsed.pairs[0].status, "former_allies");
 console.log("Team-building tests passed.");
+
+// Game-over scans don't report alliances; they must not mark allies as former.
+const afterGameOver = buildDiplomacy({
+  rows: [pair(1, 2, "ally_confirmed", { lastTick: 9 }), pair(1, 1, "ally_census", { lastTick: 9 })],
+  events: [],
+  players: [1, 2].map((uid) => ({ uid, alias: `P${uid}`, totalStars: 10 })),
+  viewerUid: 1,
+  snapshotsProcessed: 10,
+  latestTick: 10
+});
+assert.equal(afterGameOver.pairs[0].status, "allied");
+const overSnapshot = extractRelations({ ...snapshot(102, { owners: {}, weapons: { 1: 3, 2: 3, 3: 5, 4: 5, 5: 4, 6: 4 } }), gameOver: true }, second.state);
+assert.equal(overSnapshot.observations.filter((item) => item.kind.startsWith("ally_")).length, 0);
+console.log("Game-over alliance tests passed.");

@@ -2,7 +2,7 @@ import { TECH_NAMES } from "./intel.js";
 
 // Bump when extraction rules change: games whose hourly history still exists
 // are re-processed from scratch with the new rules.
-export const RELATIONS_VERSION = 2;
+export const RELATIONS_VERSION = 3;
 
 // Pulls relationship evidence out of one NP4 snapshot, diffing against the
 // compact state left by the previous one. Pure: no I/O, so it can be unit
@@ -25,7 +25,13 @@ export function extractRelations(data, previousState) {
   const observations = [];
   const events = [];
 
-  const viewerWar = players[viewer]?.war || {};
+  // NP clears formal alliances in the game-over scan, so only live scans count
+  // as an alliance census; `ally_census` marks the latest one.
+  const gameOver = Boolean(data.gameOver ?? data.game_over);
+  const viewerWar = gameOver ? {} : players[viewer]?.war || {};
+  if (!gameOver && players[viewer]?.war) {
+    observations.push(pairObservation("ally_census", viewer, viewer));
+  }
   for (const [uid, value] of Object.entries(viewerWar)) {
     if (Number(value) === 0 && Number(uid) !== viewer && players[uid]) {
       observations.push(pairObservation("ally_confirmed", viewer, Number(uid)));
