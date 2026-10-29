@@ -18,6 +18,13 @@ Neptune's Pride intel dashboard: track your games, keep their history after NP d
 - **Galaxy map**: any snapshot opens as an NP-style map. Drag to pan, scroll or pinch to zoom. You can click stars, fleets and leaderboard players, and the game-over banner names the winner.
 - **Download HTML**: saves a single self-contained `.html` file of a snapshot (data and viewer inlined) that opens offline, forever.
 - **Player book**: 👍 / 👎 / 📝 any player from a game's intel list or the map. The *Players* page lists everyone you've rated, with the games you met them in. Ratings are keyed by alias, so they follow a player across games.
+- **Diplomacy** (per game): likely teams, each player's allies and enemies, wars, suspected tech trades and recent captures, plus alliance and war lines on the map (⚭). This is inferred from every stored scan:
+  - a fleet parked at another empire's star means those two are allied (NP4 only allows that between allies), and your own formal alliances come straight from the game data;
+  - star captures and fleets flying at someone's stars mean war or tension;
+  - a tech jump of 2+ levels within a few hours, or to a level only one or two players had, flags a likely trade and its sources;
+  - neighbours who never fight count as peaceful.
+  Evidence is aggregated in D1 as scans arrive, so it outlives snapshot pruning. Pruning waits until a game's history has been processed.
+- **Nicknames**: rename any game for yourself (✎). The games list shows player count and your alias, and has a search box.
 - **Player intel**: per-player captures, losses, ship and tech changes over latest / 1h / 6h / 32h windows, plus fetch health.
 
 ## What gets kept
@@ -86,5 +93,8 @@ cd web && npm install && VITE_BACKEND_URL=http://localhost:8787 npm run dev
 | GET | `/api/games/:n/intel?window=latest\|1h\|6h\|32h` | Derived intel |
 | GET | `/api/snapshots/:id` | One full snapshot |
 | POST/DELETE | `/api/snapshots/:id/pin` | Pin or unpin a capture |
+| PUT | `/api/games/:n` | Set `{ nickname }` |
+| GET | `/api/games/:n/diplomacy` | Teams, pair relations, wars, trades, captures |
+| POST | `/api/games/:n/relations/process` | Process a few unprocessed scans (the page loops this) |
 | GET / PUT | `/api/players` | List or upsert `{ alias, rating: -1\|0\|1, note, game }` |
 | DELETE | `/api/players/:alias` | Forget a player |
