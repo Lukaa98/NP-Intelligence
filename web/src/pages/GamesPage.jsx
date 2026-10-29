@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { api } from "../api.js";
 import { navigate } from "../router.js";
-import { formatDateTime } from "../format.js";
+import { formatDateTime, gameFacts, gameTitle } from "../format.js";
+import RenameGame from "../components/RenameGame.jsx";
 
 export default function GamesPage() {
   const [games, setGames] = useState([]);
@@ -10,6 +11,7 @@ export default function GamesPage() {
   const [busy, setBusy] = useState("");
   const [formOpen, setFormOpen] = useState(false);
   const [form, setForm] = useState({ gameNumber: "", code: "", name: "" });
+  const [query, setQuery] = useState("");
 
   const load = useCallback(async () => {
     try {
@@ -53,8 +55,12 @@ export default function GamesPage() {
     });
   }
 
-  const active = games.filter((game) => !game.archivedAt);
-  const deleted = games.filter((game) => game.archivedAt);
+  const needle = query.trim().toLowerCase();
+  const matches = (game) => !needle || [game.nickname, game.name, game.gameNumber, game.myAlias, game.playerCount && `${game.playerCount}p`]
+    .some((value) => String(value || "").toLowerCase().includes(needle));
+  const replaceGame = (updated) => setGames((current) => current.map((item) => (item.gameNumber === updated.gameNumber ? updated : item)));
+  const active = games.filter((game) => !game.archivedAt && matches(game));
+  const deleted = games.filter((game) => game.archivedAt && matches(game));
 
   return (
     <>
@@ -97,7 +103,10 @@ export default function GamesPage() {
       <section className="card">
         <div className="section-head">
           <h2>Tracked games</h2>
-          <button type="button" className="ghost" onClick={load}>Refresh</button>
+          <div className="actions">
+            <input className="search" placeholder="Find by name, number, 64p…" value={query} onChange={(event) => setQuery(event.target.value)} />
+            <button type="button" className="ghost" onClick={load}>Refresh</button>
+          </div>
         </div>
         {loading ? <p className="muted">Loading…</p> : !active.length ? (
           <p className="muted">No tracked games. Use “Track a game” to add one.</p>
@@ -106,10 +115,12 @@ export default function GamesPage() {
             {active.map((game) => (
               <article key={game.gameNumber} className="game-card" onClick={() => navigate(`/game/${game.gameNumber}`)}>
                 <div className="game-main">
-                  <div className="name">{game.name || `Game ${game.gameNumber}`}</div>
-                  <div className="meta">
-                    #{game.gameNumber} · tick {game.lastTick ?? 0} · last scan {formatDateTime(game.lastSyncAt)}
+                  <div className="name-row">
+                    <span className="name">{gameTitle(game)}</span>
+                    <RenameGame game={game} onRenamed={replaceGame} />
                   </div>
+                  <div className="meta">{gameFacts(game)}</div>
+                  <div className="meta">tick {game.lastTick ?? 0} · last scan {formatDateTime(game.lastSyncAt)}</div>
                   <div className="pills">
                     {game.finishedAt && <span className="pill">finished</span>}
                     <span className={`pill ${game.keyStatus === "needs_fresh_key" ? "danger" : "success"}`}>
@@ -118,18 +129,18 @@ export default function GamesPage() {
                   </div>
                 </div>
                 <div className="game-actions" onClick={(event) => event.stopPropagation()}>
-                  <button type="button" className="secondary" disabled={!!busy} onClick={() => run(game.gameNumber, `Scanning ${game.name}`, async () => {
+                  <button type="button" className="secondary" disabled={!!busy} onClick={() => run(game.gameNumber, `Scanning ${gameTitle(game)}`, async () => {
                     const payload = await api.scanGame(game.gameNumber);
-                    return `Scanned ${game.name}. Latest tick ${payload.snapshot.tick}.`;
+                    return `Scanned ${gameTitle(game)}. Latest tick ${payload.snapshot.tick}.`;
                   })}>Scan</button>
-                  <button type="button" className="primary" disabled={!!busy} onClick={() => run(game.gameNumber, `Capturing ${game.name}`, async () => {
+                  <button type="button" className="primary" disabled={!!busy} onClick={() => run(game.gameNumber, `Capturing ${gameTitle(game)}`, async () => {
                     const payload = await api.captureGame(game.gameNumber);
                     navigate(`/snapshot/${payload.snapshot.id}`);
                     return "";
                   })}>Capture state</button>
-                  <button type="button" className="ghost danger-text" disabled={!!busy} onClick={() => run(game.gameNumber, `Deleting ${game.name}`, async () => {
+                  <button type="button" className="ghost danger-text" disabled={!!busy} onClick={() => run(game.gameNumber, `Deleting ${gameTitle(game)}`, async () => {
                     await api.archiveGame(game.gameNumber);
-                    return `${game.name} moved to Deleted games. Its history is kept.`;
+                    return `${gameTitle(game)} moved to Deleted games. Its history is kept.`;
                   })}>Delete</button>
                 </div>
               </article>
@@ -148,20 +159,23 @@ export default function GamesPage() {
             {deleted.map((game) => (
               <article key={game.gameNumber} className="game-card archived" onClick={() => navigate(`/game/${game.gameNumber}`)}>
                 <div className="game-main">
-                  <div className="name">{game.name || `Game ${game.gameNumber}`}</div>
-                  <div className="meta">#{game.gameNumber} · final tick {game.lastTick ?? 0} · deleted {formatDateTime(game.archivedAt)}</div>
+                  <div className="name-row">
+                    <span className="name">{gameTitle(game)}</span>
+                    <RenameGame game={game} onRenamed={replaceGame} />
+                  </div>
+                  <div className="meta">{gameFacts(game)} · final tick {game.lastTick ?? 0} · deleted {formatDateTime(game.archivedAt)}</div>
                 </div>
                 <div className="game-actions" onClick={(event) => event.stopPropagation()}>
                   <button type="button" className="secondary" onClick={() => navigate(`/game/${game.gameNumber}`)}>History</button>
-                  <button type="button" className="ghost" disabled={!!busy} onClick={() => run(game.gameNumber, `Restoring ${game.name}`, async () => {
+                  <button type="button" className="ghost" disabled={!!busy} onClick={() => run(game.gameNumber, `Restoring ${gameTitle(game)}`, async () => {
                     await api.restoreGame(game.gameNumber);
-                    return `${game.name} is tracked again.`;
+                    return `${gameTitle(game)} is tracked again.`;
                   })}>Restore</button>
                   <button type="button" className="ghost danger-text" disabled={!!busy} onClick={() => {
-                    if (!window.confirm(`Permanently erase ${game.name} and all of its snapshots? This cannot be undone.`)) return;
-                    run(game.gameNumber, `Erasing ${game.name}`, async () => {
+                    if (!window.confirm(`Permanently erase ${gameTitle(game)} and all of its snapshots? This cannot be undone.`)) return;
+                    run(game.gameNumber, `Erasing ${gameTitle(game)}`, async () => {
                       await api.purgeGame(game.gameNumber);
-                      return `${game.name} erased.`;
+                      return `${gameTitle(game)} erased.`;
                     });
                   }}>Erase forever</button>
                 </div>

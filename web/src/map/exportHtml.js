@@ -3,7 +3,7 @@ import viewerSource from "./mapViewer.js?raw";
 // Builds a single self-contained HTML file for a snapshot: the viewer source is
 // inlined (with its ES exports stripped) and the scan data is embedded as JSON,
 // so the page keeps working after NP deletes the game and offline.
-export function buildStandaloneHtml(snapshot, notes = {}) {
+export function buildStandaloneHtml(snapshot, notes = {}, relations = []) {
   const title = `${snapshot.gameName || "Neptune's Pride"} — tick ${snapshot.tick ?? "?"}`;
   const payload = {
     snapshot: {
@@ -14,7 +14,8 @@ export function buildStandaloneHtml(snapshot, notes = {}) {
       tick: snapshot.tick,
       data: snapshot.data
     },
-    notes
+    notes,
+    relations
   };
 
   const script = viewerSource.replace(/^export\s+/gm, "");
@@ -35,15 +36,15 @@ export function buildStandaloneHtml(snapshot, notes = {}) {
 <script>
 ${script}
 const payload = JSON.parse(document.getElementById("np-snapshot").textContent);
-mountMap(document.getElementById("map"), payload.snapshot, { notes: payload.notes });
+mountMap(document.getElementById("map"), payload.snapshot, { notes: payload.notes, relations: payload.relations });
 </script>
 </body>
 </html>
 `;
 }
 
-export function downloadStandaloneHtml(snapshot, notes) {
-  const html = buildStandaloneHtml(snapshot, notes);
+export function downloadStandaloneHtml(snapshot, notes, relations) {
+  const html = buildStandaloneHtml(snapshot, notes, relations);
   const blob = new Blob([html], { type: "text/html" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");

@@ -12,6 +12,7 @@ export default function MapPage({ snapshotId, notes }) {
   const [error, setError] = useState("");
   const [selected, setSelected] = useState(null);
   const [pinned, setPinned] = useState(false);
+  const [relations, setRelations] = useState([]);
 
   const viewerNotes = useMemo(() => notesForExport(notes), [notes.list]);
 
@@ -22,6 +23,10 @@ export default function MapPage({ snapshotId, notes }) {
         if (cancelled) return;
         setSnapshot(loaded);
         setPinned(loaded.pinned);
+        // Alliance lines are a bonus; the map works without them.
+        api.diplomacy(loaded.gameNumber)
+          .then((diplomacy) => !cancelled && setRelations(diplomacy.pairs || []))
+          .catch(() => {});
       })
       .catch((loadError) => !cancelled && setError(loadError.message));
     return () => {
@@ -46,6 +51,10 @@ export default function MapPage({ snapshotId, notes }) {
   useEffect(() => {
     viewerRef.current?.setNotes(viewerNotes);
   }, [viewerNotes]);
+
+  useEffect(() => {
+    viewerRef.current?.setRelations(relations);
+  }, [relations, snapshot]);
 
   if (error) {
     return <div className="card map-error"><p className="error">{error}</p><a href="#/">Back to games</a></div>;
@@ -80,7 +89,7 @@ export default function MapPage({ snapshotId, notes }) {
             }}>{pinned ? "★ Pinned" : "☆ Pin as capture"}</button>
           )}
           {snapshot && (
-            <button type="button" className="primary" onClick={() => downloadStandaloneHtml(snapshot, viewerNotes)}>Download HTML</button>
+            <button type="button" className="primary" onClick={() => downloadStandaloneHtml(snapshot, viewerNotes, relations)}>Download HTML</button>
           )}
         </div>
       </div>

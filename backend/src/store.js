@@ -1,3 +1,5 @@
+import { extractRelations } from "./relations.js";
+
 function nowIso() {
   return new Date().toISOString();
 }
@@ -40,6 +42,7 @@ export async function upsertGame(env, gameNumber, code, name, playerUid = null) 
 export async function updateGameAfterScan(env, gameNumber, scanningData, { finished = false } = {}) {
   const timestamp = nowIso();
   const name = scanningData.name || scanningData.config?.name || `Game ${gameNumber}`;
+  const playerUid = scanningData.playerUid ?? scanningData.player_uid;
   await env.DB.prepare(`
     UPDATE games
     SET
@@ -50,9 +53,22 @@ export async function updateGameAfterScan(env, gameNumber, scanningData, { finis
       key_status = 'valid',
       key_status_message = 'Saved key worked on the last successful scan.',
       finished_at = CASE WHEN ? THEN COALESCE(finished_at, ?) ELSE finished_at END,
+      player_count = ?,
+      my_alias = ?,
       updated_at = ?
     WHERE game_number = ?
-  `).bind(name, scanningData.playerUid ?? scanningData.player_uid ?? null, Number(scanningData.tick || 0), timestamp, finished ? 1 : 0, timestamp, timestamp, gameNumber).run();
+  `).bind(
+    name,
+    playerUid ?? null,
+    Number(scanningData.tick || 0),
+    timestamp,
+    finished ? 1 : 0,
+    timestamp,
+    Object.keys(scanningData.players || {}).length || null,
+    scanningData.players?.[playerUid]?.alias || null,
+    timestamp,
+    gameNumber
+  ).run();
 }
 
 export async function markKeyProblem(env, gameNumber, message) {
@@ -155,7 +171,15 @@ export async function restoreGame(env, gameNumber) {
   `).bind(nowIso(), gameNumber).run();
 }
 
+export async function setNickname(env, gameNumber, nickname) {
+  const cleaned = String(nickname || "").trim().slice(0, 120);
+  await env.DB.prepare(`UPDATE games SET nickname = ?, updated_at = ? WHERE game_number = ?`)
+    .bind(cleaned || null, nowIso(), gameNumber).run();
+}
+
 export async function purgeGame(env, gameNumber) {
+  await env.DB.prepare(`DELETE FROM relation_events WHERE game_number = ?`).bind(gameNumber).run();
+  await env.DB.prepare(`DELETE FROM relations WHERE game_number = ?`).bind(gameNumber).run();
   await env.DB.prepare(`DELETE FROM scan_attempts WHERE game_number = ?`).bind(gameNumber).run();
   await env.DB.prepare(`DELETE FROM snapshots WHERE game_number = ?`).bind(gameNumber).run();
   await env.DB.prepare(`DELETE FROM games WHERE game_number = ?`).bind(gameNumber).run();
@@ -207,7 +231,13 @@ export async function latestSnapshotMeta(env, gameNumber) {
 
 // History is kept in full while a game is live. Once a game stops producing
 // data (finished, deleted by you, or NP has refused scans for `staleHours`),
-// its latest scan is pinned and the unpinned hourly history is dropped.
+// its latest scan is pinned and the unpinned hourly history is dropped, but
+// only after relationship intel has processed every snapshot, so the alliance
+// and war record outlives the snapshots it came from.
+const RELATIONS_CAUGHT_UP = `
+  COALESCE(games.relation_tick, -1) >= COALESCE((SELECT MAX(tick) FROM snapshots s WHERE s.game_number = games.game_number), -1)
+`;
+
 export async function pruneInactiveGames(env, staleHours) {
   const cutoff = new Date(Date.now() - staleHours * 60 * 60 * 1000).toISOString();
 
@@ -218,6 +248,7 @@ export async function pruneInactiveGames(env, staleHours) {
       AND finished_at IS NULL
       AND key_status = 'needs_fresh_key'
       AND COALESCE(last_sync_at, created_at) < ?
+      AND ${RELATIONS_CAUGHT_UP}
   `).bind(cutoff).all();
   for (const row of stale.results) {
     await env.DB.prepare(`
@@ -231,13 +262,122 @@ export async function pruneInactiveGames(env, staleHours) {
   await env.DB.prepare(`
     DELETE FROM snapshots
     WHERE pinned = 0
-      AND game_number IN (SELECT game_number FROM games WHERE archived_at IS NOT NULL OR finished_at IS NOT NULL)
+      AND game_number IN (
+        SELECT game_number FROM games
+        WHERE (archived_at IS NOT NULL OR finished_at IS NOT NULL) AND ${RELATIONS_CAUGHT_UP}
+      )
   `).run();
   await env.DB.prepare(`DELETE FROM scan_attempts WHERE attempted_at < ?`).bind(cutoff).run();
 }
 
-export async function pruneFinishedGame(env, gameNumber) {
-  await env.DB.prepare(`DELETE FROM snapshots WHERE game_number = ? AND pinned = 0`).bind(gameNumber).run();
+// Feeds up to `limit` not-yet-processed snapshots (oldest first) through
+// relationship extraction and folds the evidence into `relations`.
+export async function processRelations(env, gameNumber, limit = 4) {
+  const game = await env.DB.prepare(`SELECT relation_tick, relation_state FROM games WHERE game_number = ?`).bind(gameNumber).first();
+  if (!game) return { processed: 0, remaining: 0 };
+
+  let state = game.relation_state ? JSON.parse(game.relation_state) : null;
+  let lastTick = game.relation_tick ?? -1;
+  const rows = await env.DB.prepare(`
+    SELECT id, tick FROM snapshots
+    WHERE game_number = ? AND tick > ?
+    ORDER BY tick ASC, captured_at ASC
+    LIMIT ?
+  `).bind(gameNumber, lastTick, limit).all();
+
+  let processed = 0;
+  for (const meta of rows.results) {
+    if (meta.tick <= lastTick) continue;
+    const row = await env.DB.prepare(`SELECT data_json FROM snapshots WHERE id = ?`).bind(meta.id).first();
+    const result = extractRelations(JSON.parse(row.data_json), state);
+    await env.DB.batch(relationStatements(env, gameNumber, result));
+    state = result.state;
+    lastTick = meta.tick;
+    processed += 1;
+  }
+
+  if (processed) {
+    await env.DB.prepare(`
+      UPDATE games
+      SET relation_tick = ?, relation_state = ?, relation_snapshots = relation_snapshots + ?
+      WHERE game_number = ?
+    `).bind(lastTick, JSON.stringify(state), processed, gameNumber).run();
+  }
+
+  const remaining = await env.DB.prepare(`SELECT COUNT(*) AS n FROM snapshots WHERE game_number = ? AND tick > ?`)
+    .bind(gameNumber, lastTick).first();
+  return { processed, remaining: remaining?.n || 0, relationTick: lastTick };
+}
+
+function relationStatements(env, gameNumber, { tick, observations, events }) {
+  const upsert = env.DB.prepare(`
+    INSERT INTO relations (game_number, kind, a_uid, b_uid, count, weight, ships, first_tick, last_tick, samples_json)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT (game_number, kind, a_uid, b_uid) DO UPDATE SET
+      count = relations.count + excluded.count,
+      weight = relations.weight + excluded.weight,
+      ships = MAX(relations.ships, excluded.ships),
+      last_tick = excluded.last_tick,
+      samples_json = CASE WHEN excluded.samples_json = '[]' THEN relations.samples_json ELSE excluded.samples_json END
+  `);
+  const statements = observations.map((item) => upsert.bind(
+    gameNumber, item.kind, item.a, item.b, 1, 1, item.ships || 0, tick, tick, JSON.stringify((item.samples || []).slice(0, 8))
+  ));
+
+  // Several captures between the same pair in one scan fold into one row update.
+  const grouped = new Map();
+  for (const event of events) {
+    const key = `${event.kind}:${event.a}:${event.b}`;
+    const entry = grouped.get(key) || { ...event, count: 0, weight: 0, samples: [] };
+    entry.count += 1;
+    entry.weight += event.weight;
+    entry.samples.push(event.detail);
+    grouped.set(key, entry);
+  }
+  for (const entry of grouped.values()) {
+    statements.push(upsert.bind(gameNumber, entry.kind, entry.a, entry.b, entry.count, entry.weight, 0, tick, tick, JSON.stringify(entry.samples.slice(0, 8))));
+  }
+
+  const insertEvent = env.DB.prepare(`
+    INSERT INTO relation_events (game_number, tick, kind, a_uid, b_uid, weight, detail) VALUES (?, ?, ?, ?, ?, ?, ?)
+  `);
+  for (const event of events) {
+    statements.push(insertEvent.bind(gameNumber, tick, event.kind, event.a, event.b, event.weight, event.detail));
+  }
+  return statements;
+}
+
+export async function gamesWithPendingRelations(env) {
+  const rows = await env.DB.prepare(`
+    SELECT game_number FROM games WHERE NOT (${RELATIONS_CAUGHT_UP})
+  `).all();
+  return rows.results.map((row) => row.game_number);
+}
+
+export async function relationRows(env, gameNumber) {
+  const rows = await env.DB.prepare(`SELECT * FROM relations WHERE game_number = ?`).bind(gameNumber).all();
+  return rows.results.map((row) => ({
+    kind: row.kind,
+    a: row.a_uid,
+    b: row.b_uid,
+    count: row.count,
+    weight: row.weight,
+    ships: row.ships,
+    firstTick: row.first_tick,
+    lastTick: row.last_tick,
+    samples: JSON.parse(row.samples_json || "[]")
+  }));
+}
+
+export async function recentRelationEvents(env, gameNumber, limit = 300) {
+  const rows = await env.DB.prepare(`
+    SELECT tick, kind, a_uid, b_uid, weight, detail
+    FROM relation_events
+    WHERE game_number = ?
+    ORDER BY tick DESC, id DESC
+    LIMIT ?
+  `).bind(gameNumber, limit).all();
+  return rows.results.map((row) => ({ tick: row.tick, kind: row.kind, a: row.a_uid, b: row.b_uid, weight: row.weight, detail: row.detail }));
 }
 
 export async function pinSnapshot(env, snapshotId, label = null) {
@@ -435,6 +575,11 @@ function gameFromRow(row) {
     createdAt: row.created_at,
     updatedAt: row.updated_at,
     archivedAt: row.archived_at || null,
+    nickname: row.nickname || "",
+    playerCount: row.player_count ?? null,
+    myAlias: row.my_alias || "",
+    relationTick: row.relation_tick ?? null,
+    relationSnapshots: row.relation_snapshots ?? 0,
     finishedAt: row.finished_at || null,
     apiKeyPreview: maskKey(row.code)
   };

@@ -1,0 +1,24 @@
+name: Preview diplomacy intel
+
+# Manual check: runs the relationship inference over stored scans and logs
+# the teams, wars and tech trades it finds.
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "scripts/preview-diplomacy.mjs"
+      - "backend/src/relations.js"
+      - "backend/src/diplomacy.js"
+      - ".github/workflows/preview-diplomacy.yml"
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/preview-diplomacy.mjs
+        env:
+          BACKEND_URL: ${{ vars.NP_BACKEND_URL }}

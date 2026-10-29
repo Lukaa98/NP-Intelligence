@@ -1,3 +1,4 @@
+import { buildDiplomacy } from "./diplomacy.js";
 import { diffSnapshots, strategicIntel, summarize } from "./intel.js";
 import { fetchScan, isGameOver, NeptuneApiError } from "./npApi.js";
 import {
@@ -17,13 +18,17 @@ import {
   listSnapshotMeta,
   markKeyProblem,
   pinSnapshot,
-  pruneFinishedGame,
+  gamesWithPendingRelations,
+  processRelations,
   pruneInactiveGames,
   purgeGame,
+  recentRelationEvents,
   recordScanAttempt,
+  relationRows,
   restoreGame,
   savePlayerNote,
   saveSnapshot,
+  setNickname,
   unpinSnapshot,
   updateGameAfterScan,
   upsertGame
@@ -33,9 +38,11 @@ import {
 // deletes finished games): its last state is pinned and its history dropped.
 const STALE_GAME_HOURS = 48;
 
-// Paused until relationship intel can be extracted from a game's history
-// before it is dropped; flip back to true once that backfill exists.
-const HISTORY_PRUNING_ENABLED = false;
+// Snapshots fed through relationship extraction per game per cron run, and
+// per manual "analyze" request. Each one parses a full scan (up to ~1 MB).
+const RELATION_BATCH_CRON = 6;
+const RELATION_BUDGET_CRON = 18;
+const RELATION_BATCH_REQUEST = 3;
 
 const CORS_HEADERS = {
   "access-control-allow-origin": "*",
@@ -135,6 +142,26 @@ export default {
         return captureGame(env, gameNumber);
       }
 
+      if (request.method === "PUT" && matchPath(url.pathname, "/api/games/:gameNumber")) {
+        const { gameNumber } = pathParams(url.pathname, "/api/games/:gameNumber");
+        const payload = await request.json();
+        if (payload.nickname !== undefined) {
+          await setNickname(env, gameNumber, payload.nickname);
+        }
+        const game = await getGame(env, gameNumber);
+        return game ? json({ game }) : json({ error: "Game not found" }, 404);
+      }
+
+      if (request.method === "POST" && matchPath(url.pathname, "/api/games/:gameNumber/relations/process")) {
+        const { gameNumber } = pathParams(url.pathname, "/api/games/:gameNumber/relations/process");
+        return json(await processRelations(env, gameNumber, RELATION_BATCH_REQUEST));
+      }
+
+      if (request.method === "GET" && matchPath(url.pathname, "/api/games/:gameNumber/diplomacy")) {
+        const { gameNumber } = pathParams(url.pathname, "/api/games/:gameNumber/diplomacy");
+        return diplomacyForGame(env, gameNumber);
+      }
+
       if (request.method === "POST" && matchPath(url.pathname, "/api/games/:gameNumber/restore")) {
         const { gameNumber } = pathParams(url.pathname, "/api/games/:gameNumber/restore");
         await restoreGame(env, gameNumber);
@@ -201,9 +228,16 @@ export default {
     const games = await enabledGamesWithCodes(env);
     ctx.waitUntil((async () => {
       await Promise.all(games.map((game) => scanSavedGame(env, game, "scheduler")));
-      if (HISTORY_PRUNING_ENABLED) {
-        await pruneInactiveGames(env, STALE_GAME_HOURS);
+      // Spread backlogs (e.g. a fresh backfill) over several runs so one cron
+      // invocation never parses more than RELATION_BUDGET_CRON snapshots.
+      let budget = RELATION_BUDGET_CRON;
+      for (const gameNumber of await gamesWithPendingRelations(env)) {
+        if (budget <= 0) break;
+        const { processed } = await processRelations(env, gameNumber, Math.min(RELATION_BATCH_CRON, budget));
+        budget -= Math.max(processed, 1);
       }
+      // Only prunes games whose history relationship intel has fully read.
+      await pruneInactiveGames(env, STALE_GAME_HOURS);
     })());
   }
 };
@@ -238,6 +272,45 @@ async function createGame(request, env) {
   }
 }
 
+async function diplomacyForGame(env, gameNumber) {
+  const game = await getGame(env, gameNumber);
+  if (!game) {
+    return json({ error: "Game not found" }, 404);
+  }
+
+  const [rows, events, latest, pending] = await Promise.all([
+    relationRows(env, gameNumber),
+    recentRelationEvents(env, gameNumber),
+    latestSnapshot(env, gameNumber),
+    env.DB.prepare(`SELECT COUNT(*) AS n FROM snapshots WHERE game_number = ? AND tick > ?`).bind(gameNumber, game.relationTick ?? -1).first()
+  ]);
+
+  const players = Object.values(latest?.data?.players || {}).map((player) => ({
+    uid: player.uid,
+    alias: player.alias,
+    color: player.color,
+    shape: player.shape,
+    totalStars: player.totalStars ?? player.total_stars ?? 0,
+    totalStrength: player.totalStrength ?? player.total_strength ?? 0,
+    conceded: player.conceded || 0,
+    ai: player.ai || 0
+  }));
+
+  return json({
+    gameNumber,
+    pendingSnapshots: pending?.n || 0,
+    players,
+    ...buildDiplomacy({
+      rows,
+      events,
+      players,
+      viewerUid: latest?.data?.playerUid ?? latest?.data?.player_uid ?? null,
+      snapshotsProcessed: game.relationSnapshots,
+      latestTick: game.relationTick ?? 0
+    })
+  });
+}
+
 async function scanGame(env, gameNumber) {
   const game = await gameWithCode(env, gameNumber);
   if (!game) {
@@ -245,6 +318,9 @@ async function scanGame(env, gameNumber) {
   }
 
   const result = await scanSavedGame(env, game, "backend-manual");
+  if (result.ok) {
+    await processRelations(env, gameNumber, RELATION_BATCH_REQUEST);
+  }
   return result.ok ? json(result) : json({ error: result.error }, 400);
 }
 
@@ -296,10 +372,6 @@ async function scanSavedGame(env, game, source, { pin = false } = {}) {
     const snapshot = await saveSnapshot(env, game.gameNumber, scanningData, source, { pinned: pin || finished, label });
     await updateGameAfterScan(env, game.gameNumber, scanningData, { finished });
     await recordScanAttempt(env, { gameNumber: game.gameNumber, source, success: true });
-    if (finished && HISTORY_PRUNING_ENABLED) {
-      // The game is over: keep the pinned final state, drop the hourly history.
-      await pruneFinishedGame(env, game.gameNumber);
-    }
     return { ok: true, gameNumber: game.gameNumber, snapshot: { ...snapshot, data: undefined } };
   } catch (error) {
     if (error instanceof NeptuneApiError) {

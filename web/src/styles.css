@@ -158,3 +158,41 @@ input:focus, textarea:focus { outline: 2px solid var(--accent-2); outline-offset
   .search { width: 100%; }
   .map-page { height: calc(100vh - 53px); }
 }
+
+.name-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.icon-button { padding: 2px 8px; border: 1px solid transparent; color: var(--muted); font-size: 15px; }
+.icon-button:hover { border-color: var(--line); color: var(--text); }
+.rename-form { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.rename-form input { width: min(320px, 70vw); }
+
+.diplomacy h3 { margin-top: 6px; }
+.progress { display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--muted); }
+.progress .bar { height: 6px; border-radius: 3px; background: #0b0a1f; overflow: hidden; }
+.progress .bar div { height: 100%; background: var(--accent-2); transition: width 0.3s; }
+.team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
+.team-card { background: #0b0a1f; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
+.team-card.mine { border-color: var(--success); }
+.team-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.team-members { display: flex; flex-wrap: wrap; gap: 6px; }
+.member { display: flex; align-items: center; gap: 6px; padding: 3px 8px; background: #14123a; border: 1px solid transparent; }
+.member:hover { border-color: var(--accent-2); }
+.player-badge { display: inline-flex; align-items: center; gap: 5px; color: var(--accent); }
+.player-badge svg { flex: none; }
+.player-badge.out { color: #8e7a66; }
+.chip-row { display: flex; flex-wrap: wrap; gap: 6px; max-height: 150px; overflow-y: auto; }
+.chip { padding: 3px 8px; background: #0b0a1f; border: 1px solid var(--line); font-size: 13px; }
+.chip.active { border-color: var(--accent); background: #232060; }
+.relation-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.relation-list li { background: #0b0a1f; border-radius: 6px; padding: 8px 10px; border-left: 3px solid var(--line); }
+.relation-list li.allied { border-left-color: var(--success); }
+.relation-list li.possible_allies, .relation-list li.peaceful { border-left-color: #7fbf9f; }
+.relation-list li.war, .relation-list li.former_allies { border-left-color: var(--danger); }
+.relation-list li.tension { border-left-color: #ffc000; }
+.relation-list li.trade { border-left-color: var(--accent-2); }
+.relation-list.compact li { padding: 6px 10px; }
+.relation-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.status { font-size: 12px; padding: 1px 8px; border-radius: 999px; background: rgba(255, 255, 255, 0.08); }
+.status.allied { color: var(--success); background: rgba(105, 211, 159, 0.15); }
+.status.war, .status.former_allies { color: var(--danger); background: rgba(255, 123, 110, 0.15); }
+.status.tension { color: #ffc000; }
+.two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }

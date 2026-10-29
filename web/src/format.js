@@ -12,3 +12,17 @@ export function renderMentions(text) {
 export function notesForExport(notes) {
   return Object.fromEntries(notes.list.map((item) => [item.aliasKey, { rating: item.rating, note: item.note }]));
 }
+
+// Your nickname wins; the NP name stays visible as secondary text.
+export function gameTitle(game, gameNumber) {
+  return game?.nickname || game?.name || `Game ${game?.gameNumber || gameNumber}`;
+}
+
+export function gameFacts(game) {
+  const parts = [];
+  if (game.nickname && game.name) parts.push(game.name);
+  parts.push(`#${game.gameNumber}`);
+  if (game.playerCount) parts.push(`${game.playerCount} players`);
+  if (game.myAlias) parts.push(`you: ${game.myAlias}`);
+  return parts.join(" · ");
+}

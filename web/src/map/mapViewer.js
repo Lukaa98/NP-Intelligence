@@ -292,6 +292,8 @@ function noteIcon(note) {
  *   notes: { [lowercased alias]: { rating, note } } shown next to players
  *   onPlayerSelect(player | null): called when a player is opened
  *   showSidebar: default true
+ *   relations: [{ a, b, status, allyScore, warScore }] diplomacy pairs to draw
+ *              as lines between empires (toggle with the ⚭ button)
  */
 export function mountMap(container, snapshot, options = {}) {
   if (!document.getElementById(STYLE_ID)) {
@@ -304,6 +306,8 @@ export function mountMap(container, snapshot, options = {}) {
   const model = normalizeSnapshot(snapshot);
   const ranked = rankPlayers(model.players);
   let notes = options.notes || {};
+  let relations = options.relations || [];
+  let showRelations = Boolean(options.showRelations ?? relations.length);
 
   container.innerHTML = `
     <div class="npmap">
@@ -320,6 +324,7 @@ export function mountMap(container, snapshot, options = {}) {
         <canvas></canvas>
         <div class="npmap-tools">
           <button type="button" data-act="side" title="Toggle leaderboard">☰</button>
+          <button type="button" data-act="relations" title="Show alliances and wars">⚭</button>
           <button type="button" data-act="in" title="Zoom in">+</button>
           <button type="button" data-act="out" title="Zoom out">−</button>
           <button type="button" data-act="fit" title="Fit galaxy">⤢</button>
@@ -502,6 +507,8 @@ export function mountMap(container, snapshot, options = {}) {
     const dim = (puid) => focus && puid !== focus.uid;
     const r = Math.max(3, Math.min(view.scale * 0.09, 14));
 
+    if (showRelations && relations.length) drawRelations(focus);
+
     // Fleet routes first so stars draw on top.
     ctx.setLineDash([4, 4]);
     ctx.lineWidth = 1;
@@ -578,6 +585,40 @@ export function mountMap(container, snapshot, options = {}) {
         ctx.fillText(String(fleet.ships), sx + r * 0.6, sy - r * 0.6);
       }
     }
+    ctx.globalAlpha = 1;
+  }
+
+  // Alliance (green) and war (red) lines between each empire's centre of mass.
+  const centres = new Map();
+  for (const player of model.players) {
+    const owned = model.stars.filter((star) => star.puid === player.uid);
+    if (!owned.length) continue;
+    centres.set(player.uid, {
+      x: owned.reduce((sum, star) => sum + star.x, 0) / owned.length,
+      y: owned.reduce((sum, star) => sum + star.y, 0) / owned.length
+    });
+  }
+
+  function drawRelations(focus) {
+    for (const pair of relations) {
+      const from = centres.get(pair.a);
+      const to = centres.get(pair.b);
+      if (!from || !to) continue;
+      if (focus && pair.a !== focus.uid && pair.b !== focus.uid) continue;
+      const allied = pair.status === "allied" || pair.status === "possible_allies";
+      const hostile = pair.status === "war" || pair.status === "former_allies" || pair.status === "tension";
+      if (!allied && !hostile) continue;
+      const strength = allied ? pair.allyScore : pair.warScore;
+      ctx.globalAlpha = 0.25 + strength * 0.6;
+      ctx.strokeStyle = allied ? "#69d39f" : pair.status === "tension" ? "#ffc000" : "#ff6b5e";
+      ctx.lineWidth = 1 + strength * 4;
+      ctx.setLineDash(pair.status === "possible_allies" || pair.status === "tension" ? [6, 5] : []);
+      ctx.beginPath();
+      ctx.moveTo(...toScreen(from.x, from.y));
+      ctx.lineTo(...toScreen(to.x, to.y));
+      ctx.stroke();
+    }
+    ctx.setLineDash([]);
     ctx.globalAlpha = 1;
   }
 
@@ -689,6 +730,10 @@ export function mountMap(container, snapshot, options = {}) {
     if (action === "in") zoomAt(1.4, width / 2, height / 2);
     if (action === "out") zoomAt(1 / 1.4, width / 2, height / 2);
     if (action === "fit") fitTo(model.stars);
+    if (action === "relations") {
+      showRelations = !showRelations;
+      draw();
+    }
     if (action === "side") {
       side.classList.toggle("collapsed");
       requestAnimationFrame(resize);
@@ -702,6 +747,11 @@ export function mountMap(container, snapshot, options = {}) {
 
   return {
     model,
+    setRelations(nextRelations) {
+      relations = nextRelations || [];
+      if (options.showRelations === undefined) showRelations = relations.length > 0;
+      draw();
+    },
     setNotes(nextNotes) {
       notes = nextNotes || {};
       renderList();

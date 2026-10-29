@@ -61,6 +61,9 @@ export const api = {
   captureGame: (gameNumber) => request(`${game(gameNumber)}/capture`, { method: "POST" }),
   archiveGame: (gameNumber) => request(game(gameNumber), { method: "DELETE" }),
   purgeGame: (gameNumber) => request(`${game(gameNumber)}?purge=1`, { method: "DELETE" }),
+  renameGame: (gameNumber, nickname) => request(game(gameNumber), { method: "PUT", body: JSON.stringify({ nickname }) }),
+  diplomacy: (gameNumber) => request(`${game(gameNumber)}/diplomacy`),
+  processRelations: (gameNumber) => request(`${game(gameNumber)}/relations/process`, { method: "POST" }),
   restoreGame: (gameNumber) => request(`${game(gameNumber)}/restore`, { method: "POST" }),
   intel: (gameNumber, window) => request(`${game(gameNumber)}/intel?window=${encodeURIComponent(window)}`),
   snapshots: (gameNumber, { pinnedOnly = false, limit = 100 } = {}) =>

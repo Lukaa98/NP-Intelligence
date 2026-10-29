@@ -2,9 +2,11 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { api } from "../api.js";
 import { navigate } from "../router.js";
 import { buildPlayerIntel } from "../intel.js";
-import { formatDateTime, notesForExport, renderMentions } from "../format.js";
+import { formatDateTime, gameFacts, gameTitle, notesForExport, renderMentions } from "../format.js";
 import { downloadStandaloneHtml } from "../map/exportHtml.js";
 import PlayerRating from "../components/PlayerRating.jsx";
+import Diplomacy from "../components/Diplomacy.jsx";
+import RenameGame from "../components/RenameGame.jsx";
 
 const WINDOWS = [
   ["latest", "Latest"],
@@ -22,6 +24,7 @@ export default function GamePage({ gameNumber, notes }) {
   const [showAllSnapshots, setShowAllSnapshots] = useState(false);
   const [status, setStatus] = useState("");
   const [busy, setBusy] = useState(false);
+  const [diplomacyKey, setDiplomacyKey] = useState(0);
 
   const loadGame = useCallback(async () => {
     const games = await api.listGames();
@@ -57,7 +60,7 @@ export default function GamePage({ gameNumber, notes }) {
     }
   }
 
-  const gameContext = { gameNumber, gameName: game?.name || `Game ${gameNumber}` };
+  const gameContext = { gameNumber, gameName: gameTitle(game, gameNumber) };
   const players = useMemo(() => intel ? buildPlayerIntel(intel.summary || {}, intel.events || []) : [], [intel]);
   const activePlayer = players.find((player) => player.name === selectedPlayer) || players[0] || null;
   const captures = snapshots.filter((snapshot) => snapshot.pinned);
@@ -66,8 +69,8 @@ export default function GamePage({ gameNumber, notes }) {
 
   async function download(snapshotId) {
     await run("Building HTML", async () => {
-      const snapshot = await api.snapshot(snapshotId);
-      downloadStandaloneHtml(snapshot, notesForExport(notes));
+      const [snapshot, diplomacy] = await Promise.all([api.snapshot(snapshotId), api.diplomacy(gameNumber).catch(() => null)]);
+      downloadStandaloneHtml(snapshot, notesForExport(notes), diplomacy?.pairs || []);
       return "Downloaded a standalone HTML copy. It opens offline in any browser.";
     });
   }
@@ -77,7 +80,11 @@ export default function GamePage({ gameNumber, notes }) {
       <section className="hero card">
         <div>
           <p className="eyebrow"><a href="#/">Games</a> / #{gameNumber}</p>
-          <h1>{game?.name || `Game ${gameNumber}`}</h1>
+          <div className="name-row">
+            <h1>{gameTitle(game, gameNumber)}</h1>
+            {game && <RenameGame game={game} onRenamed={setGame} />}
+          </div>
+          {game && <p className="muted small">{gameFacts(game)}</p>}
           <p className="muted">
             Tick {game?.lastTick ?? "?"} · last scan {formatDateTime(game?.lastSyncAt)}
             {game?.finishedAt && " · game finished"}
@@ -95,6 +102,7 @@ export default function GamePage({ gameNumber, notes }) {
           {!game?.archivedAt && <button type="button" className="secondary" disabled={busy} onClick={() => run("Scanning", async () => {
             const payload = await api.scanGame(gameNumber);
             await Promise.all([loadGame(), loadSnapshots(), loadIntel()]);
+            setDiplomacyKey((value) => value + 1);
             return payload.unchanged
               ? `No new tick yet (still tick ${payload.snapshot.tick}).`
               : `Scanned. Latest tick ${payload.snapshot.tick}.`;
@@ -116,6 +124,8 @@ export default function GamePage({ gameNumber, notes }) {
       </section>
 
       {status && <p className="status banner">{status}</p>}
+
+      <Diplomacy gameNumber={gameNumber} refreshKey={diplomacyKey} />
 
       <section className="card">
         <div className="section-head">

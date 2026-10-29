@@ -7,6 +7,6 @@
     "dev": "npm --prefix web run dev",
     "build": "npm --prefix web run build",
     "check": "node --check backend/src/index.js && node --check backend/src/store.js && node --check backend/src/intel.js && node --check backend/src/npApi.js && node --check web/src/map/mapViewer.js",
-    "test": "node scripts/test-intel.mjs"
+    "test": "node scripts/test-intel.mjs && node scripts/test-relations.mjs"
   }
 }
