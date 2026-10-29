@@ -33,6 +33,10 @@ import {
 // deletes finished games): its last state is pinned and its history dropped.
 const STALE_GAME_HOURS = 48;
 
+// Paused until relationship intel can be extracted from a game's history
+// before it is dropped; flip back to true once that backfill exists.
+const HISTORY_PRUNING_ENABLED = false;
+
 const CORS_HEADERS = {
   "access-control-allow-origin": "*",
   "access-control-allow-methods": "GET,POST,PUT,DELETE,OPTIONS",
@@ -197,7 +201,9 @@ export default {
     const games = await enabledGamesWithCodes(env);
     ctx.waitUntil((async () => {
       await Promise.all(games.map((game) => scanSavedGame(env, game, "scheduler")));
-      await pruneInactiveGames(env, STALE_GAME_HOURS);
+      if (HISTORY_PRUNING_ENABLED) {
+        await pruneInactiveGames(env, STALE_GAME_HOURS);
+      }
     })());
   }
 };
@@ -290,7 +296,7 @@ async function scanSavedGame(env, game, source, { pin = false } = {}) {
     const snapshot = await saveSnapshot(env, game.gameNumber, scanningData, source, { pinned: pin || finished, label });
     await updateGameAfterScan(env, game.gameNumber, scanningData, { finished });
     await recordScanAttempt(env, { gameNumber: game.gameNumber, source, success: true });
-    if (finished) {
+    if (finished && HISTORY_PRUNING_ENABLED) {
       // The game is over: keep the pinned final state, drop the hourly history.
       await pruneFinishedGame(env, game.gameNumber);
     }
