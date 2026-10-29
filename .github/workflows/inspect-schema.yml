@@ -4,6 +4,10 @@ name: Inspect NP data shape
 # snapshot so new intel features can be built against real field names.
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - "scripts/inspect-schema.mjs"
+      - ".github/workflows/inspect-schema.yml"
 
 jobs:
   inspect:
