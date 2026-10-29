@@ -62,7 +62,7 @@ export default function GamesPage() {
         <div>
           <p className="eyebrow">Neptune's Pride intel</p>
           <h1>Your games</h1>
-          <p className="muted">Tracked games are scanned every hour. The last 48 hours of scans power the intel; your captures and each game's final state are kept forever, so finished games stay viewable after Neptune's Pride deletes them.</p>
+          <p className="muted">Tracked games are scanned every hour, and their full history is kept while they run. When a game ends or you delete it, only its final state and your captures are kept, so finished games stay viewable after Neptune's Pride deletes them.</p>
         </div>
         <button type="button" className="primary" onClick={() => setFormOpen((open) => !open)}>
           {formOpen ? "Hide form" : "Track a game"}

@@ -205,9 +205,34 @@ export async function latestSnapshotMeta(env, gameNumber) {
   return latest || null;
 }
 
-export async function pruneOldSnapshots(env, retentionHours) {
-  const cutoff = new Date(Date.now() - retentionHours * 60 * 60 * 1000).toISOString();
-  await env.DB.prepare(`DELETE FROM snapshots WHERE pinned = 0 AND captured_at < ?`).bind(cutoff).run();
+// History is kept in full while a game is live. Once a game stops producing
+// data (finished, deleted by you, or NP has refused scans for `staleHours`),
+// its latest scan is pinned and the unpinned hourly history is dropped.
+export async function pruneInactiveGames(env, staleHours) {
+  const cutoff = new Date(Date.now() - staleHours * 60 * 60 * 1000).toISOString();
+
+  const stale = await env.DB.prepare(`
+    SELECT game_number
+    FROM games
+    WHERE archived_at IS NULL
+      AND finished_at IS NULL
+      AND key_status = 'needs_fresh_key'
+      AND COALESCE(last_sync_at, created_at) < ?
+  `).bind(cutoff).all();
+  for (const row of stale.results) {
+    await env.DB.prepare(`
+      UPDATE snapshots
+      SET pinned = 1, label = COALESCE(label, 'Last known state')
+      WHERE id = (SELECT id FROM snapshots WHERE game_number = ? ORDER BY captured_at DESC LIMIT 1)
+    `).bind(row.game_number).run();
+    await env.DB.prepare(`DELETE FROM snapshots WHERE game_number = ? AND pinned = 0`).bind(row.game_number).run();
+  }
+
+  await env.DB.prepare(`
+    DELETE FROM snapshots
+    WHERE pinned = 0
+      AND game_number IN (SELECT game_number FROM games WHERE archived_at IS NOT NULL OR finished_at IS NOT NULL)
+  `).run();
   await env.DB.prepare(`DELETE FROM scan_attempts WHERE attempted_at < ?`).bind(cutoff).run();
 }
 

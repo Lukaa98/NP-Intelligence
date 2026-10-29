@@ -18,7 +18,7 @@ import {
   markKeyProblem,
   pinSnapshot,
   pruneFinishedGame,
-  pruneOldSnapshots,
+  pruneInactiveGames,
   purgeGame,
   recordScanAttempt,
   restoreGame,
@@ -29,9 +29,9 @@ import {
   upsertGame
 } from "./store.js";
 
-// Unpinned scans older than this are deleted; it covers the longest intel
-// window (32h). Pinned captures and final states are kept forever.
-const HISTORY_RETENTION_HOURS = 48;
+// A live game whose scans have failed for this long is treated as gone (NP
+// deletes finished games): its last state is pinned and its history dropped.
+const STALE_GAME_HOURS = 48;
 
 const CORS_HEADERS = {
   "access-control-allow-origin": "*",
@@ -53,7 +53,7 @@ export default {
           ok: true,
           schedulerEnabled: true,
           scanIntervalHours: 1,
-          historyRetentionHours: HISTORY_RETENTION_HOURS,
+          staleGameHours: STALE_GAME_HOURS,
           writeTokenRequired: Boolean(env.ADMIN_TOKEN)
         });
       }
@@ -177,7 +177,7 @@ export default {
           await purgeGame(env, gameNumber);
         } else {
           // Pin the latest scan so a deleted game always keeps a viewable map;
-          // its unpinned history then ages out like everything else.
+          // the next cron run drops its unpinned history.
           const latest = await latestSnapshotMeta(env, gameNumber);
           if (latest && !latest.pinned) {
             await pinSnapshot(env, latest.id, "Last state before delete");
@@ -197,7 +197,7 @@ export default {
     const games = await enabledGamesWithCodes(env);
     ctx.waitUntil((async () => {
       await Promise.all(games.map((game) => scanSavedGame(env, game, "scheduler")));
-      await pruneOldSnapshots(env, HISTORY_RETENTION_HOURS);
+      await pruneInactiveGames(env, STALE_GAME_HOURS);
     })());
   }
 };

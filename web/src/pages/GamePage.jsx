@@ -196,7 +196,7 @@ export default function GamePage({ gameNumber, notes }) {
 
       <section className="card">
         <div className="section-head">
-          <h2>Snapshot history <span className="muted">({snapshots.length}, last 48h + pinned)</span></h2>
+          <h2>Snapshot history <span className="muted">({snapshots.length})</span></h2>
           {snapshots.length > 12 && (
             <button type="button" className="ghost" onClick={() => setShowAllSnapshots((value) => !value)}>
               {showAllSnapshots ? "Show fewer" : "Show all"}

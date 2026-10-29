@@ -23,10 +23,12 @@ Neptune's Pride intel dashboard: track your games, keep their history after NP d
 ## What gets kept
 
 - Running games are scanned every hour (at :07). A scan on the same tick as the previous one isn't stored again.
-- Ordinary scans are kept for **48 hours**, enough for the 32h intel window, and then deleted.
-- **Kept forever:** pinned captures, the automatic *Final state* when a game ends, and player notes.
-- When a game ends, its hourly history is deleted right away and only the final state stays.
-- Deleting a game pins its latest scan first, so every deleted game keeps at least one map.
+- **While a game is live, its full scan history is kept.**
+- Once a game stops producing data, its latest state is pinned and the rest of its history is deleted. That happens when:
+  - the game ends (pinned as *Final state*),
+  - you delete it (pinned as *Last state before delete*), or
+  - NP refuses scans for 48 hours, e.g. NP deleted the game or the key expired (pinned as *Last known state*).
+- **Kept forever:** pinned captures, those final states, and player notes.
 
 ## Deploying
 
