@@ -1,0 +1,18 @@
+name: Inspect NP data shape
+
+# Manual helper: logs the structure (not the contents) of the newest stored
+# snapshot so new intel features can be built against real field names.
+on:
+  workflow_dispatch:
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/inspect-schema.mjs
+        env:
+          BACKEND_URL: ${{ vars.NP_BACKEND_URL }}
