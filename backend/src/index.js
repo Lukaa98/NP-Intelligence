@@ -19,6 +19,7 @@ import {
   markKeyProblem,
   pinSnapshot,
   gamesWithPendingRelations,
+  pendingRelationSnapshots,
   processRelations,
   pruneInactiveGames,
   purgeGame,
@@ -282,7 +283,7 @@ async function diplomacyForGame(env, gameNumber) {
     relationRows(env, gameNumber),
     recentRelationEvents(env, gameNumber),
     latestSnapshot(env, gameNumber),
-    env.DB.prepare(`SELECT COUNT(*) AS n FROM snapshots WHERE game_number = ? AND tick > ?`).bind(gameNumber, game.relationTick ?? -1).first()
+    pendingRelationSnapshots(env, gameNumber)
   ]);
 
   const players = Object.values(latest?.data?.players || {}).map((player) => ({
@@ -298,7 +299,7 @@ async function diplomacyForGame(env, gameNumber) {
 
   return json({
     gameNumber,
-    pendingSnapshots: pending?.n || 0,
+    pendingSnapshots: pending,
     players,
     ...buildDiplomacy({
       rows,

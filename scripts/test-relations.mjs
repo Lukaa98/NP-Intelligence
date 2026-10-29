@@ -70,3 +70,34 @@ assert.equal(status(5, 6), "war");
 const teams = diplomacy.teams.map((team) => team.members.slice().sort());
 assert.deepEqual(teams.sort(), [[1, 2], [3, 4]]);
 console.log("Relationship intel tests passed.");
+
+// Team building must not chain rival blocs through a single weak link:
+// 1-2 and 3-4 are allied, 2-3 is allied, but 1 is at war with 4.
+const pair = (a, b, kind, extra = {}) => ({ kind, a, b, count: 3, weight: 3, ships: 0, firstTick: 1, lastTick: 10, samples: [], ...extra });
+const vetoed = buildDiplomacy({
+  rows: [
+    pair(1, 2, "guest"), pair(2, 1, "guest"),
+    pair(3, 4, "guest"), pair(4, 3, "guest"),
+    pair(2, 3, "guest", { count: 2 }),
+    pair(1, 4, "capture", { count: 4 })
+  ],
+  events: [],
+  players: [1, 2, 3, 4].map((uid) => ({ uid, alias: `P${uid}`, totalStars: 10 })),
+  viewerUid: 99,
+  snapshotsProcessed: 10,
+  latestTick: 10
+});
+assert.equal(vetoed.teams.length, 2, "war between 1 and 4 keeps the blocs apart");
+assert(vetoed.teams.every((team) => team.members.length === 2));
+
+// A formal alliance seen earlier but not in the newest scan is no longer current.
+const lapsed = buildDiplomacy({
+  rows: [pair(1, 2, "ally_confirmed", { lastTick: 5 })],
+  events: [],
+  players: [1, 2].map((uid) => ({ uid, alias: `P${uid}`, totalStars: 10 })),
+  viewerUid: 1,
+  snapshotsProcessed: 10,
+  latestTick: 10
+});
+assert.equal(lapsed.pairs[0].status, "former_allies");
+console.log("Team-building tests passed.");

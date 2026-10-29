@@ -1,4 +1,4 @@
-import { extractRelations } from "./relations.js";
+import { extractRelations, RELATIONS_VERSION } from "./relations.js";
 
 function nowIso() {
   return new Date().toISOString();
@@ -234,9 +234,14 @@ export async function latestSnapshotMeta(env, gameNumber) {
 // its latest scan is pinned and the unpinned hourly history is dropped, but
 // only after relationship intel has processed every snapshot, so the alliance
 // and war record outlives the snapshots it came from.
-const RELATIONS_CAUGHT_UP = `
+const RELATIONS_CAUGHT_UP = `(
   COALESCE(games.relation_tick, -1) >= COALESCE((SELECT MAX(tick) FROM snapshots s WHERE s.game_number = games.game_number), -1)
-`;
+  AND (
+    games.relation_state IS NULL
+    OR COALESCE(json_extract(games.relation_state, '$.version'), 1) = ${RELATIONS_VERSION}
+    OR NOT EXISTS (SELECT 1 FROM snapshots s WHERE s.game_number = games.game_number AND s.pinned = 0)
+  )
+)`;
 
 export async function pruneInactiveGames(env, staleHours) {
   const cutoff = new Date(Date.now() - staleHours * 60 * 60 * 1000).toISOString();
@@ -278,6 +283,23 @@ export async function processRelations(env, gameNumber, limit = 4) {
 
   let state = game.relation_state ? JSON.parse(game.relation_state) : null;
   let lastTick = game.relation_tick ?? -1;
+
+  // Evidence from older extraction rules is rebuilt while the hourly history
+  // it came from still exists; once that is pruned the old evidence is kept.
+  if (state && state.version !== RELATIONS_VERSION) {
+    const history = await env.DB.prepare(`SELECT COUNT(*) AS n FROM snapshots WHERE game_number = ? AND pinned = 0`).bind(gameNumber).first();
+    if (history?.n > 0) {
+      await env.DB.batch([
+        env.DB.prepare(`DELETE FROM relations WHERE game_number = ?`).bind(gameNumber),
+        env.DB.prepare(`DELETE FROM relation_events WHERE game_number = ?`).bind(gameNumber),
+        env.DB.prepare(`UPDATE games SET relation_tick = NULL, relation_state = NULL, relation_snapshots = 0 WHERE game_number = ?`).bind(gameNumber)
+      ]);
+      state = null;
+      lastTick = -1;
+    } else {
+      state.version = RELATIONS_VERSION;
+    }
+  }
   const rows = await env.DB.prepare(`
     SELECT id, tick FROM snapshots
     WHERE game_number = ? AND tick > ?
@@ -345,6 +367,23 @@ function relationStatements(env, gameNumber, { tick, observations, events }) {
     statements.push(insertEvent.bind(gameNumber, tick, event.kind, event.a, event.b, event.weight, event.detail));
   }
   return statements;
+}
+
+// Snapshots still to process for a game, counting a full rebuild when its
+// evidence came from older extraction rules and its history still exists.
+export async function pendingRelationSnapshots(env, gameNumber) {
+  const row = await env.DB.prepare(`
+    SELECT
+      CASE WHEN ${RELATIONS_CAUGHT_UP} THEN 0
+        WHEN games.relation_state IS NOT NULL
+          AND COALESCE(json_extract(games.relation_state, '$.version'), 1) != ${RELATIONS_VERSION}
+          THEN (SELECT COUNT(*) FROM snapshots s WHERE s.game_number = games.game_number)
+        ELSE (SELECT COUNT(*) FROM snapshots s WHERE s.game_number = games.game_number AND s.tick > COALESCE(games.relation_tick, -1))
+      END AS n
+    FROM games
+    WHERE game_number = ?
+  `).bind(gameNumber).first();
+  return row?.n || 0;
 }
 
 export async function gamesWithPendingRelations(env) {

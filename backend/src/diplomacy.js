@@ -14,6 +14,7 @@ export function buildDiplomacy({ rows, events, players, viewerUid, snapshotsProc
       pairs.set(key, {
         a, b,
         confirmed: false,
+        confirmedLastTick: -1,
         guest: { ab: 0, ba: 0, ships: 0, lastTick: -1, samples: [] },
         route: { ab: 0, ba: 0, shipsAB: 0, shipsBA: 0, lastTick: -1, samples: [] },
         captures: { ab: 0, ba: 0, lastTick: -1 },
@@ -28,7 +29,11 @@ export function buildDiplomacy({ rows, events, players, viewerUid, snapshotsProc
     if (row.a === row.b) continue;
     const pair = pairFor(row.a, row.b);
     const forward = row.a === pair.a;
-    if (row.kind === "ally_confirmed") pair.confirmed = true;
+    if (row.kind === "ally_confirmed") {
+      // Only an alliance present in the newest scan is current.
+      pair.confirmedLastTick = Math.max(pair.confirmedLastTick, row.lastTick);
+      pair.confirmed = pair.confirmedLastTick >= latestTick;
+    }
     if (row.kind === "contact") pair.contact += row.count;
     if (row.kind === "guest") {
       pair.guest[forward ? "ab" : "ba"] += row.count;
@@ -54,7 +59,7 @@ export function buildDiplomacy({ rows, events, players, viewerUid, snapshotsProc
   const meaningful = scored.filter((pair) => pair.status !== "none");
 
   const active = new Map(players.map((player) => [player.uid, player]));
-  const teams = findTeams(meaningful.filter((pair) => pair.allied), active);
+  const teams = findTeams(meaningful, active);
 
   return {
     coverage: { snapshotsProcessed, latestTick },
@@ -75,14 +80,19 @@ function scorePair(pair, { contactThreshold, latestTick }) {
   let allyScore = 0;
   if (pair.confirmed) {
     allyScore = 1;
+  } else if (pair.confirmedLastTick >= 0) {
+    allyScore = 0.3;
   } else {
     allyScore = 1 - Math.exp(-guestTotal / 2);
     if (mutualGuests) allyScore += 0.2;
     allyScore += Math.min(0.3, tradeTotal * 0.15);
   }
 
-  // Stars taken after the last friendly visit mean the alliance (if any) ended.
-  const betrayed = guestTotal > 0 && pair.captures.lastTick > pair.guest.lastTick;
+  // Stars taken after the last friendly visit, or a formal alliance that no
+  // longer exists, mean the alliance ended.
+  const lastFriendly = Math.max(pair.guest.lastTick, pair.confirmedLastTick);
+  const betrayed = (guestTotal > 0 || pair.confirmedLastTick >= 0) && !pair.confirmed
+    && (pair.captures.lastTick > lastFriendly || (pair.confirmedLastTick >= 0 && guestTotal === 0));
   if (betrayed && !pair.confirmed) allyScore *= 0.2;
 
   const peaceful = pair.contact >= contactThreshold && captureTotal === 0 && routeTotal === 0;
@@ -131,39 +141,52 @@ function scorePair(pair, { contactThreshold, latestTick }) {
   };
 }
 
-// Connected groups of allied players. Chains (A-B, B-C) still form one team,
-// so each team reports how many of its possible pairs are directly linked.
-function findTeams(alliedPairs, players) {
-  const parent = new Map();
-  const find = (uid) => {
-    if (!parent.has(uid)) parent.set(uid, uid);
-    let root = uid;
-    while (parent.get(root) !== root) root = parent.get(root);
-    parent.set(uid, root);
-    return root;
-  };
-  for (const pair of alliedPairs) parent.set(find(pair.a), find(pair.b));
+// Groups allied players into teams by merging the strongest alliances first.
+// Two groups never merge if any pair across them is at war (or used to be
+// allied and fell out), which stops one weak link chaining rival blocs
+// together. Each team reports how many of its pairs are directly linked.
+function findTeams(pairs, players) {
+  const byKey = new Map(pairs.map((pair) => [`${pair.a}:${pair.b}`, pair]));
+  const relation = (x, y) => byKey.get(`${Math.min(x, y)}:${Math.max(x, y)}`);
+  const hostile = (pair) => pair && ["war", "former_allies"].includes(pair.status);
 
-  const groups = new Map();
-  for (const uid of parent.keys()) {
-    const root = find(uid);
-    if (!groups.has(root)) groups.set(root, []);
-    groups.get(root).push(uid);
+  const teamOf = new Map();
+  const teams = [];
+  for (const pair of pairs.filter((item) => item.allied).sort((left, right) => right.allyScore - left.allyScore)) {
+    const left = teamOf.get(pair.a);
+    const right = teamOf.get(pair.b);
+    if (left && left === right) continue;
+    const leftMembers = left ? left.members : [pair.a];
+    const rightMembers = right ? right.members : [pair.b];
+    const clash = leftMembers.some((x) => rightMembers.some((y) => hostile(relation(x, y))));
+    if (clash) continue;
+
+    const merged = left || right || { members: [] };
+    for (const uid of [...leftMembers, ...rightMembers]) {
+      if (!merged.members.includes(uid)) merged.members.push(uid);
+      teamOf.set(uid, merged);
+    }
+    if (left && right && left !== right) teams.splice(teams.indexOf(right), 1);
+    if (!teams.includes(merged)) teams.push(merged);
   }
 
-  return [...groups.values()]
-    .filter((members) => members.length >= 2)
-    .map((members) => {
-      const memberSet = new Set(members);
-      const links = alliedPairs.filter((pair) => memberSet.has(pair.a) && memberSet.has(pair.b));
+  return teams
+    .map(({ members }) => {
+      const links = [];
+      for (let i = 0; i < members.length; i += 1) {
+        for (let j = i + 1; j < members.length; j += 1) {
+          const pair = relation(members[i], members[j]);
+          if (pair?.allied) links.push(pair);
+        }
+      }
       const possible = (members.length * (members.length - 1)) / 2;
       const stars = members.reduce((sum, uid) => sum + Number(players.get(uid)?.totalStars || 0), 0);
       const ships = members.reduce((sum, uid) => sum + Number(players.get(uid)?.totalStrength || 0), 0);
       return {
-        members: members.sort((left, right) => Number(players.get(right)?.totalStars || 0) - Number(players.get(left)?.totalStars || 0)),
+        members: members.sort((x, y) => Number(players.get(y)?.totalStars || 0) - Number(players.get(x)?.totalStars || 0)),
         links: links.length,
         density: round(links.length / possible),
-        confidence: round(links.reduce((sum, pair) => sum + pair.allyScore, 0) / links.length),
+        confidence: round(links.reduce((sum, pair) => sum + pair.allyScore, 0) / Math.max(links.length, 1)),
         confirmed: links.some((pair) => pair.confirmed),
         stars,
         ships

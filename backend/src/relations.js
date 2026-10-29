@@ -1,5 +1,9 @@
 import { TECH_NAMES } from "./intel.js";
 
+// Bump when extraction rules change: games whose hourly history still exists
+// are re-processed from scratch with the new rules.
+export const RELATIONS_VERSION = 2;
+
 // Pulls relationship evidence out of one NP4 snapshot, diffing against the
 // compact state left by the previous one. Pure: no I/O, so it can be unit
 // tested and run both for new scans and for backfilling stored history.
@@ -74,7 +78,7 @@ export function extractRelations(data, previousState) {
     events.push(...techTradeEvents(previousState.tech || {}, tech, tick - previousState.tick, players));
   }
 
-  return { tick, observations, events, state: { tick, owners, tech } };
+  return { tick, observations, events, state: { version: RELATIONS_VERSION, tick, owners, tech } };
 }
 
 // A player gaining a tech level is normally research (+1). A jump of 2+
@@ -94,10 +98,11 @@ function techTradeEvents(previousTech, currentTech, tickGap, players) {
         .map(([otherUid]) => Number(otherUid));
       if (!sources.length) continue;
 
-      // Research can't plausibly add more than one level per scan interval of
-      // a day or less, so a bigger jump is a trade; a +1 is only suspicious
-      // when very few players could have supplied it.
-      const bigJump = gain >= 2 && tickGap <= 24;
+      // Research rarely adds 2+ levels within a few hours, so a bigger jump is
+      // likely a trade, but it only says something about *who* when few
+      // players could have supplied it. A +1 is suspicious only when one or
+      // two players already had that level.
+      const bigJump = gain >= 2 && tickGap <= 6 && sources.length <= 4;
       const rare = sources.length <= 2;
       if (!bigJump && !rare) continue;
 
