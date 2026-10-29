@@ -200,6 +200,21 @@ export async function latestSnapshot(env, gameNumber) {
   return row ? snapshotFromRow(row) : null;
 }
 
+export async function latestSnapshotMeta(env, gameNumber) {
+  const [latest] = await listSnapshotMeta(env, gameNumber, { limit: 1 });
+  return latest || null;
+}
+
+export async function pruneOldSnapshots(env, retentionHours) {
+  const cutoff = new Date(Date.now() - retentionHours * 60 * 60 * 1000).toISOString();
+  await env.DB.prepare(`DELETE FROM snapshots WHERE pinned = 0 AND captured_at < ?`).bind(cutoff).run();
+  await env.DB.prepare(`DELETE FROM scan_attempts WHERE attempted_at < ?`).bind(cutoff).run();
+}
+
+export async function pruneFinishedGame(env, gameNumber) {
+  await env.DB.prepare(`DELETE FROM snapshots WHERE game_number = ? AND pinned = 0`).bind(gameNumber).run();
+}
+
 export async function pinSnapshot(env, snapshotId, label = null) {
   await env.DB.prepare(`
     UPDATE snapshots

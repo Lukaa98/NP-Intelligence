@@ -7,7 +7,7 @@ Neptune's Pride intel dashboard: track your games, keep their history after NP d
 ## Layout
 
 - `web/`: the dashboard (Vite + React), deployed to GitHub Pages.
-- `backend/`: Cloudflare Worker + D1. Stores games, every scan snapshot and your player notes, and polls tracked games every 6 hours by cron.
+- `backend/`: Cloudflare Worker + D1. Scans tracked games hourly by cron and stores snapshots and your player notes.
 - `scripts/test-intel.mjs`: tests for the intel diff logic (`npm test`).
 
 ## Features
@@ -19,6 +19,14 @@ Neptune's Pride intel dashboard: track your games, keep their history after NP d
 - **Download HTML**: saves a single self-contained `.html` file of a snapshot (data and viewer inlined) that opens offline, forever.
 - **Player book**: 👍 / 👎 / 📝 any player from a game's intel list or the map. The *Players* page lists everyone you've rated, with the games you met them in. Ratings are keyed by alias, so they follow a player across games.
 - **Player intel**: per-player captures, losses, ship and tech changes over latest / 1h / 6h / 32h windows, plus fetch health.
+
+## What gets kept
+
+- Running games are scanned every hour (at :07). A scan on the same tick as the previous one isn't stored again.
+- Ordinary scans are kept for **48 hours**, enough for the 32h intel window, and then deleted.
+- **Kept forever:** pinned captures, the automatic *Final state* when a game ends, and player notes.
+- When a game ends, its hourly history is deleted right away and only the final state stays.
+- Deleting a game pins its latest scan first, so every deleted game keeps at least one map.
 
 ## Deploying
 

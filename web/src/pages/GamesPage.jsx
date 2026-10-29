@@ -62,7 +62,7 @@ export default function GamesPage() {
         <div>
           <p className="eyebrow">Neptune's Pride intel</p>
           <h1>Your games</h1>
-          <p className="muted">The backend scans tracked games every 6 hours and keeps every snapshot, so finished games stay viewable after Neptune's Pride deletes them.</p>
+          <p className="muted">Tracked games are scanned every hour. The last 48 hours of scans power the intel; your captures and each game's final state are kept forever, so finished games stay viewable after Neptune's Pride deletes them.</p>
         </div>
         <button type="button" className="primary" onClick={() => setFormOpen((open) => !open)}>
           {formOpen ? "Hide form" : "Track a game"}

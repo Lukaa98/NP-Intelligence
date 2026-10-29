@@ -95,7 +95,9 @@ export default function GamePage({ gameNumber, notes }) {
           {!game?.archivedAt && <button type="button" className="secondary" disabled={busy} onClick={() => run("Scanning", async () => {
             const payload = await api.scanGame(gameNumber);
             await Promise.all([loadGame(), loadSnapshots(), loadIntel()]);
-            return `Scanned. Latest tick ${payload.snapshot.tick}.`;
+            return payload.unchanged
+              ? `No new tick yet (still tick ${payload.snapshot.tick}).`
+              : `Scanned. Latest tick ${payload.snapshot.tick}.`;
           })}>Scan now</button>}
           {game && (game.archivedAt ? (
             <button type="button" className="ghost" disabled={busy} onClick={() => run("Restoring", async () => {
@@ -194,7 +196,7 @@ export default function GamePage({ gameNumber, notes }) {
 
       <section className="card">
         <div className="section-head">
-          <h2>Snapshot history <span className="muted">({snapshots.length})</span></h2>
+          <h2>Snapshot history <span className="muted">({snapshots.length}, last 48h + pinned)</span></h2>
           {snapshots.length > 12 && (
             <button type="button" className="ghost" onClick={() => setShowAllSnapshots((value) => !value)}>
               {showAllSnapshots ? "Show fewer" : "Show all"}

@@ -10,12 +10,15 @@ import {
   getGame,
   getSnapshot,
   latestSnapshot,
+  latestSnapshotMeta,
   latestSnapshotsForCompare,
   listGames,
   listPlayerNotes,
   listSnapshotMeta,
   markKeyProblem,
   pinSnapshot,
+  pruneFinishedGame,
+  pruneOldSnapshots,
   purgeGame,
   recordScanAttempt,
   restoreGame,
@@ -25,6 +28,10 @@ import {
   updateGameAfterScan,
   upsertGame
 } from "./store.js";
+
+// Unpinned scans older than this are deleted; it covers the longest intel
+// window (32h). Pinned captures and final states are kept forever.
+const HISTORY_RETENTION_HOURS = 48;
 
 const CORS_HEADERS = {
   "access-control-allow-origin": "*",
@@ -45,7 +52,8 @@ export default {
         return json({
           ok: true,
           schedulerEnabled: true,
-          scanIntervalHours: 6,
+          scanIntervalHours: 1,
+          historyRetentionHours: HISTORY_RETENTION_HOURS,
           writeTokenRequired: Boolean(env.ADMIN_TOKEN)
         });
       }
@@ -168,6 +176,12 @@ export default {
         if (url.searchParams.get("purge") === "1") {
           await purgeGame(env, gameNumber);
         } else {
+          // Pin the latest scan so a deleted game always keeps a viewable map;
+          // its unpinned history then ages out like everything else.
+          const latest = await latestSnapshotMeta(env, gameNumber);
+          if (latest && !latest.pinned) {
+            await pinSnapshot(env, latest.id, "Last state before delete");
+          }
           await archiveGame(env, gameNumber);
         }
         return json({ ok: true });
@@ -181,9 +195,10 @@ export default {
 
   async scheduled(controller, env, ctx) {
     const games = await enabledGamesWithCodes(env);
-    for (const game of games) {
-      ctx.waitUntil(scanSavedGame(env, game, "scheduler"));
-    }
+    ctx.waitUntil((async () => {
+      await Promise.all(games.map((game) => scanSavedGame(env, game, "scheduler")));
+      await pruneOldSnapshots(env, HISTORY_RETENTION_HOURS);
+    })());
   }
 };
 
@@ -260,10 +275,25 @@ async function scanSavedGame(env, game, source, { pin = false } = {}) {
   try {
     const scanningData = await fetchScan(game.gameNumber, game.code);
     const finished = isGameOver(scanningData);
+    const tick = Number(scanningData.tick || 0);
+    const latest = await latestSnapshotMeta(env, game.gameNumber);
+
+    // Hourly scans often land on the same tick; don't store duplicates unless
+    // this is a capture or the first time we see the game is over.
+    if (!pin && latest && latest.tick === tick && (!finished || latest.pinned)) {
+      await updateGameAfterScan(env, game.gameNumber, scanningData, { finished });
+      await recordScanAttempt(env, { gameNumber: game.gameNumber, source, success: true });
+      return { ok: true, gameNumber: game.gameNumber, unchanged: true, snapshot: latest };
+    }
+
     const label = finished ? "Final state" : pin ? "Manual capture" : null;
     const snapshot = await saveSnapshot(env, game.gameNumber, scanningData, source, { pinned: pin || finished, label });
     await updateGameAfterScan(env, game.gameNumber, scanningData, { finished });
     await recordScanAttempt(env, { gameNumber: game.gameNumber, source, success: true });
+    if (finished) {
+      // The game is over: keep the pinned final state, drop the hourly history.
+      await pruneFinishedGame(env, game.gameNumber);
+    }
     return { ok: true, gameNumber: game.gameNumber, snapshot: { ...snapshot, data: undefined } };
   } catch (error) {
     if (error instanceof NeptuneApiError) {
