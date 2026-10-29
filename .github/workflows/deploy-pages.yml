@@ -1,0 +1,50 @@
+name: Deploy web dashboard to GitHub Pages
+
+# Builds web/ and publishes it to the gh-pages branch, served at
+# https://lukaa98.github.io/NP-Intelligence/ (Settings → Pages → Deploy from
+# branch: gh-pages / root). Same setup as AI-horror-stories.
+on:
+  push:
+    branches:
+      - main
+      - claude/zealous-rubin-6592oy
+    paths:
+      - "web/**"
+      - ".github/workflows/deploy-pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        working-directory: web
+        run: npm ci
+
+      - name: Build project
+        working-directory: web
+        env:
+          # Optional repo variable to point the dashboard at a different Worker.
+          VITE_BACKEND_URL: ${{ vars.NP_BACKEND_URL }}
+        run: npm run build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: web/dist

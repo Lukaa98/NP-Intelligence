@@ -34,3 +34,10 @@ export async function fetchScan(gameNumber, code) {
 
   return payload.scanning_data;
 }
+
+// NP reports the end of a game with a game_over flag; accept both spellings
+// since the payload has shipped in snake_case and camelCase variants.
+export function isGameOver(scanningData) {
+  const value = scanningData?.gameOver ?? scanningData?.game_over;
+  return Boolean(value) && value !== "0";
+}

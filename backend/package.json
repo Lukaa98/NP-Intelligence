@@ -8,5 +8,8 @@
     "deploy": "wrangler deploy",
     "migrate:local": "wrangler d1 migrations apply DB --local",
     "migrate:remote": "wrangler d1 migrations apply DB --remote"
+  },
+  "devDependencies": {
+    "wrangler": "^3.114.17"
   }
 }

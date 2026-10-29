@@ -30,13 +30,14 @@ export async function upsertGame(env, gameNumber, code, name, playerUid = null) 
       name = excluded.name,
       player_uid = COALESCE(excluded.player_uid, games.player_uid),
       enabled = 1,
+      archived_at = NULL,
       key_status = 'valid',
       key_status_message = 'Saved key worked on the last successful scan.',
       updated_at = excluded.updated_at
   `).bind(gameNumber, code, name, playerUid, timestamp, timestamp).run();
 }
 
-export async function updateGameAfterScan(env, gameNumber, scanningData) {
+export async function updateGameAfterScan(env, gameNumber, scanningData, { finished = false } = {}) {
   const timestamp = nowIso();
   const name = scanningData.name || scanningData.config?.name || `Game ${gameNumber}`;
   await env.DB.prepare(`
@@ -48,9 +49,10 @@ export async function updateGameAfterScan(env, gameNumber, scanningData) {
       last_sync_at = ?,
       key_status = 'valid',
       key_status_message = 'Saved key worked on the last successful scan.',
+      finished_at = CASE WHEN ? THEN COALESCE(finished_at, ?) ELSE finished_at END,
       updated_at = ?
     WHERE game_number = ?
-  `).bind(name, scanningData.playerUid || null, Number(scanningData.tick || 0), timestamp, timestamp, gameNumber).run();
+  `).bind(name, scanningData.playerUid ?? scanningData.player_uid ?? null, Number(scanningData.tick || 0), timestamp, finished ? 1 : 0, timestamp, timestamp, gameNumber).run();
 }
 
 export async function markKeyProblem(env, gameNumber, message) {
@@ -66,7 +68,7 @@ export async function markKeyProblem(env, gameNumber, message) {
   `).bind(message, timestamp, timestamp, gameNumber).run();
 }
 
-export async function saveSnapshot(env, gameNumber, scanningData, source) {
+export async function saveSnapshot(env, gameNumber, scanningData, source, { pinned = false, label = null } = {}) {
   const capturedAt = nowIso();
   const tick = Number(scanningData.tick || 0);
   const snapshot = {
@@ -79,6 +81,8 @@ export async function saveSnapshot(env, gameNumber, scanningData, source) {
     productionRate: Number(scanningData.productionRate || 0),
     playerUid: Number(scanningData.playerUid || 0),
     gameName: scanningData.name || scanningData.config?.name || `Game ${gameNumber}`,
+    pinned,
+    label,
     data: scanningData
   };
 
@@ -93,9 +97,11 @@ export async function saveSnapshot(env, gameNumber, scanningData, source) {
       production_rate,
       player_uid,
       game_name,
-      data_json
+      data_json,
+      pinned,
+      label
     )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `).bind(
     snapshot.id,
     snapshot.gameNumber,
@@ -106,7 +112,9 @@ export async function saveSnapshot(env, gameNumber, scanningData, source) {
     snapshot.productionRate,
     snapshot.playerUid,
     snapshot.gameName,
-    JSON.stringify(scanningData)
+    JSON.stringify(scanningData),
+    pinned ? 1 : 0,
+    label
   ).run();
 
   return snapshot;
@@ -130,7 +138,24 @@ export async function getGame(env, gameNumber) {
   return row ? gameFromRow(row) : null;
 }
 
-export async function deleteGame(env, gameNumber) {
+export async function archiveGame(env, gameNumber) {
+  const timestamp = nowIso();
+  await env.DB.prepare(`
+    UPDATE games
+    SET archived_at = COALESCE(archived_at, ?), updated_at = ?
+    WHERE game_number = ?
+  `).bind(timestamp, timestamp, gameNumber).run();
+}
+
+export async function restoreGame(env, gameNumber) {
+  await env.DB.prepare(`
+    UPDATE games
+    SET archived_at = NULL, updated_at = ?
+    WHERE game_number = ?
+  `).bind(nowIso(), gameNumber).run();
+}
+
+export async function purgeGame(env, gameNumber) {
   await env.DB.prepare(`DELETE FROM scan_attempts WHERE game_number = ?`).bind(gameNumber).run();
   await env.DB.prepare(`DELETE FROM snapshots WHERE game_number = ?`).bind(gameNumber).run();
   await env.DB.prepare(`DELETE FROM games WHERE game_number = ?`).bind(gameNumber).run();
@@ -145,6 +170,46 @@ export async function listSnapshots(env, gameNumber, limit = 50) {
     LIMIT ?
   `).bind(gameNumber, limit).all();
   return rows.results.map(snapshotFromRow);
+}
+
+// Lists snapshots without their (large) scan payloads, for history pickers.
+export async function listSnapshotMeta(env, gameNumber, { pinnedOnly = false, limit = 100 } = {}) {
+  const rows = await env.DB.prepare(`
+    SELECT id, game_number, tick, source, captured_at, production_counter, production_rate, player_uid, game_name, pinned, label
+    FROM snapshots
+    WHERE game_number = ? ${pinnedOnly ? "AND pinned = 1" : ""}
+    ORDER BY captured_at DESC
+    LIMIT ?
+  `).bind(gameNumber, limit).all();
+  return rows.results.map(snapshotMetaFromRow);
+}
+
+export async function getSnapshot(env, snapshotId) {
+  const row = await env.DB.prepare(`SELECT * FROM snapshots WHERE id = ?`).bind(snapshotId).first();
+  return row ? snapshotFromRow(row) : null;
+}
+
+export async function latestSnapshot(env, gameNumber) {
+  const row = await env.DB.prepare(`
+    SELECT *
+    FROM snapshots
+    WHERE game_number = ?
+    ORDER BY captured_at DESC
+    LIMIT 1
+  `).bind(gameNumber).first();
+  return row ? snapshotFromRow(row) : null;
+}
+
+export async function pinSnapshot(env, snapshotId, label = null) {
+  await env.DB.prepare(`
+    UPDATE snapshots
+    SET pinned = 1, label = COALESCE(?, label)
+    WHERE id = ?
+  `).bind(label, snapshotId).run();
+}
+
+export async function unpinSnapshot(env, snapshotId) {
+  await env.DB.prepare(`UPDATE snapshots SET pinned = 0 WHERE id = ?`).bind(snapshotId).run();
 }
 
 export async function latestSnapshotsForCompare(env, gameNumber) {
@@ -206,7 +271,10 @@ export async function enabledGamesWithCodes(env) {
   const rows = await env.DB.prepare(`
     SELECT *
     FROM games
-    WHERE enabled = 1 AND key_status != 'needs_fresh_key'
+    WHERE enabled = 1
+      AND key_status != 'needs_fresh_key'
+      AND archived_at IS NULL
+      AND finished_at IS NULL
   `).all();
 
   return rows.results.map((row) => {
@@ -326,11 +394,13 @@ function gameFromRow(row) {
     lastErrorAt: row.last_error_at,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
+    archivedAt: row.archived_at || null,
+    finishedAt: row.finished_at || null,
     apiKeyPreview: maskKey(row.code)
   };
 }
 
-function snapshotFromRow(row) {
+function snapshotMetaFromRow(row) {
   return {
     id: row.id,
     gameNumber: row.game_number,
@@ -341,7 +411,78 @@ function snapshotFromRow(row) {
     productionRate: row.production_rate,
     playerUid: row.player_uid,
     gameName: row.game_name,
+    pinned: Boolean(row.pinned),
+    label: row.label || ""
+  };
+}
+
+function snapshotFromRow(row) {
+  return {
+    ...snapshotMetaFromRow(row),
     data: JSON.parse(row.data_json)
+  };
+}
+
+export function aliasKey(alias) {
+  return String(alias || "").trim().toLowerCase();
+}
+
+export async function listPlayerNotes(env) {
+  const rows = await env.DB.prepare(`
+    SELECT *
+    FROM player_notes
+    ORDER BY updated_at DESC
+  `).all();
+  return rows.results.map(playerNoteFromRow);
+}
+
+// Upserts a rating/note. `game` ({ gameNumber, gameName }) is appended to the
+// list of games the player was rated from, so the Players page can show where
+// you met them.
+export async function savePlayerNote(env, { alias, rating, note, game }) {
+  const key = aliasKey(alias);
+  const existing = await env.DB.prepare(`SELECT * FROM player_notes WHERE alias_key = ?`).bind(key).first();
+  const games = existing ? JSON.parse(existing.games_json || "[]") : [];
+  if (game?.gameNumber && !games.some((item) => String(item.gameNumber) === String(game.gameNumber))) {
+    games.push({ gameNumber: String(game.gameNumber), gameName: String(game.gameName || `Game ${game.gameNumber}`) });
+  }
+
+  const timestamp = nowIso();
+  await env.DB.prepare(`
+    INSERT INTO player_notes (alias_key, alias, rating, note, games_json, created_at, updated_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(alias_key) DO UPDATE SET
+      alias = excluded.alias,
+      rating = excluded.rating,
+      note = excluded.note,
+      games_json = excluded.games_json,
+      updated_at = excluded.updated_at
+  `).bind(
+    key,
+    String(alias).trim(),
+    Math.max(-1, Math.min(1, Number(rating) || 0)),
+    String(note || ""),
+    JSON.stringify(games),
+    timestamp,
+    timestamp
+  ).run();
+
+  return playerNoteFromRow(await env.DB.prepare(`SELECT * FROM player_notes WHERE alias_key = ?`).bind(key).first());
+}
+
+export async function deletePlayerNote(env, alias) {
+  await env.DB.prepare(`DELETE FROM player_notes WHERE alias_key = ?`).bind(aliasKey(alias)).run();
+}
+
+function playerNoteFromRow(row) {
+  return {
+    aliasKey: row.alias_key,
+    alias: row.alias,
+    rating: row.rating,
+    note: row.note,
+    games: JSON.parse(row.games_json || "[]"),
+    createdAt: row.created_at,
+    updatedAt: row.updated_at
   };
 }
 

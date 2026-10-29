@@ -1,70 +1,80 @@
 # NP Intelligence
 
-Neptune's Pride scan intelligence, now moving from a browser-only React dashboard toward a Chrome extension plus Cloudflare Worker/D1 backend.
+Neptune's Pride intel dashboard: track your games, keep their history after NP deletes them, replay any snapshot as an interactive galaxy map, and keep a book of players you'd (not) work with again.
 
-## Current layout
+**Live:** https://lukaa98.github.io/NP-Intelligence/
 
-- `src/` and `back/`
-  The existing React-style dashboard and FastAPI backend from this branch.
-- `extension/`
-  New Chrome extension UI for saving games, triggering scans, and reading backend intel.
-- `backend/`
-  New Cloudflare Worker + D1 backend patterned after the `carsandbids-labs` Wrangler setup.
+## Layout
 
-## Why this refactor
+- `web/`: the dashboard (Vite + React), deployed to GitHub Pages.
+- `backend/`: Cloudflare Worker + D1. Stores games, every scan snapshot and your player notes, and polls tracked games every 6 hours by cron.
+- `scripts/test-intel.mjs`: tests for the intel diff logic (`npm test`).
 
-The old local-first flow worked, but it kept the important polling tied to an open browser tab or a separate Render deployment. The new direction is:
+## Features
 
-1. Save Neptune's Pride game number + API code from a Chrome extension.
-2. Store those tracked games in D1.
-3. Let a Worker cron poll every 12 hours even when your browser is closed.
-4. Surface derived intel like captures, ship losses, tech changes, and visible war pressure back inside the extension popup.
+- **Games**: track a game with its number and API code (from Options → API in the game). Each game can be scanned on demand.
+- **Deleted games**: "Delete" moves a game into the *Deleted games* section. It stops being scanned, but all its snapshots and captures are kept. You can restore it, or use *Erase forever* to wipe it.
+- **Capture state**: scans the game now and pins that snapshot as a capture. If NP no longer serves the game, the newest stored snapshot is pinned instead. When a scan reports the game is over, the final state is pinned automatically and the game stops being polled.
+- **Galaxy map**: any snapshot opens as an NP-style map. Drag to pan, scroll or pinch to zoom. You can click stars, fleets and leaderboard players, and the game-over banner names the winner.
+- **Download HTML**: saves a single self-contained `.html` file of a snapshot (data and viewer inlined) that opens offline, forever.
+- **Player book**: 👍 / 👎 / 📝 any player from a game's intel list or the map. The *Players* page lists everyone you've rated, with the games you met them in. Ratings are keyed by alias, so they follow a player across games.
+- **Player intel**: per-player captures, losses, ship and tech changes over latest / 1h / 6h / 32h windows, plus fetch health.
 
-## Extension setup
+## Deploying
 
-1. Open `chrome://extensions/`
-2. Enable Developer mode
-3. Click Load unpacked
-4. Select [extension](C:/Users/13477/Desktop/DevProjects/NP-Intelligence/extension)
-5. Open a Neptune's Pride tab
-6. Use **Try page capture** if the game number or code is available in page storage, or paste them manually
-7. Point the extension at your deployed Worker URL
+### Dashboard (GitHub Pages)
 
-## Worker + D1 setup
+`.github/workflows/deploy-pages.yml` builds `web/` and publishes it to the `gh-pages` branch on every push that touches `web/`. Same setup as AI-horror-stories.
 
-1. Copy [backend/wrangler.toml.example](C:/Users/13477/Desktop/DevProjects/NP-Intelligence/backend/wrangler.toml.example) to `backend/wrangler.toml`
-2. Create a new D1 database:
+One-time: **Settings → Pages → Build and deployment → Deploy from a branch → `gh-pages` / `(root)`**.
 
-```bash
-npx wrangler d1 create np-intelligence
-```
+The dashboard talks to `https://np-intelligence-backend.carsandbids-labs.workers.dev` by default. You can change that per browser in *Settings*, or at build time with an `NP_BACKEND_URL` repository variable.
 
-3. Put the returned `database_id` into `backend/wrangler.toml`
-4. Apply migrations:
+### Worker (Cloudflare)
+
+The new features need migration `0003`. Either deploy by hand:
 
 ```bash
 cd backend
+npm install
 npx wrangler d1 migrations apply DB --remote
-```
-
-5. Deploy the Worker:
-
-```bash
-cd backend
 npx wrangler deploy
 ```
 
-6. Paste the deployed Worker URL into the extension popup
+Or add a `CLOUDFLARE_API_TOKEN` repo secret (plus `CLOUDFLARE_ACCOUNT_ID` if needed), and `.github/workflows/deploy-worker.yml` will migrate and deploy on pushes that touch `backend/`.
 
-## What the Worker does
+**Protect writes (recommended):** the dashboard is public, so anyone who finds the Worker URL could change data. Set a token:
 
-- validates a saved NP game/code by running a live scan
-- stores tracked games and immutable snapshots in D1
-- exposes routes for games, scans, snapshots, and derived intel
-- runs a `0 */12 * * *` cron schedule for closed-browser polling
+```bash
+cd backend
+npx wrangler secret put ADMIN_TOKEN
+```
 
-## Notes
+Then enter the same token under *Settings → Write token* in the dashboard. Reads stay open, and API codes are always masked.
 
-- `back/` is still here as the previous FastAPI path, but `backend/` is now the Wrangler-targeted direction.
-- The strategic intel logic used by the new Worker is ported from the current branch so we keep the same captures, pressure, combat-loss, and tech-shift reasoning.
-- The extension currently uses lightweight page-hint capture for convenience, but the most reliable path is still a real game number plus valid NP code.
+## Local development
+
+```bash
+cd backend && npm install && npx wrangler d1 migrations apply DB --local && npx wrangler dev
+```
+
+```bash
+cd web && npm install && VITE_BACKEND_URL=http://localhost:8787 npm run dev
+```
+
+## Worker API
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `/api/games` | All games, including deleted (`archivedAt`) and finished (`finishedAt`) |
+| POST | `/api/games` | Save `{ game_number, code, name }` and run a first scan |
+| POST | `/api/games/:n/scan` | Scan now |
+| POST | `/api/games/:n/capture` | Scan and pin, falling back to the latest stored snapshot |
+| DELETE | `/api/games/:n` | Move to Deleted games (`?purge=1` erases everything) |
+| POST | `/api/games/:n/restore` | Undo delete |
+| GET | `/api/games/:n/snapshots` | Snapshot list without payloads (`?pinned=1` for captures) |
+| GET | `/api/games/:n/intel?window=latest\|1h\|6h\|32h` | Derived intel |
+| GET | `/api/snapshots/:id` | One full snapshot |
+| POST/DELETE | `/api/snapshots/:id/pin` | Pin or unpin a capture |
+| GET / PUT | `/api/players` | List or upsert `{ alias, rating: -1\|0\|1, note, game }` |
+| DELETE | `/api/players/:alias` | Forget a player |
