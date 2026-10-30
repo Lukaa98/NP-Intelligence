@@ -1,0 +1,28 @@
+{
+ "games": [
+  {
+   "gameNumber": "7996",
+   "name": "Chi Sarir",
+   "frames": 1,
+   "firstTick": 417,
+   "lastTick": 417,
+   "archivedAt": "2026-10-30T02:51:03.139Z"
+  },
+  {
+   "gameNumber": "8106",
+   "name": "Gamma Sceptrum",
+   "frames": 1,
+   "firstTick": 325,
+   "lastTick": 325,
+   "archivedAt": "2026-10-30T02:51:03.139Z"
+  },
+  {
+   "gameNumber": "8289",
+   "name": "Gamma Alcor",
+   "frames": 70,
+   "firstTick": 242,
+   "lastTick": 647,
+   "archivedAt": "2026-10-30T02:51:03.139Z"
+  }
+ ]
+}

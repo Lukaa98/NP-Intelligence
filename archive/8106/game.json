@@ -1,0 +1,2656 @@
+{
+ "game": {
+  "gameNumber": "8106",
+  "name": "Gamma Sceptrum",
+  "playerUid": 1,
+  "enabled": true,
+  "keyStatus": "needs_fresh_key",
+  "keyStatusMessage": "NP API status 200",
+  "lastTick": 325,
+  "lastSyncAt": "2026-08-14T06:00:57.165Z",
+  "lastErrorAt": "2026-08-14T12:01:03.664Z",
+  "createdAt": "2026-07-19T02:32:54.196Z",
+  "updatedAt": "2026-10-29T16:43:06.013Z",
+  "archivedAt": "2026-10-29T16:43:06.013Z",
+  "nickname": "",
+  "playerCount": null,
+  "myAlias": "",
+  "relationTick": 325,
+  "exportedAt": null,
+  "archiveRef": null,
+  "relationSnapshots": 45,
+  "finishedAt": null,
+  "apiKeyPreview": "9ty****Vro"
+ },
+ "frames": [
+  {
+   "id": "8106-325-1786687256950",
+   "tick": 325,
+   "capturedAt": "2026-08-14T06:00:56.950Z",
+   "label": "Last state before delete",
+   "pinned": true,
+   "file": "ticks/325.json"
+  }
+ ],
+ "diplomacy": {
+  "gameNumber": "8106",
+  "pendingSnapshots": 0,
+  "players": [
+   {
+    "uid": 1,
+    "alias": "RocketCharger",
+    "color": 6,
+    "shape": 0,
+    "totalStars": 54,
+    "totalStrength": 3823,
+    "conceded": 0,
+    "ai": 0
+   },
+   {
+    "uid": 2,
+    "alias": "TheBlackMarketWeapons",
+    "color": 7,
+    "shape": 1,
+    "totalStars": 9,
+    "totalStrength": 1047,
+    "conceded": 1,
+    "ai": 1
+   },
+   {
+    "uid": 3,
+    "alias": "malinkymatrioshka",
+    "color": 2,
+    "shape": 2,
+    "totalStars": 0,
+    "totalStrength": 0,
+    "conceded": 2,
+    "ai": 1
+   },
+   {
+    "uid": 4,
+    "alias": "ZARG ",
+    "color": 4,
+    "shape": 3,
+    "totalStars": 9,
+    "totalStrength": 622,
+    "conceded": 1,
+    "ai": 1
+   },
+   {
+    "uid": 5,
+    "alias": "3K04T",
+    "color": 1,
+    "shape": 4,
+    "totalStars": 97,
+    "totalStrength": 6574,
+    "conceded": 0,
+    "ai": 0
+   },
+   {
+    "uid": 6,
+    "alias": "StarlightForge",
+    "color": 0,
+    "shape": 5,
+    "totalStars": 0,
+    "totalStrength": 0,
+    "conceded": 3,
+    "ai": 0
+   },
+   {
+    "uid": 7,
+    "alias": "The Banking Clan",
+    "color": 5,
+    "shape": 6,
+    "totalStars": 2,
+    "totalStrength": 103,
+    "conceded": 1,
+    "ai": 1
+   },
+   {
+    "uid": 8,
+    "alias": "Divine Sol Mandate",
+    "color": 3,
+    "shape": 7,
+    "totalStars": 18,
+    "totalStrength": 722,
+    "conceded": 1,
+    "ai": 1
+   }
+  ],
+  "coverage": {
+   "snapshotsProcessed": 45,
+   "latestTick": 325
+  },
+  "viewerUid": 1,
+  "pairs": [
+   {
+    "a": 1,
+    "b": 8,
+    "status": "war",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0.3,
+    "warScore": 1,
+    "warActive": true,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 22,
+     "routeBA": 21,
+     "routeStars": [
+      "Terebellum",
+      "Vindemiatrix",
+      "Arakus Point",
+      "Atik"
+     ],
+     "capturesAB": 13,
+     "capturesBA": 10,
+     "lastCaptureTick": 325,
+     "tradeAB": 0.75,
+     "tradeBA": 1.25,
+     "contact": 37
+    }
+   },
+   {
+    "a": 4,
+    "b": 5,
+    "status": "war",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0.3,
+    "warScore": 1,
+    "warActive": true,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 11,
+     "routeBA": 14,
+     "routeStars": [
+      "Ruchbah",
+      "Pan",
+      "Gut",
+      "Alfirk",
+      "Sadachbia"
+     ],
+     "capturesAB": 3,
+     "capturesBA": 17,
+     "lastCaptureTick": 325,
+     "tradeAB": 1.75,
+     "tradeBA": 0.75,
+     "contact": 20
+    }
+   },
+   {
+    "a": 5,
+    "b": 8,
+    "status": "war",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0.3,
+    "warScore": 1,
+    "warActive": true,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 3,
+     "routeBA": 4,
+     "routeStars": [
+      "Taypan II",
+      "Raw",
+      "Canopus",
+      "Goo"
+     ],
+     "capturesAB": 11,
+     "capturesBA": 1,
+     "lastCaptureTick": 325,
+     "tradeAB": 1.75,
+     "tradeBA": 2.5,
+     "contact": 45
+    }
+   },
+   {
+    "a": 5,
+    "b": 7,
+    "status": "war",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0.26,
+    "warScore": 1,
+    "warActive": true,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 0,
+     "routeBA": 1,
+     "routeStars": [
+      "AlGiedi",
+      "Aldhanab"
+     ],
+     "capturesAB": 34,
+     "capturesBA": 5,
+     "lastCaptureTick": 325,
+     "tradeAB": 0,
+     "tradeBA": 1.75,
+     "contact": 25
+    }
+   },
+   {
+    "a": 2,
+    "b": 4,
+    "status": "war",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0.19,
+    "warScore": 1,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 4,
+     "routeBA": 7,
+     "routeStars": [
+      "Septen",
+      "Kajam"
+     ],
+     "capturesAB": 4,
+     "capturesBA": 6,
+     "lastCaptureTick": 241,
+     "tradeAB": 0.5,
+     "tradeBA": 0.75,
+     "contact": 38
+    }
+   },
+   {
+    "a": 1,
+    "b": 3,
+    "status": "war",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0.15,
+    "warScore": 1,
+    "warActive": true,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 24,
+     "routeBA": 25,
+     "routeStars": [
+      "Tejat",
+      "Tax"
+     ],
+     "capturesAB": 14,
+     "capturesBA": 5,
+     "lastCaptureTick": 307,
+     "tradeAB": 0,
+     "tradeBA": 1,
+     "contact": 36
+    }
+   },
+   {
+    "a": 1,
+    "b": 2,
+    "status": "war",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0.11,
+    "warScore": 1,
+    "warActive": true,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 10,
+     "routeBA": 8,
+     "routeStars": [
+      "Acrab",
+      "SteropeII",
+      "Acamar"
+     ],
+     "capturesAB": 5,
+     "capturesBA": 4,
+     "lastCaptureTick": 307,
+     "tradeAB": 0.25,
+     "tradeBA": 0.5,
+     "contact": 43
+    }
+   },
+   {
+    "a": 5,
+    "b": 6,
+    "status": "war",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0,
+    "warScore": 0.98,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 0,
+     "routeBA": 0,
+     "routeStars": [],
+     "capturesAB": 8,
+     "capturesBA": 0,
+     "lastCaptureTick": 198,
+     "tradeAB": 0,
+     "tradeBA": 0,
+     "contact": 24
+    }
+   },
+   {
+    "a": 2,
+    "b": 8,
+    "status": "former_allies",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0.26,
+    "warScore": 0.71,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 7,
+     "guestBA": 12,
+     "guestShips": 137,
+     "guestStars": [
+      "Atik",
+      "Jabbah"
+     ],
+     "routeAB": 1,
+     "routeBA": 9,
+     "routeStars": [
+      "Atik",
+      "Jabbah"
+     ],
+     "capturesAB": 0,
+     "capturesBA": 1,
+     "lastCaptureTick": 288,
+     "tradeAB": 0.25,
+     "tradeBA": 0.5,
+     "contact": 45
+    }
+   },
+   {
+    "a": 6,
+    "b": 7,
+    "status": "war",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0,
+    "warScore": 0.92,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 0,
+     "routeBA": 0,
+     "routeStars": [],
+     "capturesAB": 0,
+     "capturesBA": 5,
+     "lastCaptureTick": 205,
+     "tradeAB": 0,
+     "tradeBA": 0,
+     "contact": 17
+    }
+   },
+   {
+    "a": 4,
+    "b": 7,
+    "status": "war",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0,
+    "warScore": 0.78,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 0,
+     "routeBA": 0,
+     "routeStars": [],
+     "capturesAB": 1,
+     "capturesBA": 2,
+     "lastCaptureTick": 198,
+     "tradeAB": 0,
+     "tradeBA": 0,
+     "contact": 42
+    }
+   },
+   {
+    "a": 3,
+    "b": 8,
+    "status": "war",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0,
+    "warScore": 0.52,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 0,
+     "routeBA": 3,
+     "routeStars": [
+      "Celaeno"
+     ],
+     "capturesAB": 0,
+     "capturesBA": 1,
+     "lastCaptureTick": 205,
+     "tradeAB": 0,
+     "tradeBA": 0,
+     "contact": 15
+    }
+   },
+   {
+    "a": 1,
+    "b": 4,
+    "status": "possible_allies",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0.3,
+    "warScore": 0.2,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 1,
+     "guestShips": 30,
+     "guestStars": [
+      "Acamar"
+     ],
+     "routeAB": 0,
+     "routeBA": 3,
+     "routeStars": [
+      "Acamar"
+     ],
+     "capturesAB": 0,
+     "capturesBA": 0,
+     "lastCaptureTick": -1,
+     "tradeAB": 0.5,
+     "tradeBA": 0.75,
+     "contact": 45
+    }
+   },
+   {
+    "a": 2,
+    "b": 5,
+    "status": "possible_allies",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0.3,
+    "warScore": 0.14,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 0,
+     "routeBA": 2,
+     "routeStars": [
+      "Arneb"
+     ],
+     "capturesAB": 0,
+     "capturesBA": 0,
+     "lastCaptureTick": -1,
+     "tradeAB": 1.25,
+     "tradeBA": 1.25,
+     "contact": 45
+    }
+   },
+   {
+    "a": 1,
+    "b": 5,
+    "status": "possible_allies",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0.3,
+    "warScore": 0,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 0,
+     "routeBA": 0,
+     "routeStars": [],
+     "capturesAB": 0,
+     "capturesBA": 0,
+     "lastCaptureTick": -1,
+     "tradeAB": 3.5,
+     "tradeBA": 1.75,
+     "contact": 19
+    }
+   },
+   {
+    "a": 4,
+    "b": 8,
+    "status": "tension",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0.08,
+    "warScore": 0.14,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 0,
+     "routeBA": 2,
+     "routeStars": [
+      "Septen"
+     ],
+     "capturesAB": 0,
+     "capturesBA": 0,
+     "lastCaptureTick": -1,
+     "tradeAB": 0.25,
+     "tradeBA": 0.25,
+     "contact": 0
+    }
+   },
+   {
+    "a": 4,
+    "b": 6,
+    "status": "tension",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0.04,
+    "warScore": 0.14,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 0,
+     "routeBA": 2,
+     "routeStars": [
+      "Etamin"
+     ],
+     "capturesAB": 0,
+     "capturesBA": 0,
+     "lastCaptureTick": -1,
+     "tradeAB": 0,
+     "tradeBA": 0.25,
+     "contact": 0
+    }
+   }
+  ],
+  "teams": [],
+  "conflicts": [
+   {
+    "side": [
+     5
+    ],
+    "enemies": [
+     {
+      "members": [
+       7
+      ],
+      "took": 34,
+      "lost": 5,
+      "active": true,
+      "lastTick": 325
+     },
+     {
+      "members": [
+       4
+      ],
+      "took": 17,
+      "lost": 3,
+      "active": true,
+      "lastTick": 325
+     },
+     {
+      "members": [
+       8
+      ],
+      "took": 11,
+      "lost": 1,
+      "active": true,
+      "lastTick": 325
+     },
+     {
+      "members": [
+       6
+      ],
+      "took": 8,
+      "lost": 0,
+      "active": false,
+      "lastTick": 198
+     }
+    ],
+    "took": 70,
+    "lost": 9,
+    "active": true,
+    "lastTick": 325
+   },
+   {
+    "side": [
+     1
+    ],
+    "enemies": [
+     {
+      "members": [
+       8
+      ],
+      "took": 13,
+      "lost": 10,
+      "active": true,
+      "lastTick": 325
+     },
+     {
+      "members": [
+       3
+      ],
+      "took": 14,
+      "lost": 5,
+      "active": true,
+      "lastTick": 307
+     },
+     {
+      "members": [
+       2
+      ],
+      "took": 5,
+      "lost": 4,
+      "active": true,
+      "lastTick": 307
+     }
+    ],
+    "took": 32,
+    "lost": 19,
+    "active": true,
+    "lastTick": 325
+   },
+   {
+    "side": [
+     4
+    ],
+    "enemies": [
+     {
+      "members": [
+       2
+      ],
+      "took": 6,
+      "lost": 4,
+      "active": false,
+      "lastTick": 241
+     },
+     {
+      "members": [
+       7
+      ],
+      "took": 1,
+      "lost": 2,
+      "active": false,
+      "lastTick": 198
+     }
+    ],
+    "took": 7,
+    "lost": 6,
+    "active": false,
+    "lastTick": 241
+   },
+   {
+    "side": [
+     6
+    ],
+    "enemies": [
+     {
+      "members": [
+       7
+      ],
+      "took": 0,
+      "lost": 5,
+      "active": false,
+      "lastTick": 205
+     }
+    ],
+    "took": 0,
+    "lost": 5,
+    "active": false,
+    "lastTick": 205
+   },
+   {
+    "side": [
+     3
+    ],
+    "enemies": [
+     {
+      "members": [
+       8
+      ],
+      "took": 0,
+      "lost": 1,
+      "active": false,
+      "lastTick": 205
+     }
+    ],
+    "took": 0,
+    "lost": 1,
+    "active": false,
+    "lastTick": 205
+   }
+  ],
+  "middlemen": [
+   {
+    "middle": 5,
+    "sides": [
+     {
+      "uid": 1,
+      "tech": 3.5,
+      "fleets": 0,
+      "routes": 0,
+      "attacks": 0,
+      "score": 7
+     },
+     {
+      "uid": 2,
+      "tech": 1.25,
+      "fleets": 0,
+      "routes": 2,
+      "attacks": 0,
+      "score": 3.1
+     }
+    ],
+    "verdict": "leans_first",
+    "warActive": true
+   },
+   {
+    "middle": 1,
+    "sides": [
+     {
+      "uid": 4,
+      "tech": 0.75,
+      "fleets": 0,
+      "routes": 0,
+      "attacks": 0,
+      "score": 1.5
+     },
+     {
+      "uid": 5,
+      "tech": 1.75,
+      "fleets": 0,
+      "routes": 0,
+      "attacks": 0,
+      "score": 3.5
+     }
+    ],
+    "verdict": "leans_second",
+    "warActive": true
+   }
+  ],
+  "events": [
+   {
+    "tick": 325,
+    "kind": "tech_trade",
+    "a": 8,
+    "b": 5,
+    "weight": 0.25,
+    "detail": "Experimentation 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 325,
+    "kind": "tech_trade",
+    "a": 8,
+    "b": 1,
+    "weight": 0.25,
+    "detail": "Experimentation 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 325,
+    "kind": "tech_trade",
+    "a": 7,
+    "b": 5,
+    "weight": 0.5,
+    "detail": "Manufacturing 4→5"
+   },
+   {
+    "tick": 325,
+    "kind": "tech_trade",
+    "a": 4,
+    "b": 5,
+    "weight": 0.5,
+    "detail": "Manufacturing 4→5"
+   },
+   {
+    "tick": 325,
+    "kind": "capture",
+    "a": 1,
+    "b": 8,
+    "weight": 1,
+    "detail": "Rukbat"
+   },
+   {
+    "tick": 325,
+    "kind": "capture",
+    "a": 1,
+    "b": 8,
+    "weight": 1,
+    "detail": "Wezen"
+   },
+   {
+    "tick": 325,
+    "kind": "capture",
+    "a": 1,
+    "b": 8,
+    "weight": 1,
+    "detail": "Atik"
+   },
+   {
+    "tick": 325,
+    "kind": "capture",
+    "a": 5,
+    "b": 8,
+    "weight": 1,
+    "detail": "Tarazet"
+   },
+   {
+    "tick": 325,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "AlGiedi"
+   },
+   {
+    "tick": 325,
+    "kind": "capture",
+    "a": 5,
+    "b": 4,
+    "weight": 1,
+    "detail": "Ruchbah"
+   },
+   {
+    "tick": 325,
+    "kind": "capture",
+    "a": 5,
+    "b": 8,
+    "weight": 1,
+    "detail": "Yildun"
+   },
+   {
+    "tick": 325,
+    "kind": "capture",
+    "a": 5,
+    "b": 8,
+    "weight": 1,
+    "detail": "Dubhe"
+   },
+   {
+    "tick": 325,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Diadem"
+   },
+   {
+    "tick": 315,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 5,
+    "weight": 0.5,
+    "detail": "Weapons 7→8"
+   },
+   {
+    "tick": 315,
+    "kind": "capture",
+    "a": 5,
+    "b": 8,
+    "weight": 1,
+    "detail": "Dschubba"
+   },
+   {
+    "tick": 315,
+    "kind": "capture",
+    "a": 5,
+    "b": 4,
+    "weight": 1,
+    "detail": "Pan"
+   },
+   {
+    "tick": 315,
+    "kind": "capture",
+    "a": 5,
+    "b": 8,
+    "weight": 1,
+    "detail": "Kal Surezai"
+   },
+   {
+    "tick": 312,
+    "kind": "tech_trade",
+    "a": 8,
+    "b": 5,
+    "weight": 0.25,
+    "detail": "Manufacturing 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 312,
+    "kind": "tech_trade",
+    "a": 8,
+    "b": 1,
+    "weight": 0.25,
+    "detail": "Manufacturing 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 312,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Aldhanab"
+   },
+   {
+    "tick": 312,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Hydrobius"
+   },
+   {
+    "tick": 312,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Rigil"
+   },
+   {
+    "tick": 312,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Sarin"
+   },
+   {
+    "tick": 307,
+    "kind": "tech_trade",
+    "a": 8,
+    "b": 5,
+    "weight": 0.25,
+    "detail": "Range 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 307,
+    "kind": "tech_trade",
+    "a": 8,
+    "b": 1,
+    "weight": 0.25,
+    "detail": "Range 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 307,
+    "kind": "tech_trade",
+    "a": 8,
+    "b": 5,
+    "weight": 0.25,
+    "detail": "Experimentation 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 307,
+    "kind": "tech_trade",
+    "a": 8,
+    "b": 1,
+    "weight": 0.25,
+    "detail": "Experimentation 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 307,
+    "kind": "tech_trade",
+    "a": 2,
+    "b": 5,
+    "weight": 0.25,
+    "detail": "Range 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 307,
+    "kind": "tech_trade",
+    "a": 2,
+    "b": 1,
+    "weight": 0.25,
+    "detail": "Range 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 307,
+    "kind": "capture",
+    "a": 5,
+    "b": 8,
+    "weight": 1,
+    "detail": "Taypan I"
+   },
+   {
+    "tick": 307,
+    "kind": "capture",
+    "a": 5,
+    "b": 8,
+    "weight": 1,
+    "detail": "Zu"
+   },
+   {
+    "tick": 307,
+    "kind": "capture",
+    "a": 1,
+    "b": 2,
+    "weight": 1,
+    "detail": "Acrab"
+   },
+   {
+    "tick": 307,
+    "kind": "capture",
+    "a": 1,
+    "b": 3,
+    "weight": 1,
+    "detail": "Tejat"
+   },
+   {
+    "tick": 307,
+    "kind": "capture",
+    "a": 5,
+    "b": 8,
+    "weight": 1,
+    "detail": "Media"
+   },
+   {
+    "tick": 307,
+    "kind": "capture",
+    "a": 8,
+    "b": 5,
+    "weight": 1,
+    "detail": "Dschubba"
+   },
+   {
+    "tick": 307,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Arrakis"
+   },
+   {
+    "tick": 307,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Alnasl"
+   },
+   {
+    "tick": 307,
+    "kind": "capture",
+    "a": 5,
+    "b": 8,
+    "weight": 1,
+    "detail": "Goo"
+   },
+   {
+    "tick": 307,
+    "kind": "capture",
+    "a": 1,
+    "b": 8,
+    "weight": 1,
+    "detail": "Jabbah"
+   },
+   {
+    "tick": 307,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Matar"
+   },
+   {
+    "tick": 307,
+    "kind": "capture",
+    "a": 5,
+    "b": 4,
+    "weight": 1,
+    "detail": "Azmidiske"
+   },
+   {
+    "tick": 299,
+    "kind": "tech_trade",
+    "a": 8,
+    "b": 5,
+    "weight": 0.5,
+    "detail": "Banking 5→6"
+   },
+   {
+    "tick": 299,
+    "kind": "tech_trade",
+    "a": 4,
+    "b": 5,
+    "weight": 0.5,
+    "detail": "Banking 5→6"
+   },
+   {
+    "tick": 299,
+    "kind": "capture",
+    "a": 1,
+    "b": 8,
+    "weight": 1,
+    "detail": "Arakus Point"
+   },
+   {
+    "tick": 299,
+    "kind": "capture",
+    "a": 7,
+    "b": 5,
+    "weight": 1,
+    "detail": "Hydrobius"
+   },
+   {
+    "tick": 299,
+    "kind": "capture",
+    "a": 1,
+    "b": 3,
+    "weight": 1,
+    "detail": "Aludra"
+   },
+   {
+    "tick": 295,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Hydrobius"
+   },
+   {
+    "tick": 295,
+    "kind": "capture",
+    "a": 1,
+    "b": 2,
+    "weight": 1,
+    "detail": "Septen"
+   },
+   {
+    "tick": 295,
+    "kind": "capture",
+    "a": 5,
+    "b": 8,
+    "weight": 1,
+    "detail": "Canopus"
+   },
+   {
+    "tick": 295,
+    "kind": "capture",
+    "a": 5,
+    "b": 8,
+    "weight": 1,
+    "detail": "Dschubba"
+   },
+   {
+    "tick": 295,
+    "kind": "capture",
+    "a": 7,
+    "b": 5,
+    "weight": 1,
+    "detail": "Arrakis"
+   },
+   {
+    "tick": 295,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "AlKap"
+   },
+   {
+    "tick": 295,
+    "kind": "capture",
+    "a": 1,
+    "b": 8,
+    "weight": 1,
+    "detail": "Fay"
+   },
+   {
+    "tick": 295,
+    "kind": "capture",
+    "a": 5,
+    "b": 4,
+    "weight": 1,
+    "detail": "Kit"
+   },
+   {
+    "tick": 288,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Arrakis"
+   },
+   {
+    "tick": 288,
+    "kind": "capture",
+    "a": 8,
+    "b": 2,
+    "weight": 1,
+    "detail": "Jabbah"
+   },
+   {
+    "tick": 288,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Minchir"
+   },
+   {
+    "tick": 283,
+    "kind": "tech_trade",
+    "a": 7,
+    "b": 5,
+    "weight": 0.25,
+    "detail": "Range 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 283,
+    "kind": "tech_trade",
+    "a": 7,
+    "b": 1,
+    "weight": 0.25,
+    "detail": "Range 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 283,
+    "kind": "tech_trade",
+    "a": 3,
+    "b": 5,
+    "weight": 0.25,
+    "detail": "Experimentation 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 283,
+    "kind": "tech_trade",
+    "a": 3,
+    "b": 1,
+    "weight": 0.25,
+    "detail": "Experimentation 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 283,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 5,
+    "weight": 0.5,
+    "detail": "Weapons 6→7"
+   },
+   {
+    "tick": 283,
+    "kind": "capture",
+    "a": 1,
+    "b": 2,
+    "weight": 1,
+    "detail": "Zaurak"
+   },
+   {
+    "tick": 283,
+    "kind": "capture",
+    "a": 7,
+    "b": 5,
+    "weight": 1,
+    "detail": "Arrakis"
+   },
+   {
+    "tick": 283,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Aldhafera"
+   },
+   {
+    "tick": 283,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Mintaka"
+   },
+   {
+    "tick": 283,
+    "kind": "capture",
+    "a": 1,
+    "b": 3,
+    "weight": 1,
+    "detail": "Phact"
+   },
+   {
+    "tick": 283,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Ksora"
+   },
+   {
+    "tick": 283,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Scheat"
+   },
+   {
+    "tick": 275,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 8,
+    "weight": 0.25,
+    "detail": "Banking 4→5 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 275,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 5,
+    "weight": 0.25,
+    "detail": "Banking 4→5 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 275,
+    "kind": "capture",
+    "a": 1,
+    "b": 3,
+    "weight": 1,
+    "detail": "Mekbuda"
+   },
+   {
+    "tick": 275,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Zosma"
+   },
+   {
+    "tick": 271,
+    "kind": "tech_trade",
+    "a": 5,
+    "b": 1,
+    "weight": 0.5,
+    "detail": "Range 3→4"
+   },
+   {
+    "tick": 271,
+    "kind": "tech_trade",
+    "a": 5,
+    "b": 8,
+    "weight": 0.5,
+    "detail": "Banking 4→5"
+   },
+   {
+    "tick": 271,
+    "kind": "capture",
+    "a": 1,
+    "b": 8,
+    "weight": 1,
+    "detail": "Theemin"
+   },
+   {
+    "tick": 271,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Arrakis"
+   },
+   {
+    "tick": 271,
+    "kind": "capture",
+    "a": 7,
+    "b": 5,
+    "weight": 1,
+    "detail": "Mintaka"
+   },
+   {
+    "tick": 271,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Arich"
+   },
+   {
+    "tick": 271,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Ashlesha"
+   },
+   {
+    "tick": 271,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Alsafi"
+   },
+   {
+    "tick": 265,
+    "kind": "tech_trade",
+    "a": 7,
+    "b": 5,
+    "weight": 0.25,
+    "detail": "Manufacturing 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 265,
+    "kind": "tech_trade",
+    "a": 7,
+    "b": 1,
+    "weight": 0.25,
+    "detail": "Manufacturing 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 265,
+    "kind": "tech_trade",
+    "a": 2,
+    "b": 5,
+    "weight": 0.25,
+    "detail": "Weapons 5→6 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 265,
+    "kind": "tech_trade",
+    "a": 2,
+    "b": 1,
+    "weight": 0.25,
+    "detail": "Weapons 5→6 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 265,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 5,
+    "weight": 0.5,
+    "detail": "Experimentation 4→5"
+   },
+   {
+    "tick": 265,
+    "kind": "capture",
+    "a": 1,
+    "b": 8,
+    "weight": 1,
+    "detail": "Beid"
+   },
+   {
+    "tick": 265,
+    "kind": "capture",
+    "a": 8,
+    "b": 1,
+    "weight": 1,
+    "detail": "Arakus Point"
+   },
+   {
+    "tick": 265,
+    "kind": "capture",
+    "a": 1,
+    "b": 3,
+    "weight": 1,
+    "detail": "Tax"
+   },
+   {
+    "tick": 265,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Git"
+   },
+   {
+    "tick": 258,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 5,
+    "weight": 0.5,
+    "detail": "Weapons 5→6"
+   },
+   {
+    "tick": 258,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Mintaka"
+   },
+   {
+    "tick": 251,
+    "kind": "capture",
+    "a": 8,
+    "b": 1,
+    "weight": 1,
+    "detail": "Fay"
+   },
+   {
+    "tick": 247,
+    "kind": "capture",
+    "a": 8,
+    "b": 1,
+    "weight": 1,
+    "detail": "Celaeno"
+   },
+   {
+    "tick": 247,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Tack"
+   },
+   {
+    "tick": 247,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Jih"
+   },
+   {
+    "tick": 247,
+    "kind": "capture",
+    "a": 1,
+    "b": 3,
+    "weight": 1,
+    "detail": "Yum"
+   },
+   {
+    "tick": 241,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Grassias"
+   },
+   {
+    "tick": 241,
+    "kind": "capture",
+    "a": 2,
+    "b": 4,
+    "weight": 1,
+    "detail": "Septen"
+   },
+   {
+    "tick": 241,
+    "kind": "capture",
+    "a": 1,
+    "b": 2,
+    "weight": 1,
+    "detail": "SteropeII"
+   },
+   {
+    "tick": 241,
+    "kind": "capture",
+    "a": 1,
+    "b": 8,
+    "weight": 1,
+    "detail": "Fay"
+   },
+   {
+    "tick": 234,
+    "kind": "capture",
+    "a": 1,
+    "b": 8,
+    "weight": 1,
+    "detail": "Almach"
+   },
+   {
+    "tick": 234,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Furud"
+   },
+   {
+    "tick": 234,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Askella"
+   },
+   {
+    "tick": 234,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Izar"
+   },
+   {
+    "tick": 228,
+    "kind": "capture",
+    "a": 5,
+    "b": 4,
+    "weight": 1,
+    "detail": "Ash"
+   },
+   {
+    "tick": 228,
+    "kind": "capture",
+    "a": 1,
+    "b": 3,
+    "weight": 1,
+    "detail": "Alhena"
+   },
+   {
+    "tick": 228,
+    "kind": "capture",
+    "a": 1,
+    "b": 8,
+    "weight": 1,
+    "detail": "Celaeno"
+   },
+   {
+    "tick": 228,
+    "kind": "capture",
+    "a": 1,
+    "b": 3,
+    "weight": 1,
+    "detail": "Ri"
+   },
+   {
+    "tick": 228,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Korn"
+   },
+   {
+    "tick": 223,
+    "kind": "tech_trade",
+    "a": 4,
+    "b": 5,
+    "weight": 0.25,
+    "detail": "Weapons 4→5 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 223,
+    "kind": "tech_trade",
+    "a": 4,
+    "b": 2,
+    "weight": 0.25,
+    "detail": "Weapons 4→5 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 223,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 5,
+    "weight": 0.25,
+    "detail": "Weapons 4→5 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 223,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 2,
+    "weight": 0.25,
+    "detail": "Weapons 4→5 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 223,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Duo"
+   },
+   {
+    "tick": 223,
+    "kind": "capture",
+    "a": 1,
+    "b": 3,
+    "weight": 1,
+    "detail": "Hoedus"
+   },
+   {
+    "tick": 223,
+    "kind": "capture",
+    "a": 7,
+    "b": 5,
+    "weight": 1,
+    "detail": "Ashlesha"
+   },
+   {
+    "tick": 217,
+    "kind": "tech_trade",
+    "a": 7,
+    "b": 5,
+    "weight": 0.25,
+    "detail": "Experimentation 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 217,
+    "kind": "tech_trade",
+    "a": 7,
+    "b": 1,
+    "weight": 0.25,
+    "detail": "Experimentation 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 217,
+    "kind": "tech_trade",
+    "a": 2,
+    "b": 5,
+    "weight": 0.5,
+    "detail": "Weapons 4→5"
+   },
+   {
+    "tick": 217,
+    "kind": "capture",
+    "a": 1,
+    "b": 8,
+    "weight": 1,
+    "detail": "Arakus Point"
+   },
+   {
+    "tick": 217,
+    "kind": "capture",
+    "a": 8,
+    "b": 1,
+    "weight": 1,
+    "detail": "Almach"
+   },
+   {
+    "tick": 217,
+    "kind": "capture",
+    "a": 1,
+    "b": 2,
+    "weight": 1,
+    "detail": "Acamar"
+   },
+   {
+    "tick": 217,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Seginus"
+   },
+   {
+    "tick": 217,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Ashlesha"
+   },
+   {
+    "tick": 208,
+    "kind": "tech_trade",
+    "a": 7,
+    "b": 5,
+    "weight": 0.25,
+    "detail": "Range 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 208,
+    "kind": "tech_trade",
+    "a": 7,
+    "b": 1,
+    "weight": 0.25,
+    "detail": "Range 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 208,
+    "kind": "capture",
+    "a": 5,
+    "b": 4,
+    "weight": 1,
+    "detail": "Tab"
+   },
+   {
+    "tick": 205,
+    "kind": "capture",
+    "a": 2,
+    "b": 1,
+    "weight": 1,
+    "detail": "SteropeII"
+   },
+   {
+    "tick": 205,
+    "kind": "capture",
+    "a": 8,
+    "b": 1,
+    "weight": 1,
+    "detail": "Terebellum"
+   },
+   {
+    "tick": 205,
+    "kind": "capture",
+    "a": 2,
+    "b": 1,
+    "weight": 1,
+    "detail": "Acamar"
+   },
+   {
+    "tick": 205,
+    "kind": "capture",
+    "a": 7,
+    "b": 6,
+    "weight": 1,
+    "detail": "Izar"
+   },
+   {
+    "tick": 205,
+    "kind": "capture",
+    "a": 8,
+    "b": 3,
+    "weight": 1,
+    "detail": "Celaeno"
+   },
+   {
+    "tick": 198,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 5,
+    "weight": 0.5,
+    "detail": "Experimentation 3→4"
+   },
+   {
+    "tick": 198,
+    "kind": "capture",
+    "a": 7,
+    "b": 4,
+    "weight": 1,
+    "detail": "AlKap"
+   },
+   {
+    "tick": 198,
+    "kind": "capture",
+    "a": 5,
+    "b": 6,
+    "weight": 1,
+    "detail": "Zavijava"
+   },
+   {
+    "tick": 198,
+    "kind": "capture",
+    "a": 5,
+    "b": 4,
+    "weight": 1,
+    "detail": "Algenib"
+   },
+   {
+    "tick": 193,
+    "kind": "tech_trade",
+    "a": 8,
+    "b": 5,
+    "weight": 0.5,
+    "detail": "Banking 3→4"
+   },
+   {
+    "tick": 193,
+    "kind": "tech_trade",
+    "a": 3,
+    "b": 5,
+    "weight": 0.25,
+    "detail": "Experimentation 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 193,
+    "kind": "tech_trade",
+    "a": 3,
+    "b": 1,
+    "weight": 0.25,
+    "detail": "Experimentation 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 193,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 5,
+    "weight": 0.5,
+    "detail": "Banking 3→4"
+   },
+   {
+    "tick": 193,
+    "kind": "capture",
+    "a": 4,
+    "b": 5,
+    "weight": 1,
+    "detail": "Ash"
+   },
+   {
+    "tick": 193,
+    "kind": "capture",
+    "a": 5,
+    "b": 4,
+    "weight": 1,
+    "detail": "Etamin"
+   },
+   {
+    "tick": 193,
+    "kind": "capture",
+    "a": 5,
+    "b": 4,
+    "weight": 1,
+    "detail": "Sham"
+   },
+   {
+    "tick": 187,
+    "kind": "capture",
+    "a": 8,
+    "b": 1,
+    "weight": 1,
+    "detail": "Beid"
+   },
+   {
+    "tick": 187,
+    "kind": "capture",
+    "a": 5,
+    "b": 4,
+    "weight": 1,
+    "detail": "Ash"
+   },
+   {
+    "tick": 187,
+    "kind": "capture",
+    "a": 1,
+    "b": 3,
+    "weight": 1,
+    "detail": "Heze"
+   },
+   {
+    "tick": 187,
+    "kind": "capture",
+    "a": 4,
+    "b": 2,
+    "weight": 1,
+    "detail": "Septen"
+   },
+   {
+    "tick": 187,
+    "kind": "capture",
+    "a": 7,
+    "b": 6,
+    "weight": 1,
+    "detail": "Furud"
+   },
+   {
+    "tick": 187,
+    "kind": "capture",
+    "a": 7,
+    "b": 6,
+    "weight": 1,
+    "detail": "Duo"
+   },
+   {
+    "tick": 187,
+    "kind": "capture",
+    "a": 5,
+    "b": 4,
+    "weight": 1,
+    "detail": "Adhara"
+   },
+   {
+    "tick": 181,
+    "kind": "tech_trade",
+    "a": 5,
+    "b": 1,
+    "weight": 0.5,
+    "detail": "Range 2→3"
+   },
+   {
+    "tick": 181,
+    "kind": "tech_trade",
+    "a": 5,
+    "b": 1,
+    "weight": 0.5,
+    "detail": "Manufacturing 3→4"
+   },
+   {
+    "tick": 181,
+    "kind": "tech_trade",
+    "a": 3,
+    "b": 1,
+    "weight": 0.5,
+    "detail": "Range 2→3"
+   },
+   {
+    "tick": 181,
+    "kind": "capture",
+    "a": 8,
+    "b": 1,
+    "weight": 1,
+    "detail": "Theemin"
+   },
+   {
+    "tick": 181,
+    "kind": "capture",
+    "a": 7,
+    "b": 4,
+    "weight": 1,
+    "detail": "Atria"
+   },
+   {
+    "tick": 181,
+    "kind": "capture",
+    "a": 2,
+    "b": 1,
+    "weight": 1,
+    "detail": "Zaurak"
+   },
+   {
+    "tick": 181,
+    "kind": "capture",
+    "a": 4,
+    "b": 5,
+    "weight": 1,
+    "detail": "Kit"
+   },
+   {
+    "tick": 181,
+    "kind": "capture",
+    "a": 2,
+    "b": 4,
+    "weight": 1,
+    "detail": "Kajam"
+   },
+   {
+    "tick": 175,
+    "kind": "capture",
+    "a": 1,
+    "b": 8,
+    "weight": 1,
+    "detail": "Terebellum"
+   },
+   {
+    "tick": 175,
+    "kind": "capture",
+    "a": 5,
+    "b": 4,
+    "weight": 1,
+    "detail": "Kit"
+   },
+   {
+    "tick": 175,
+    "kind": "capture",
+    "a": 5,
+    "b": 4,
+    "weight": 1,
+    "detail": "Sheliak"
+   },
+   {
+    "tick": 175,
+    "kind": "capture",
+    "a": 4,
+    "b": 7,
+    "weight": 1,
+    "detail": "Adhara"
+   },
+   {
+    "tick": 169,
+    "kind": "tech_trade",
+    "a": 7,
+    "b": 5,
+    "weight": 0.25,
+    "detail": "Experimentation 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 169,
+    "kind": "tech_trade",
+    "a": 7,
+    "b": 1,
+    "weight": 0.25,
+    "detail": "Experimentation 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 169,
+    "kind": "tech_trade",
+    "a": 4,
+    "b": 1,
+    "weight": 0.5,
+    "detail": "Range 2→3"
+   },
+   {
+    "tick": 169,
+    "kind": "capture",
+    "a": 2,
+    "b": 4,
+    "weight": 1,
+    "detail": "Arneb"
+   },
+   {
+    "tick": 169,
+    "kind": "capture",
+    "a": 7,
+    "b": 6,
+    "weight": 1,
+    "detail": "Seginus"
+   },
+   {
+    "tick": 169,
+    "kind": "capture",
+    "a": 8,
+    "b": 1,
+    "weight": 1,
+    "detail": "Fay"
+   },
+   {
+    "tick": 169,
+    "kind": "capture",
+    "a": 1,
+    "b": 3,
+    "weight": 1,
+    "detail": "Arided"
+   },
+   {
+    "tick": 169,
+    "kind": "capture",
+    "a": 3,
+    "b": 1,
+    "weight": 1,
+    "detail": "Phact"
+   },
+   {
+    "tick": 160,
+    "kind": "tech_trade",
+    "a": 5,
+    "b": 8,
+    "weight": 0.25,
+    "detail": "Weapons 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 160,
+    "kind": "tech_trade",
+    "a": 5,
+    "b": 2,
+    "weight": 0.25,
+    "detail": "Weapons 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 160,
+    "kind": "capture",
+    "a": 5,
+    "b": 4,
+    "weight": 1,
+    "detail": "Okul"
+   },
+   {
+    "tick": 157,
+    "kind": "capture",
+    "a": 5,
+    "b": 4,
+    "weight": 1,
+    "detail": "Ruchba"
+   },
+   {
+    "tick": 157,
+    "kind": "capture",
+    "a": 4,
+    "b": 5,
+    "weight": 1,
+    "detail": "Etamin"
+   },
+   {
+    "tick": 157,
+    "kind": "capture",
+    "a": 1,
+    "b": 3,
+    "weight": 1,
+    "detail": "Rigel"
+   },
+   {
+    "tick": 151,
+    "kind": "tech_trade",
+    "a": 8,
+    "b": 2,
+    "weight": 0.5,
+    "detail": "Weapons 3→4"
+   },
+   {
+    "tick": 151,
+    "kind": "capture",
+    "a": 5,
+    "b": 4,
+    "weight": 1,
+    "detail": "Etamin"
+   },
+   {
+    "tick": 151,
+    "kind": "capture",
+    "a": 5,
+    "b": 6,
+    "weight": 1,
+    "detail": "Mac"
+   },
+   {
+    "tick": 151,
+    "kind": "capture",
+    "a": 3,
+    "b": 1,
+    "weight": 1,
+    "detail": "Arided"
+   },
+   {
+    "tick": 145,
+    "kind": "tech_trade",
+    "a": 8,
+    "b": 5,
+    "weight": 0.25,
+    "detail": "Manufacturing 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 145,
+    "kind": "tech_trade",
+    "a": 8,
+    "b": 1,
+    "weight": 0.25,
+    "detail": "Manufacturing 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 145,
+    "kind": "capture",
+    "a": 8,
+    "b": 1,
+    "weight": 1,
+    "detail": "Praecipua"
+   },
+   {
+    "tick": 145,
+    "kind": "capture",
+    "a": 1,
+    "b": 3,
+    "weight": 1,
+    "detail": "Phact"
+   },
+   {
+    "tick": 139,
+    "kind": "capture",
+    "a": 8,
+    "b": 1,
+    "weight": 1,
+    "detail": "Terebellum"
+   },
+   {
+    "tick": 139,
+    "kind": "capture",
+    "a": 5,
+    "b": 4,
+    "weight": 1,
+    "detail": "Errai"
+   },
+   {
+    "tick": 139,
+    "kind": "capture",
+    "a": 1,
+    "b": 3,
+    "weight": 1,
+    "detail": "Wei"
+   },
+   {
+    "tick": 132,
+    "kind": "capture",
+    "a": 2,
+    "b": 4,
+    "weight": 1,
+    "detail": "Jabbah"
+   },
+   {
+    "tick": 132,
+    "kind": "capture",
+    "a": 5,
+    "b": 6,
+    "weight": 1,
+    "detail": "Regor"
+   },
+   {
+    "tick": 127,
+    "kind": "capture",
+    "a": 4,
+    "b": 2,
+    "weight": 1,
+    "detail": "Ruchba"
+   },
+   {
+    "tick": 127,
+    "kind": "capture",
+    "a": 7,
+    "b": 6,
+    "weight": 1,
+    "detail": "Jih"
+   },
+   {
+    "tick": 121,
+    "kind": "tech_trade",
+    "a": 5,
+    "b": 8,
+    "weight": 0.25,
+    "detail": "Weapons 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 121,
+    "kind": "tech_trade",
+    "a": 5,
+    "b": 2,
+    "weight": 0.25,
+    "detail": "Weapons 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 121,
+    "kind": "tech_trade",
+    "a": 5,
+    "b": 4,
+    "weight": 0.5,
+    "detail": "Experimentation 2→3"
+   },
+   {
+    "tick": 121,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 4,
+    "weight": 0.5,
+    "detail": "Experimentation 2→3"
+   },
+   {
+    "tick": 121,
+    "kind": "capture",
+    "a": 3,
+    "b": 1,
+    "weight": 1,
+    "detail": "Heze"
+   },
+   {
+    "tick": 121,
+    "kind": "capture",
+    "a": 2,
+    "b": 1,
+    "weight": 1,
+    "detail": "Septen"
+   },
+   {
+    "tick": 121,
+    "kind": "capture",
+    "a": 5,
+    "b": 6,
+    "weight": 1,
+    "detail": "Ankaa"
+   },
+   {
+    "tick": 121,
+    "kind": "capture",
+    "a": 5,
+    "b": 6,
+    "weight": 1,
+    "detail": "Electra"
+   },
+   {
+    "tick": 121,
+    "kind": "capture",
+    "a": 4,
+    "b": 2,
+    "weight": 1,
+    "detail": "Jabbah"
+   },
+   {
+    "tick": 121,
+    "kind": "capture",
+    "a": 4,
+    "b": 2,
+    "weight": 1,
+    "detail": "Okul"
+   },
+   {
+    "tick": 121,
+    "kind": "capture",
+    "a": 4,
+    "b": 2,
+    "weight": 1,
+    "detail": "Errai"
+   },
+   {
+    "tick": 121,
+    "kind": "capture",
+    "a": 5,
+    "b": 6,
+    "weight": 1,
+    "detail": "Albali"
+   },
+   {
+    "tick": 121,
+    "kind": "capture",
+    "a": 3,
+    "b": 1,
+    "weight": 1,
+    "detail": "Rigel"
+   },
+   {
+    "tick": 121,
+    "kind": "capture",
+    "a": 5,
+    "b": 6,
+    "weight": 1,
+    "detail": "Kaus"
+   },
+   {
+    "tick": 121,
+    "kind": "capture",
+    "a": 4,
+    "b": 2,
+    "weight": 1,
+    "detail": "Kit"
+   },
+   {
+    "tick": 121,
+    "kind": "capture",
+    "a": 5,
+    "b": 6,
+    "weight": 1,
+    "detail": "Foe"
+   },
+   {
+    "tick": 84,
+    "kind": "capture",
+    "a": 3,
+    "b": 1,
+    "weight": 1,
+    "detail": "Alhena"
+   },
+   {
+    "tick": 73,
+    "kind": "tech_trade",
+    "a": 8,
+    "b": 5,
+    "weight": 0.25,
+    "detail": "Range 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 73,
+    "kind": "tech_trade",
+    "a": 8,
+    "b": 4,
+    "weight": 0.25,
+    "detail": "Range 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 66,
+    "kind": "tech_trade",
+    "a": 4,
+    "b": 5,
+    "weight": 0.5,
+    "detail": "Range 1→2"
+   },
+   {
+    "tick": 61,
+    "kind": "tech_trade",
+    "a": 7,
+    "b": 2,
+    "weight": 0.5,
+    "detail": "Weapons 1→2"
+   },
+   {
+    "tick": 61,
+    "kind": "tech_trade",
+    "a": 6,
+    "b": 4,
+    "weight": 0.25,
+    "detail": "Experimentation 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 61,
+    "kind": "tech_trade",
+    "a": 6,
+    "b": 2,
+    "weight": 0.25,
+    "detail": "Experimentation 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 61,
+    "kind": "tech_trade",
+    "a": 5,
+    "b": 2,
+    "weight": 0.5,
+    "detail": "Weapons 1→2"
+   },
+   {
+    "tick": 61,
+    "kind": "tech_trade",
+    "a": 5,
+    "b": 4,
+    "weight": 0.25,
+    "detail": "Experimentation 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 61,
+    "kind": "tech_trade",
+    "a": 5,
+    "b": 2,
+    "weight": 0.25,
+    "detail": "Experimentation 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 61,
+    "kind": "tech_trade",
+    "a": 4,
+    "b": 2,
+    "weight": 0.5,
+    "detail": "Weapons 1→2"
+   },
+   {
+    "tick": 61,
+    "kind": "tech_trade",
+    "a": 3,
+    "b": 2,
+    "weight": 0.5,
+    "detail": "Weapons 1→2"
+   },
+   {
+    "tick": 61,
+    "kind": "tech_trade",
+    "a": 2,
+    "b": 8,
+    "weight": 0.25,
+    "detail": "Manufacturing 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 61,
+    "kind": "tech_trade",
+    "a": 2,
+    "b": 5,
+    "weight": 0.25,
+    "detail": "Manufacturing 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 55,
+    "kind": "tech_trade",
+    "a": 6,
+    "b": 8,
+    "weight": 0.25,
+    "detail": "Banking 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 55,
+    "kind": "tech_trade",
+    "a": 6,
+    "b": 1,
+    "weight": 0.25,
+    "detail": "Banking 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 55,
+    "kind": "tech_trade",
+    "a": 5,
+    "b": 8,
+    "weight": 0.5,
+    "detail": "Manufacturing 1→2"
+   },
+   {
+    "tick": 55,
+    "kind": "tech_trade",
+    "a": 5,
+    "b": 8,
+    "weight": 0.25,
+    "detail": "Banking 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 55,
+    "kind": "tech_trade",
+    "a": 5,
+    "b": 1,
+    "weight": 0.25,
+    "detail": "Banking 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 55,
+    "kind": "tech_trade",
+    "a": 4,
+    "b": 8,
+    "weight": 0.25,
+    "detail": "Banking 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 55,
+    "kind": "tech_trade",
+    "a": 4,
+    "b": 1,
+    "weight": 0.25,
+    "detail": "Banking 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 49,
+    "kind": "tech_trade",
+    "a": 2,
+    "b": 4,
+    "weight": 0.5,
+    "detail": "Experimentation 1→2"
+   },
+   {
+    "tick": 49,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 8,
+    "weight": 0.5,
+    "detail": "Banking 1→2"
+   }
+  ]
+ },
+ "exportedAt": "2026-10-30T02:50:56.839Z"
+}
