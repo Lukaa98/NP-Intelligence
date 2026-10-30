@@ -289,7 +289,8 @@ export default function Diplomacy({ gameNumber, refreshKey }) {
           )}
         </div>
         <div>
-          <h3>Suspected tech trades</h3>
+          <h3>Possible tech trades</h3>
+          <p className="muted small">Each is roughly a coin flip: research or Experimentation can cause the same jump.</p>
           {!trades.length ? <p className="muted">None spotted yet. A 2+ level jump in one hour, or reaching a level only one or two others had, gets flagged here.</p> : (
             <ul className="relation-list compact">
               {trades.slice(0, 25).map((trade) => (
@@ -427,7 +428,11 @@ function verdictText(item, name) {
     case "leans_first": return `${who} leans towards ${name(first.uid)}.`;
     case "leans_second": return `${who} leans towards ${name(second.uid)}.`;
     case "helping_both": return `${who} is helping both sides, maybe letting them wear each other down.`;
-    case "attacking_one": return `${who} has taken stars from one of them: likely picking a side or switching.`;
+    case "attacking_one": {
+      const victim = first.attacks ? first : second;
+      return `${who} has taken stars from ${name(victim.uid)}: likely picking a side or switching.`;
+    }
+    case "fighting_both": return `${who} has taken stars from both: friendly on paper only.`;
     default: return `${who} is staying out of it (no tech, fleets or reinforcements seen for either).`;
   }
 }

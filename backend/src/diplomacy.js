@@ -313,7 +313,8 @@ function findMiddlemen(pairs) {
         const first = { uid: friends[i], ...support(middle, friends[i]) };
         const second = { uid: friends[j], ...support(middle, friends[j]) };
         let verdict = "staying_out";
-        if (first.attacks || second.attacks) verdict = "attacking_one";
+        if (first.attacks && second.attacks) verdict = "fighting_both";
+        else if (first.attacks || second.attacks) verdict = "attacking_one";
         else if (first.score >= 0.5 || second.score >= 0.5) {
           const high = Math.max(first.score, second.score);
           const low = Math.min(first.score, second.score);
