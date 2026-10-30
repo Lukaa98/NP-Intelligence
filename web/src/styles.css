@@ -209,3 +209,5 @@ input:focus, textarea:focus { outline: 2px solid var(--accent-2); outline-offset
 .team-grid:has(.member-relations) { grid-template-columns: 1fr; }
 .capture-log summary { cursor: pointer; color: var(--muted); padding: 6px 0; }
 .capture-log[open] summary { color: var(--text); }
+.verdict { margin: 4px 0; font-size: 14px; }
+.support-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 2px 14px; }

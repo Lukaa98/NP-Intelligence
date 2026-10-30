@@ -138,3 +138,28 @@ assert.equal(multiFront.conflicts.length, 2, "1 vs (2, 3) and 5 vs 6");
 const usedPairs = multiFront.conflicts.reduce((sum, conflict) => sum + conflict.enemies.length, 0);
 assert.equal(usedPairs, 3, "every war appears exactly once");
 console.log("Conflict grouping tests passed.");
+
+// 1 is friendly with both 2 and 3, who fight each other; 1 sends tech and
+// parks fleets only with 2, so 1 leans to 2.
+const middle = buildDiplomacy({
+  rows: [
+    pair(1, 2, "guest", { count: 4 }), pair(2, 1, "guest", { count: 2 }),
+    pair(1, 3, "guest", { count: 3 }),
+    pair(2, 1, "tech_trade", { count: 2, weight: 2 }), // 2 received tech from 1
+    pair(2, 3, "capture", { count: 5 })
+  ],
+  events: [],
+  players: [1, 2, 3].map((uid) => ({ uid, alias: `P${uid}`, totalStars: 10 })),
+  viewerUid: 99,
+  snapshotsProcessed: 10,
+  latestTick: 10
+});
+const entry = middle.middlemen.find((item) => item.middle === 1);
+assert(entry, "player 1 is caught between 2 and 3");
+const toTwo = entry.sides.find((side) => side.uid === 2);
+const toThree = entry.sides.find((side) => side.uid === 3);
+assert.equal(toTwo.tech, 2);
+assert.equal(toTwo.fleets, 4);
+assert.equal(toThree.fleets, 3);
+assert.equal(entry.verdict, entry.sides[0].uid === 2 ? "leans_first" : "leans_second");
+console.log("Middleman tests passed.");

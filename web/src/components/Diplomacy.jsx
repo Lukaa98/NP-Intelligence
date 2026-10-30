@@ -175,6 +175,39 @@ export default function Diplomacy({ gameNumber, refreshKey }) {
         </>
       )}
 
+      {!!data.middlemen?.length && (
+        <>
+          <h3>Caught in the middle</h3>
+          <p className="muted small">Friendly with two players who are at war with each other, and who they actually help: tech sent, fleets parked at their stars, fleets flying to them.</p>
+          <ul className="relation-list compact">
+            {data.middlemen.slice(0, 15).map((item) => {
+              const [first, second] = item.sides;
+              return (
+                <li key={`${item.middle}:${first.uid}:${second.uid}`} className="trade">
+                  <div className="relation-head">
+                    <PlayerBadge player={players.get(item.middle)} uid={item.middle} />
+                    <span className="muted small">between</span>
+                    <PlayerBadge player={players.get(first.uid)} uid={first.uid} />
+                    <span className="versus">⚔</span>
+                    <PlayerBadge player={players.get(second.uid)} uid={second.uid} />
+                    {item.warActive && <span className="pill danger">war active</span>}
+                  </div>
+                  <div className="verdict">{verdictText(item, name)}</div>
+                  <div className="support-grid">
+                    {[first, second].map((side) => (
+                      <div key={side.uid} className="meta">
+                        to <strong>{name(side.uid)}</strong>: tech {side.tech || 0} · fleets parked {side.fleets} scans · fleets sent {side.routes} scans
+                        {side.attacks ? <span className="pill danger">took {side.attacks} of their stars</span> : null}
+                      </div>
+                    ))}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </>
+      )}
+
       <h3>Alliances forming</h3>
       {!forming.length ? <p className="muted">Nothing yet. Pairs that start visiting each other's stars, trading tech, or sharing a border without fighting show up here.</p> : (
         <ul className="relation-list compact">
@@ -385,6 +418,18 @@ function describePair(pair, focus, name) {
   if ((routeOut || routeIn) && !pair.allied) parts.push(`fleets heading at each other (${routeOut} / ${routeIn} scans)`);
   if (e.contact && !captured && !lost) parts.push(`neighbours for ${e.contact} scans without fighting`);
   return parts.join(" · ") || "Weak signal.";
+}
+
+function verdictText(item, name) {
+  const [first, second] = item.sides;
+  const who = name(item.middle);
+  switch (item.verdict) {
+    case "leans_first": return `${who} leans towards ${name(first.uid)}.`;
+    case "leans_second": return `${who} leans towards ${name(second.uid)}.`;
+    case "helping_both": return `${who} is helping both sides, maybe letting them wear each other down.`;
+    case "attacking_one": return `${who} has taken stars from one of them: likely picking a side or switching.`;
+    default: return `${who} is staying out of it (no tech, fleets or reinforcements seen for either).`;
+  }
 }
 
 function groupByTick(events) {

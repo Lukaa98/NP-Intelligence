@@ -65,6 +65,7 @@ export function buildDiplomacy({ rows, events, players, viewerUid, snapshotsProc
   const active = new Map(players.map((player) => [player.uid, player]));
   const teams = findTeams(meaningful, active);
   const conflicts = findConflicts(meaningful.filter((pair) => pair.status === "war"), teams);
+  const middlemen = findMiddlemen(meaningful);
 
   return {
     coverage: { snapshotsProcessed, latestTick },
@@ -72,6 +73,7 @@ export function buildDiplomacy({ rows, events, players, viewerUid, snapshotsProc
     pairs: meaningful.sort((left, right) => right.allyScore + right.warScore - (left.allyScore + left.warScore)),
     teams,
     conflicts,
+    middlemen,
     events: events.map((event) => ({ ...event }))
   };
 }
@@ -272,6 +274,57 @@ function findConflicts(wars, teams) {
   }
 
   return conflicts.sort((x, y) => Number(y.active) - Number(x.active) || (y.took + y.lost) - (x.took + x.lost));
+}
+
+// A player friendly with two players who are at war with each other, and how
+// much they help each side: tech sent, fleets parked at their stars (defence)
+// and fleets flying to their stars (reinforcement).
+function findMiddlemen(pairs) {
+  const byKey = new Map(pairs.map((pair) => [`${pair.a}:${pair.b}`, pair]));
+  const relation = (x, y) => byKey.get(`${Math.min(x, y)}:${Math.max(x, y)}`);
+  const friendly = (pair) => pair && ["allied", "possible_allies"].includes(pair.status);
+
+  const friendsOf = new Map();
+  for (const pair of pairs.filter(friendly)) {
+    for (const [self, other] of [[pair.a, pair.b], [pair.b, pair.a]]) {
+      if (!friendsOf.has(self)) friendsOf.set(self, []);
+      friendsOf.get(self).push(other);
+    }
+  }
+
+  // Support from `from` to `to`, read from the direction-aware evidence.
+  const support = (from, to) => {
+    const pair = relation(from, to);
+    const e = pair.evidence;
+    const forward = pair.a === from;
+    const tech = forward ? e.tradeBA : e.tradeAB; // `to` received from `from`
+    const fleets = forward ? e.guestAB : e.guestBA;
+    const routes = forward ? e.routeAB : e.routeBA;
+    const attacks = forward ? e.capturesAB : e.capturesBA;
+    return { tech: round(tech), fleets, routes, attacks, score: round(tech * 2 + fleets * 0.5 + routes * 0.3) };
+  };
+
+  const results = [];
+  for (const [middle, friends] of friendsOf) {
+    for (let i = 0; i < friends.length; i += 1) {
+      for (let j = i + 1; j < friends.length; j += 1) {
+        const war = relation(friends[i], friends[j]);
+        if (!war || war.status !== "war") continue;
+        const first = { uid: friends[i], ...support(middle, friends[i]) };
+        const second = { uid: friends[j], ...support(middle, friends[j]) };
+        let verdict = "staying_out";
+        if (first.attacks || second.attacks) verdict = "attacking_one";
+        else if (first.score >= 0.5 || second.score >= 0.5) {
+          const high = Math.max(first.score, second.score);
+          const low = Math.min(first.score, second.score);
+          verdict = low === 0 || high / low >= 2 ? (first.score > second.score ? "leans_first" : "leans_second") : "helping_both";
+        }
+        results.push({ middle, sides: [first, second], verdict, warActive: war.warActive });
+      }
+    }
+  }
+  return results.sort((x, y) => Number(y.warActive) - Number(x.warActive)
+    || (y.sides[0].score + y.sides[1].score) - (x.sides[0].score + x.sides[1].score));
 }
 
 function round(value) {

@@ -56,6 +56,14 @@ for (const game of (await get("/api/games")).games) {
     console.log(`  ${alias(pair.a)} vs ${alias(pair.b)} captures ${pair.evidence.capturesAB}/${pair.evidence.capturesBA} active=${pair.warActive}`);
   }
   console.log("FORMER ALLIES:", d.pairs.filter((p) => p.status === "former_allies").slice(0, 8).map((p) => `${alias(p.a)}/${alias(p.b)}`).join(", ") || "none");
+  console.log("CAUGHT IN THE MIDDLE:");
+  for (const item of d.middlemen.slice(0, 8)) {
+    console.log(`  ${alias(item.middle)} between ${alias(item.sides[0].uid)} and ${alias(item.sides[1].uid)}: ${item.verdict} ${JSON.stringify(item.sides.map(({ uid, ...rest }) => rest))}`);
+  }
+  console.log("CONFLICTS:");
+  for (const conflict of d.conflicts.slice(0, 6)) {
+    console.log(`  ${conflict.side.map(alias).join(" & ")} vs ${conflict.enemies.map((enemy) => enemy.members.map(alias).join(" & ")).join(" + ")} took=${conflict.took} lost=${conflict.lost}`);
+  }
   const trades = events.filter((event) => event.kind === "tech_trade");
   console.log(`TECH TRADES (${trades.length} candidate links):`);
   for (const trade of trades.slice(0, 12)) console.log(`  t${trade.tick} ${alias(trade.a)} ${trade.detail} <- ${alias(trade.b)}`);
