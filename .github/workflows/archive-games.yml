@@ -1,0 +1,78 @@
+name: Archive finished games to git
+
+# Daily: exports finished, deleted or dead games (every scan + diplomacy) to
+# the np-archive branch, then tells the backend so Cloudflare can drop their
+# hourly history. Same output-branch pattern as the cars project.
+on:
+  schedule:
+    - cron: "41 5 * * *"
+  workflow_dispatch:
+  push:
+    paths:
+      - "scripts/archive-games.mjs"
+      - ".github/workflows/archive-games.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: np-archive
+  cancel-in-progress: false
+
+env:
+  ARCHIVE_BRANCH: np-archive
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: code
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check out the archive branch
+        run: |
+          set -euo pipefail
+          remote="https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
+          if git ls-remote --exit-code --heads "$remote" "$ARCHIVE_BRANCH" >/dev/null; then
+            git clone --depth 1 --branch "$ARCHIVE_BRANCH" "$remote" out
+          else
+            mkdir out && cd out
+            git init -b "$ARCHIVE_BRANCH"
+            git remote add origin "$remote"
+            printf '# NP Intelligence archive\n\nFinished games exported by the archive workflow: archive/<game>/game.json and one file per tick under ticks/.\n' > README.md
+          fi
+
+      - name: Export finished games
+        env:
+          BACKEND_URL: ${{ vars.NP_BACKEND_URL }}
+          NP_ADMIN_TOKEN: ${{ secrets.NP_ADMIN_TOKEN }}
+        run: node code/scripts/archive-games.mjs export out/archive "$RUNNER_TEMP/exported.json"
+
+      - name: Commit and push
+        id: push
+        run: |
+          set -euo pipefail
+          cd out
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Nothing new to archive."
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "archive: $(cat "$RUNNER_TEMP/exported.json")"
+          git push origin "HEAD:$ARCHIVE_BRANCH"
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Mark games as archived
+        if: steps.push.outputs.pushed == 'true'
+        env:
+          BACKEND_URL: ${{ vars.NP_BACKEND_URL }}
+          NP_ADMIN_TOKEN: ${{ secrets.NP_ADMIN_TOKEN }}
+        run: node code/scripts/archive-games.mjs mark "$RUNNER_TEMP/exported.json"

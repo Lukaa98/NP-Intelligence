@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { api } from "../api.js";
+import { api, ARCHIVE_BROWSE } from "../api.js";
 import { navigate } from "../router.js";
 import { buildPlayerIntel } from "../intel.js";
 import { formatBytes, formatDateTime, gameFacts, gameTitle, notesForExport, renderMentions } from "../format.js";
@@ -134,6 +134,7 @@ export default function GamePage({ gameNumber, notes }) {
             Tick {game?.lastTick ?? "?"} · last scan {formatDateTime(game?.lastSyncAt)}
             {game?.finishedAt && " · game finished"}
             {game?.archivedAt && " · deleted (history kept)"}
+            {game?.exportedAt && <> · full replay <a href={`${ARCHIVE_BROWSE}/${gameNumber}`} target="_blank" rel="noreferrer">archived on GitHub</a></>}
           </p>
           {game?.keyStatus === "needs_fresh_key" && <p className="error small">Last scan failed: {game.keyStatusMessage}</p>}
         </div>

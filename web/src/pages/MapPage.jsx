@@ -38,9 +38,16 @@ export default function MapPage({ snapshotId, notes }) {
         api.diplomacy(loaded.gameNumber)
           .then((diplomacy) => !cancelled && setRelations(diplomacy.pairs || []))
           .catch(() => {});
-        api.snapshots(loaded.gameNumber, { limit: 500 })
-          .then((list) => !cancelled && setFrames(timelineFrames(list)))
-          .catch(() => {});
+        // Live scans come from the backend; a finished game's history comes
+        // from the git archive once Cloudflare has dropped it.
+        Promise.all([
+          api.snapshots(loaded.gameNumber, { limit: 5000 }).catch(() => []),
+          api.archivedGame(loaded.gameNumber)
+        ]).then(([list, archived]) => {
+          if (cancelled) return;
+          const fromArchive = (archived?.frames || []).map((item) => ({ ...item, gameNumber: loaded.gameNumber, archived: true }));
+          setFrames(timelineFrames([...fromArchive, ...list]));
+        });
       })
       .catch((loadError) => !cancelled && setError(loadError.message));
     return () => {
@@ -72,7 +79,10 @@ export default function MapPage({ snapshotId, notes }) {
 
   const fetchFrame = useCallback(async (meta) => {
     if (!cache.current.has(meta.id)) {
-      cache.current.set(meta.id, await api.snapshot(meta.id));
+      const loaded = meta.archived
+        ? { ...(await api.archivedFrame(meta.gameNumber, meta.file)), archived: true }
+        : await api.snapshot(meta.id);
+      cache.current.set(meta.id, loaded);
     }
     return cache.current.get(meta.id);
   }, []);
@@ -135,7 +145,7 @@ export default function MapPage({ snapshotId, notes }) {
           </div>
         )}
         <div className="actions">
-          {current && (
+          {current && !current.archived && (
             <button type="button" className="ghost" onClick={async () => {
               try {
                 if (pinned) {
@@ -192,12 +202,16 @@ export default function MapPage({ snapshotId, notes }) {
 }
 
 // One frame per tick, oldest first. When several scans share a tick (a
-// capture right after a scheduled scan), keep the newest.
+// capture right after a scheduled scan), keep the newest; prefer the live
+// backend copy over the archived one.
 function timelineFrames(list) {
   const byTick = new Map();
   for (const item of list) {
     const existing = byTick.get(item.tick);
-    if (!existing || item.capturedAt > existing.capturedAt) byTick.set(item.tick, item);
+    const better = !existing
+      || (existing.archived && !item.archived)
+      || (existing.archived === item.archived && item.capturedAt > existing.capturedAt);
+    if (better) byTick.set(item.tick, item);
   }
   return [...byTick.values()].sort((x, y) => x.tick - y.tick);
 }

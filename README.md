@@ -30,12 +30,10 @@ Neptune's Pride intel dashboard: track your games, keep their history after NP d
 ## What gets kept
 
 - Running games are scanned every hour (at :07). A scan on the same tick as the previous one isn't stored again.
-- **While a game is live, its full scan history is kept.**
-- Once a game stops producing data, its latest state is pinned and the rest of its history is deleted. That happens when:
-  - the game ends (pinned as *Final state*),
-  - you delete it (pinned as *Last state before delete*), or
-  - NP refuses scans for 48 hours, e.g. NP deleted the game or the key expired (pinned as *Last known state*).
-- **Kept forever:** pinned captures, those final states, and player notes.
+- **While a game is live, its full scan history is kept** in Cloudflare D1.
+- Once a game stops producing data (it ends, you delete it, or NP refuses scans for 48 hours), the daily **Archive finished games** workflow exports every scan plus its diplomacy to the **`np-archive` branch** (`archive/<game>/game.json` and `archive/<game>/ticks/<tick>.json`). Only after that push succeeds does the backend drop the game's hourly history, keeping just the pinned final state.
+- The map timeline replays archived games straight from that branch.
+- **Kept forever:** pinned captures, final states, the alliance and war record, player notes, and the git archive.
 
 ## Deploying
 

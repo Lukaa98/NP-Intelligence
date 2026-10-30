@@ -1,5 +1,8 @@
 const DEFAULT_BACKEND_URL = (import.meta.env.VITE_BACKEND_URL || "https://np-intelligence-backend.carsandbids-labs.workers.dev").replace(/\/+$/, "");
 const BACKEND_KEY = "np-intel.backendUrl";
+// Finished games live on the np-archive branch (see archive-games workflow).
+export const ARCHIVE_BASE = (import.meta.env.VITE_ARCHIVE_BASE || "https://raw.githubusercontent.com/Lukaa98/NP-Intelligence/np-archive/archive").replace(/\/+$/, "");
+export const ARCHIVE_BROWSE = "https://github.com/Lukaa98/NP-Intelligence/tree/np-archive/archive";
 const TOKEN_KEY = "np-intel.writeToken";
 
 function readStorage(key) {
@@ -71,6 +74,15 @@ export const api = {
   snapshot: (snapshotId) => request(`/api/snapshots/${encodeURIComponent(snapshotId)}`).then((payload) => payload.snapshot),
   pinSnapshot: (snapshotId, label) => request(`/api/snapshots/${encodeURIComponent(snapshotId)}/pin`, { method: "POST", body: JSON.stringify({ label }) }),
   unpinSnapshot: (snapshotId) => request(`/api/snapshots/${encodeURIComponent(snapshotId)}/pin`, { method: "DELETE" }),
+  // Archived games: null when the game isn't in the git archive (yet).
+  archivedGame: (gameNumber) => fetch(`${ARCHIVE_BASE}/${encodeURIComponent(gameNumber)}/game.json`)
+    .then((response) => (response.ok ? response.json() : null))
+    .catch(() => null),
+  archivedFrame: async (gameNumber, file) => {
+    const response = await fetch(`${ARCHIVE_BASE}/${encodeURIComponent(gameNumber)}/${file}`);
+    if (!response.ok) throw new Error(`Archived tick not found (${response.status})`);
+    return response.json();
+  },
   listPlayers: () => request("/api/players").then((payload) => payload.players || []),
   savePlayer: (body) => request("/api/players", { method: "PUT", body: JSON.stringify(body) }).then((payload) => payload.player),
   deletePlayer: (alias) => request(`/api/players/${encodeURIComponent(alias)}`, { method: "DELETE" })

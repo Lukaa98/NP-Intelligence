@@ -146,7 +146,8 @@ export default {
           return json({ error: "Game not found" }, 404);
         }
 
-        const limit = Math.max(1, Math.min(Number(url.searchParams.get("limit") || 100), 500));
+        // Metadata only (no scan payloads), so long games can list every scan.
+        const limit = Math.max(1, Math.min(Number(url.searchParams.get("limit") || 100), 5000));
         const pinnedOnly = url.searchParams.get("pinned") === "1";
         return json({ snapshots: await listSnapshotMeta(env, gameNumber, { pinnedOnly, limit }) });
       }
