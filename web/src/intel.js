@@ -107,26 +107,41 @@ function playerQuickSummary(player) {
   return parts.join(" • ") || "No major change in this window.";
 }
 
+// "3 from [[A]] (S1, S2, S3) · 2 from [[B]] (S4, S5)": one group per empire.
+function groupedStars(items, key, word) {
+  const groups = new Map();
+  for (const item of items) {
+    const other = item[key] || "another empire";
+    if (!groups.has(other)) groups.set(other, []);
+    groups.get(other).push(item.starName);
+  }
+  return [...groups.entries()]
+    .sort((x, y) => y[1].length - x[1].length)
+    .map(([other, stars]) => {
+      const names = stars.slice(0, 4).map((star) => `[[${star}]]`).join(", ");
+      const more = stars.length > 4 ? ` and ${stars.length - 4} more` : "";
+      const who = other === "another empire" ? other : `[[${other}]]`;
+      return `${stars.length} ${word} ${who} (${names}${more})`;
+    })
+    .join(" · ") + ".";
+}
+
 function playerDetailRows(player) {
   const details = [];
 
   if (player.losses.length) {
-    const names = player.losses.slice(0, 4).map((item) => `[[${item.starName}]]`).join(", ");
-    const target = player.losses[0]?.to ? `[[${player.losses[0].to}]]` : "another empire";
     details.push({
       title: `[[${player.name}]] lost ${player.losses.length} planet${player.losses.length === 1 ? "" : "s"}.`,
-      detail: `${names}${player.losses.length > 4 ? ` and ${player.losses.length - 4} more` : ""} transferred to ${target}.`,
+      detail: groupedStars(player.losses, "to", "to"),
       tag: "loss",
       tone: "danger"
     });
   }
 
   if (player.captures.length) {
-    const names = player.captures.slice(0, 4).map((item) => `[[${item.starName}]]`).join(", ");
-    const source = player.captures[0]?.from ? `[[${player.captures[0].from}]]` : "another empire";
     details.push({
       title: `[[${player.name}]] captured ${player.captures.length} planet${player.captures.length === 1 ? "" : "s"}.`,
-      detail: `${names}${player.captures.length > 4 ? ` and ${player.captures.length - 4} more` : ""} came from ${source}.`,
+      detail: groupedStars(player.captures, "from", "from"),
       tag: "capture",
       tone: "success"
     });

@@ -62,7 +62,7 @@ export default function GamePage({ gameNumber, notes }) {
 
   const gameContext = { gameNumber, gameName: gameTitle(game, gameNumber) };
   const players = useMemo(() => intel ? buildPlayerIntel(intel.summary || {}, intel.events || []) : [], [intel]);
-  const activePlayer = players.find((player) => player.name === selectedPlayer) || players[0] || null;
+  const activePlayer = players.find((player) => player.name === selectedPlayer) || null;
   const captures = snapshots.filter((snapshot) => snapshot.pinned);
   const history = showAllSnapshots ? snapshots : snapshots.slice(0, 12);
   const latest = snapshots[0];
@@ -163,45 +163,31 @@ export default function GamePage({ gameNumber, notes }) {
         ) : <p className="muted">No intel yet for this game.</p>}
 
         <div className="player-table">
-          {players.map((player) => (
-            <div
-              key={player.name}
-              className={`player-line${activePlayer?.name === player.name ? " active" : ""}`}
-              onClick={() => setSelectedPlayer(player.name)}
-            >
-              <div className="player-name">
-                <strong>{player.name}</strong>
-                <span className="muted small">{player.quickSummary}</span>
-              </div>
-              <div className="player-stats small">
-                <span>{player.stars}★</span>
-                <span>{player.ships} ships</span>
-                <span className={`pill ${player.tone === "danger" ? "danger" : player.tone === "success" ? "success" : ""}`}>{player.badge}</span>
-              </div>
-              <PlayerRating alias={player.name} notes={notes} game={gameContext} compact />
-            </div>
-          ))}
+          {players.map((player) => {
+            const open = activePlayer?.name === player.name;
+            return (
+              <React.Fragment key={player.name}>
+                <div
+                  className={`player-line${open ? " active" : ""}`}
+                  onClick={() => setSelectedPlayer(open ? "" : player.name)}
+                  aria-expanded={open}
+                >
+                  <div className="player-name">
+                    <strong><span className="caret">{open ? "▾" : "▸"}</span> {player.name}</strong>
+                    <span className="muted small">{player.quickSummary}</span>
+                  </div>
+                  <div className="player-stats small">
+                    <span>{player.stars}★</span>
+                    <span>{player.ships} ships</span>
+                    <span className={`pill ${player.tone === "danger" ? "danger" : player.tone === "success" ? "success" : ""}`}>{player.badge}</span>
+                  </div>
+                  <PlayerRating alias={player.name} notes={notes} game={gameContext} compact />
+                </div>
+                {open && <PlayerDetail player={player} note={notes.byAlias[player.name.toLowerCase()]?.note} />}
+              </React.Fragment>
+            );
+          })}
         </div>
-
-        {activePlayer && (
-          <div className="detail-box">
-            <h3>{activePlayer.name}</h3>
-            <p className="muted small">Eco {activePlayer.economy} · Ind {activePlayer.industry} · Sci {activePlayer.science}</p>
-            {notes.byAlias[activePlayer.name.toLowerCase()]?.note && (
-              <p className="note-text">📝 {notes.byAlias[activePlayer.name.toLowerCase()].note}</p>
-            )}
-            {!activePlayer.details.length ? <p className="muted">No meaningful changes in this window.</p> : (
-              <ul className="event-list">
-                {activePlayer.details.map((item, index) => (
-                  <li key={index} className={item.tone}>
-                    <strong><Mentions text={item.title} /></strong>
-                    <span><Mentions text={item.detail} /></span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        )}
       </section>
 
       <section className="card">
@@ -234,6 +220,29 @@ export default function GamePage({ gameNumber, notes }) {
 
       {intel?.fetchHealth && <FetchHealth health={intel.fetchHealth} />}
     </>
+  );
+}
+
+// Opens directly under the clicked player row.
+function PlayerDetail({ player, note }) {
+  return (
+    <div className="detail-box inline">
+      <p className="muted small">
+        {player.stars} stars · {player.ships} ships · Eco {player.economy} · Ind {player.industry} · Sci {player.science}
+        {player.stars === 0 && " · no stars left"}
+      </p>
+      {note && <p className="note-text">📝 {note}</p>}
+      {!player.details.length ? <p className="muted">No meaningful changes in this window.</p> : (
+        <ul className="event-list">
+          {player.details.map((item, index) => (
+            <li key={index} className={item.tone}>
+              <strong><Mentions text={item.title} /></strong>
+              <span><Mentions text={item.detail} /></span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }
 
