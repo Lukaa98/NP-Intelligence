@@ -5,13 +5,24 @@ import { shapeSvg } from "../map/mapViewer.js";
 const NP_COLORS = ["#0000ff", "#009fdf", "#40c000", "#ffc000", "#df5f00", "#c00000", "#c000c0", "#6000c0"];
 const NP_SHAPES = ["circle", "square", "hexagon", "triangle", "cross", "diamond", "star", "pill"];
 
+// Labels say how the relation was inferred, because only formal alliances in
+// your own data are certain.
 const STATUS_LABELS = {
-  allied: "Allied",
-  possible_allies: "Possibly allied",
+  allied: "Allied (fleets parked at each other's stars)",
+  possible_allies: "Probably cooperating",
   former_allies: "Former allies",
   war: "At war",
   tension: "Tension",
-  peaceful: "Peaceful neighbours"
+  peaceful: "Not fighting · maybe a NAP"
+};
+
+const STATUS_HINTS = {
+  allied: "Near-certain: NP4 fleets fight at enemy stars, so fleets sitting at each other's stars mean a formal alliance.",
+  possible_allies: "Some evidence (a fleet visit or likely tech trades), not proof of an alliance.",
+  peaceful: "Weak: neighbours who never fight. Could be a non-aggression deal, or just busy elsewhere.",
+  tension: "Fleets flying at each other's stars, no captures yet.",
+  former_allies: "Were allied, then fought or the alliance ended.",
+  war: "Stars captured between them."
 };
 
 // Who is with whom, who fights whom, and who trades tech, inferred from every
@@ -93,7 +104,7 @@ export default function Diplomacy({ gameNumber, refreshKey }) {
         <h2>Diplomacy</h2>
         <span className="muted small">
           Based on {data.coverage.snapshotsProcessed} scans{data.coverage.latestTick ? ` up to tick ${data.coverage.latestTick}` : ""}.
-          {" "}Inferred from fleets, captures and tech, except your own alliances.
+          {" "}Only your own formal alliances are certain; everything else is inferred (hover a label to see how sure).
         </span>
       </div>
 
@@ -173,7 +184,7 @@ export default function Diplomacy({ gameNumber, refreshKey }) {
                 <PlayerBadge player={players.get(pair.a)} uid={pair.a} />
                 <span className="muted">+</span>
                 <PlayerBadge player={players.get(pair.b)} uid={pair.b} />
-                <span className={`status ${pair.status}`}>{STATUS_LABELS[pair.status]}</span>
+                <span className={`status ${pair.status}`} title={pair.confirmed ? "From your own game data." : STATUS_HINTS[pair.status]}>{STATUS_LABELS[pair.status]}</span>
               </div>
               <div className="meta">{describePair(pair, pair.a, name)}</div>
             </li>
@@ -197,7 +208,7 @@ export default function Diplomacy({ gameNumber, refreshKey }) {
               <li key={`${pair.a}:${pair.b}`} className={pair.status}>
                 <div className="relation-head">
                   <PlayerBadge player={players.get(other)} uid={other} />
-                  <span className={`status ${pair.status}`}>{pair.confirmed ? "Allied (formal)" : STATUS_LABELS[pair.status]}</span>
+                  <span className={`status ${pair.status}`} title={pair.confirmed ? "From your own game data." : STATUS_HINTS[pair.status]}>{pair.confirmed ? "Allied (formal, certain)" : STATUS_LABELS[pair.status]}</span>
                   {pair.warActive && <span className="pill danger">active</span>}
                 </div>
                 <div className="meta">{describePair(pair, focus, name)}</div>
@@ -316,7 +327,7 @@ function MemberRelations({ uid, pairs, teamIndex, ownTeam, players, name }) {
           <li key={`${pair.a}:${pair.b}`} className={pair.status}>
             <div className="relation-head">
               <PlayerBadge player={players.get(them)} uid={them} />
-              <span className={`status ${pair.status}`}>{pair.confirmed ? "Allied (formal)" : STATUS_LABELS[pair.status]}</span>
+              <span className={`status ${pair.status}`} title={pair.confirmed ? "From your own game data." : STATUS_HINTS[pair.status]}>{pair.confirmed ? "Allied (formal, certain)" : STATUS_LABELS[pair.status]}</span>
               {friendlyOutside && <span className="pill">⚠ outside team</span>}
               {pair.warActive && <span className="pill danger">active</span>}
             </div>
