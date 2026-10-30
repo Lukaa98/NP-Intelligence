@@ -5,7 +5,7 @@ import { buildPlayerIntel } from "../intel.js";
 import { formatDateTime, gameFacts, gameTitle, notesForExport, renderMentions } from "../format.js";
 import { downloadStandaloneHtml } from "../map/exportHtml.js";
 import PlayerRating from "../components/PlayerRating.jsx";
-import Diplomacy from "../components/Diplomacy.jsx";
+import Diplomacy, { PickPlayer, PlayerBadge as DiplomacyBadge, STATUS_HINTS, STATUS_LABELS, describePair, groupTrades, useDiplomacy, verdictText } from "../components/Diplomacy.jsx";
 import RenameGame from "../components/RenameGame.jsx";
 
 const WINDOWS = [
@@ -60,12 +60,57 @@ export default function GamePage({ gameNumber, notes }) {
     }
   }
 
+  const diplomacy = useDiplomacy(gameNumber, diplomacyKey);
   const gameContext = { gameNumber, gameName: gameTitle(game, gameNumber) };
   const players = useMemo(() => intel ? buildPlayerIntel(intel.summary || {}, intel.events || []) : [], [intel]);
   const activePlayer = players.find((player) => player.name === selectedPlayer) || null;
   const captures = snapshots.filter((snapshot) => snapshot.pinned);
   const history = showAllSnapshots ? snapshots : snapshots.slice(0, 12);
   const latest = snapshots[0];
+  const alive = players.filter((player) => player.stars > 0 || player.ships > 0);
+  const eliminated = players.filter((player) => player.stars === 0 && player.ships === 0);
+
+  // Any player name on the page opens that player's row here and scrolls to it.
+  const openPlayer = useCallback((uid) => {
+    const alias = diplomacy.players.get(uid)?.alias;
+    if (!alias) return;
+    setSelectedPlayer(alias);
+    requestAnimationFrame(() => {
+      document.getElementById(`player-${uid}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }, [diplomacy.players]);
+
+  const renderPlayer = (player) => {
+    const open = activePlayer?.name === player.name;
+    return (
+      <React.Fragment key={player.name}>
+        <div
+          id={`player-${player.uid}`}
+          className={`player-line${open ? " active" : ""}`}
+          onClick={() => setSelectedPlayer(open ? "" : player.name)}
+          aria-expanded={open}
+        >
+          <div className="player-name">
+            <strong><span className="caret">{open ? "▾" : "▸"}</span> {player.name}</strong>
+            <span className="muted small">{player.quickSummary}</span>
+          </div>
+          <div className="player-stats small">
+            <span>{player.stars}★</span>
+            <span>{player.ships} ships</span>
+            <span className={`pill ${player.tone === "danger" ? "danger" : player.tone === "success" ? "success" : ""}`}>{player.badge}</span>
+          </div>
+          <PlayerRating alias={player.name} notes={notes} game={gameContext} compact />
+        </div>
+        {open && (
+          <PlayerDetail
+            player={player}
+            note={notes.byAlias[player.name.toLowerCase()]?.note}
+            diplomacy={diplomacy}
+          />
+        )}
+      </React.Fragment>
+    );
+  };
 
   async function download(snapshotId) {
     await run("Building HTML", async () => {
@@ -76,7 +121,7 @@ export default function GamePage({ gameNumber, notes }) {
   }
 
   return (
-    <>
+    <PickPlayer.Provider value={openPlayer}>
       <section className="hero card">
         <div>
           <p className="eyebrow"><a href="#/">Games</a> / #{gameNumber}</p>
@@ -125,7 +170,33 @@ export default function GamePage({ gameNumber, notes }) {
 
       {status && <p className="status banner">{status}</p>}
 
-      <Diplomacy gameNumber={gameNumber} refreshKey={diplomacyKey} />
+      <Diplomacy diplomacy={diplomacy} />
+
+      <section className="card">
+        <div className="section-head">
+          <h2>Players</h2>
+          <div className="actions">
+            <span className="muted small">changes over</span>
+            {WINDOWS.map(([key, label]) => (
+              <button key={key} type="button" className={`ghost${windowKey === key ? " active" : ""}`} onClick={() => setWindowKey(key)}>{label}</button>
+            ))}
+          </div>
+        </div>
+        {intel?.summary?.players?.length ? (
+          <p className="muted small">Click a player for everything: stats, allies, wars, recent changes and possible tech trades. Tick {intel.summary.tick} · {alive.length} still in the game.</p>
+        ) : <p className="muted">No intel yet for this game.</p>}
+
+        <div className="player-table">
+          {alive.map(renderPlayer)}
+        </div>
+        {!!eliminated.length && (
+          <details className="eliminated">
+            <summary>Eliminated or empty ({eliminated.length})</summary>
+            <div className="player-table">{eliminated.map(renderPlayer)}</div>
+          </details>
+        )}
+      </section>
+
 
       <section className="card">
         <div className="section-head">
@@ -147,47 +218,6 @@ export default function GamePage({ gameNumber, notes }) {
             ))}
           </div>
         )}
-      </section>
-
-      <section className="card">
-        <div className="section-head">
-          <h2>Player intel</h2>
-          <div className="actions">
-            {WINDOWS.map(([key, label]) => (
-              <button key={key} type="button" className={`ghost${windowKey === key ? " active" : ""}`} onClick={() => setWindowKey(key)}>{label}</button>
-            ))}
-          </div>
-        </div>
-        {intel?.summary?.players?.length ? (
-          <p className="muted small">{intel.summary.gameName} · tick {intel.summary.tick} · {intel.summary.players.length} players · {intel.summary.stars?.length || 0} stars</p>
-        ) : <p className="muted">No intel yet for this game.</p>}
-
-        <div className="player-table">
-          {players.map((player) => {
-            const open = activePlayer?.name === player.name;
-            return (
-              <React.Fragment key={player.name}>
-                <div
-                  className={`player-line${open ? " active" : ""}`}
-                  onClick={() => setSelectedPlayer(open ? "" : player.name)}
-                  aria-expanded={open}
-                >
-                  <div className="player-name">
-                    <strong><span className="caret">{open ? "▾" : "▸"}</span> {player.name}</strong>
-                    <span className="muted small">{player.quickSummary}</span>
-                  </div>
-                  <div className="player-stats small">
-                    <span>{player.stars}★</span>
-                    <span>{player.ships} ships</span>
-                    <span className={`pill ${player.tone === "danger" ? "danger" : player.tone === "success" ? "success" : ""}`}>{player.badge}</span>
-                  </div>
-                  <PlayerRating alias={player.name} notes={notes} game={gameContext} compact />
-                </div>
-                {open && <PlayerDetail player={player} note={notes.byAlias[player.name.toLowerCase()]?.note} />}
-              </React.Fragment>
-            );
-          })}
-        </div>
       </section>
 
       <section className="card">
@@ -219,20 +249,71 @@ export default function GamePage({ gameNumber, notes }) {
       </section>
 
       {intel?.fetchHealth && <FetchHealth health={intel.fetchHealth} />}
-    </>
+    </PickPlayer.Provider>
   );
 }
 
-// Opens directly under the clicked player row.
-function PlayerDetail({ player, note }) {
+// Everything about one player, opened directly under their row: stats, your
+// note, diplomatic relations, recent changes and possible tech trades.
+const RELATION_ORDER = { allied: 0, possible_allies: 1, war: 2, former_allies: 3, tension: 4, peaceful: 5 };
+
+function PlayerDetail({ player, note, diplomacy }) {
+  const uid = Number(player.uid);
+  const data = diplomacy.data;
+  const name = (other) => diplomacy.players.get(other)?.alias || `Player ${other}`;
+  const relations = (data?.pairs || [])
+    .filter((pair) => pair.a === uid || pair.b === uid)
+    .sort((x, y) => (RELATION_ORDER[x.status] ?? 9) - (RELATION_ORDER[y.status] ?? 9) || y.allyScore + y.warScore - (x.allyScore + x.warScore));
+  const team = data?.teams.find((item) => item.members.includes(uid));
+  const middle = (data?.middlemen || []).filter((item) => item.middle === uid);
+  const trades = groupTrades((data?.events || []).filter((event) => event.kind === "tech_trade" && (event.a === uid || event.b === uid))).slice(0, 6);
+
   return (
     <div className="detail-box inline">
       <p className="muted small">
         {player.stars} stars · {player.ships} ships · Eco {player.economy} · Ind {player.industry} · Sci {player.science}
         {player.stars === 0 && " · no stars left"}
+        {team && ` · in a likely team of ${team.members.length}`}
       </p>
       {note && <p className="note-text">📝 {note}</p>}
-      {!player.details.length ? <p className="muted">No meaningful changes in this window.</p> : (
+
+      <h4>Relations</h4>
+      {!data ? <p className="muted small">Loading…</p> : !relations.length ? <p className="muted small">Nothing recorded yet.</p> : (
+        <ul className="relation-list compact">
+          {relations.slice(0, 15).map((pair) => {
+            const other = pair.a === uid ? pair.b : pair.a;
+            return (
+              <li key={`${pair.a}:${pair.b}`} className={pair.status}>
+                <div className="relation-head">
+                  <BadgeFor uid={other} diplomacy={diplomacy} />
+                  <span className={`status ${pair.status}`} title={pair.confirmed ? "From your own game data." : STATUS_HINTS[pair.status]}>
+                    {pair.confirmed ? "Allied (formal, certain)" : STATUS_LABELS[pair.status]}
+                  </span>
+                  {team && !team.members.includes(other) && ["allied", "possible_allies"].includes(pair.status) && <span className="pill">⚠ outside their team</span>}
+                  {pair.warActive && <span className="pill danger">active</span>}
+                </div>
+                <div className="meta">{describePair(pair, uid, name)}</div>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+
+      {!!middle.length && (
+        <>
+          <h4>Caught in the middle</h4>
+          <ul className="relation-list compact">
+            {middle.map((item) => (
+              <li key={`${item.sides[0].uid}:${item.sides[1].uid}`} className="trade">
+                <div className="meta">{verdictText(item, name)} ({name(item.sides[0].uid)} ⚔ {name(item.sides[1].uid)})</div>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+
+      <h4>Recent changes</h4>
+      {!player.details.length ? <p className="muted small">No meaningful changes in this window.</p> : (
         <ul className="event-list">
           {player.details.map((item, index) => (
             <li key={index} className={item.tone}>
@@ -242,8 +323,29 @@ function PlayerDetail({ player, note }) {
           ))}
         </ul>
       )}
+
+      {!!trades.length && (
+        <>
+          <h4>Possible tech trades <span className="muted small">(about a coin flip each)</span></h4>
+          <ul className="relation-list compact">
+            {trades.map((trade) => (
+              <li key={trade.key} className="trade">
+                <div className="meta">
+                  tick {trade.tick}: {trade.receiver === uid ? "got" : `${name(trade.receiver)} got`} {trade.detail}
+                  {" "}— likely from {trade.sources.map(name).join(" or ")}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
     </div>
   );
+}
+
+function BadgeFor({ uid, diplomacy }) {
+  const player = diplomacy.players.get(uid);
+  return <DiplomacyBadge player={player} uid={uid} />;
 }
 
 function SnapshotRow({ snapshot, onDownload, onPinToggle }) {

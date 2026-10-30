@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { api } from "../api.js";
 import { shapeSvg } from "../map/mapViewer.js";
 
@@ -7,7 +7,7 @@ const NP_SHAPES = ["circle", "square", "hexagon", "triangle", "cross", "diamond"
 
 // Labels say how the relation was inferred, because only formal alliances in
 // your own data are certain.
-const STATUS_LABELS = {
+export const STATUS_LABELS = {
   allied: "Allied (fleets parked at each other's stars)",
   possible_allies: "Probably cooperating",
   former_allies: "Former allies",
@@ -16,7 +16,7 @@ const STATUS_LABELS = {
   peaceful: "Not fighting · maybe a NAP"
 };
 
-const STATUS_HINTS = {
+export const STATUS_HINTS = {
   allied: "Near-certain: NP4 fleets fight at enemy stars, so fleets sitting at each other's stars mean a formal alliance.",
   possible_allies: "Some evidence (a fleet visit or likely tech trades), not proof of an alliance.",
   peaceful: "Weak: neighbours who never fight. Could be a non-aggression deal, or just busy elsewhere.",
@@ -25,14 +25,15 @@ const STATUS_HINTS = {
   war: "Stars captured between them."
 };
 
-// Who is with whom, who fights whom, and who trades tech, inferred from every
-// stored scan. Automatically analyses scans that haven't been processed yet.
-export default function Diplomacy({ gameNumber, refreshKey }) {
+// Clicking any player name on the game page calls this with the player's uid
+// (the page opens that player's row in the player list).
+export const PickPlayer = createContext(null);
+
+// Loads diplomacy for a game and analyses any scans not processed yet.
+export function useDiplomacy(gameNumber, refreshKey) {
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
   const [progress, setProgress] = useState(null);
-  const [focusUid, setFocusUid] = useState(null);
-  const [openMember, setOpenMember] = useState(null);
   const analysing = useRef(false);
 
   const load = useCallback(async () => {
@@ -74,15 +75,17 @@ export default function Diplomacy({ gameNumber, refreshKey }) {
   }, [data?.pendingSnapshots, analyse]);
 
   const players = useMemo(() => new Map((data?.players || []).map((player) => [player.uid, player])), [data]);
-  const active = useMemo(() => [...players.values()]
-    .filter((player) => !player.conceded && player.totalStars > 0)
-    .sort((left, right) => right.totalStars - left.totalStars), [players]);
+  return { data, error, progress, players };
+}
+
+// The big picture: teams, wars, double ties, middlemen, alliances forming and
+// tech trades. Per-player detail lives in the player list on the game page.
+export default function Diplomacy({ diplomacy }) {
+  const { data, error, progress, players } = diplomacy;
 
   if (error) return <section className="card"><h2>Diplomacy</h2><p className="error">{error}</p></section>;
   if (!data) return <section className="card"><h2>Diplomacy</h2><p className="muted">Loading…</p></section>;
 
-  const focus = focusUid ?? data.viewerUid ?? active[0]?.uid;
-  const focusPairs = data.pairs.filter((pair) => pair.a === focus || pair.b === focus);
   const conflicts = data.conflicts || [];
   const teamIndex = new Map();
   data.teams.forEach((team, index) => team.members.forEach((uid) => teamIndex.set(uid, index)));
@@ -104,7 +107,7 @@ export default function Diplomacy({ gameNumber, refreshKey }) {
         <h2>Diplomacy</h2>
         <span className="muted small">
           Based on {data.coverage.snapshotsProcessed} scans{data.coverage.latestTick ? ` up to tick ${data.coverage.latestTick}` : ""}.
-          {" "}Only your own formal alliances are certain; everything else is inferred (hover a label to see how sure).
+          {" "}Only your own formal alliances are certain; everything else is inferred (hover a label to see how sure). Click any name to open that player.
         </span>
       </div>
 
@@ -128,28 +131,14 @@ export default function Diplomacy({ gameNumber, refreshKey }) {
               </div>
               <div className="team-members">
                 {team.members.map((uid) => (
-                  <button
-                    key={uid}
-                    type="button"
-                    className={`member${openMember === uid ? " open" : ""}`}
-                    onClick={() => setOpenMember(openMember === uid ? null : uid)}
-                  >
+                  <span key={uid} className="member">
                     <PlayerBadge player={players.get(uid)} uid={uid} />
                     <span className="muted small">{players.get(uid)?.totalStars ?? 0}★</span>
-                  </button>
+                  </span>
                 ))}
               </div>
               <div className="meta">{team.stars} stars · {team.ships.toLocaleString()} ships · {team.links} of {team.members.length * (team.members.length - 1) / 2} pairs directly linked</div>
-              {team.members.includes(openMember) && (
-                <MemberRelations
-                  uid={openMember}
-                  pairs={data.pairs.filter((pair) => pair.a === openMember || pair.b === openMember)}
-                  teamIndex={teamIndex}
-                  ownTeam={index}
-                  players={players}
-                  name={name}
-                />
-              )}
+
             </article>
           ))}
         </div>
@@ -225,32 +214,6 @@ export default function Diplomacy({ gameNumber, refreshKey }) {
         </ul>
       )}
 
-      <h3>Any player's relations</h3>
-      <div className="chip-row">
-        {active.map((player) => (
-          <button key={player.uid} type="button" className={`chip${player.uid === focus ? " active" : ""}`} onClick={() => setFocusUid(player.uid)}>
-            <PlayerBadge player={player} uid={player.uid} />
-          </button>
-        ))}
-      </div>
-      {!focusPairs.length ? <p className="muted">No relations recorded for {name(focus)} yet.</p> : (
-        <ul className="relation-list">
-          {focusPairs.map((pair) => {
-            const other = pair.a === focus ? pair.b : pair.a;
-            return (
-              <li key={`${pair.a}:${pair.b}`} className={pair.status}>
-                <div className="relation-head">
-                  <PlayerBadge player={players.get(other)} uid={other} />
-                  <span className={`status ${pair.status}`} title={pair.confirmed ? "From your own game data." : STATUS_HINTS[pair.status]}>{pair.confirmed ? "Allied (formal, certain)" : STATUS_LABELS[pair.status]}</span>
-                  {pair.warActive && <span className="pill danger">active</span>}
-                </div>
-                <div className="meta">{describePair(pair, focus, name)}</div>
-              </li>
-            );
-          })}
-        </ul>
-      )}
-
       <div className="two-col">
         <div>
           <h3>Wars</h3>
@@ -259,12 +222,12 @@ export default function Diplomacy({ gameNumber, refreshKey }) {
               {conflicts.slice(0, 20).map((conflict, index) => (
                 <li key={index} className="war conflict">
                   <div className="relation-head">
-                    <Side uids={conflict.side} players={players} onPick={setFocusUid} />
+                    <Side uids={conflict.side} players={players} />
                     <span className="versus">⚔</span>
                     {conflict.enemies.map((enemy, enemyIndex) => (
                       <React.Fragment key={enemyIndex}>
                         {enemyIndex > 0 && <span className="muted">+</span>}
-                        <Side uids={enemy.members} players={players} onPick={setFocusUid} />
+                        <Side uids={enemy.members} players={players} />
                       </React.Fragment>
                     ))}
                     {conflict.active && <span className="pill danger">active</span>}
@@ -340,68 +303,48 @@ export default function Diplomacy({ gameNumber, refreshKey }) {
   );
 }
 
-// A team member's relations, shown inside their team card. Friendly ties to
-// players outside the team are the interesting part, so they come first.
-function MemberRelations({ uid, pairs, teamIndex, ownTeam, players, name }) {
-  const other = (pair) => (pair.a === uid ? pair.b : pair.a);
-  const outside = (pair) => teamIndex.get(other(pair)) !== ownTeam;
-  const order = { allied: 0, possible_allies: 1, war: 2, former_allies: 3, tension: 4, peaceful: 5 };
-  const sorted = pairs
-    .filter((pair) => outside(pair) || pair.status !== "allied")
-    .sort((x, y) => (order[x.status] ?? 9) - (order[y.status] ?? 9) || y.allyScore + y.warScore - (x.allyScore + x.warScore));
-  if (!sorted.length) {
-    return <p className="member-relations muted small">{name(uid)} has no relations outside this team on record.</p>;
-  }
-  return (
-    <ul className="member-relations relation-list compact">
-      {sorted.slice(0, 12).map((pair) => {
-        const them = other(pair);
-        const friendlyOutside = ["allied", "possible_allies"].includes(pair.status) && outside(pair);
-        return (
-          <li key={`${pair.a}:${pair.b}`} className={pair.status}>
-            <div className="relation-head">
-              <PlayerBadge player={players.get(them)} uid={them} />
-              <span className={`status ${pair.status}`} title={pair.confirmed ? "From your own game data." : STATUS_HINTS[pair.status]}>{pair.confirmed ? "Allied (formal, certain)" : STATUS_LABELS[pair.status]}</span>
-              {friendlyOutside && <span className="pill">⚠ outside team</span>}
-              {pair.warActive && <span className="pill danger">active</span>}
-            </div>
-            <div className="meta">{describePair(pair, uid, name)}</div>
-          </li>
-        );
-      })}
-    </ul>
-  );
-}
-
 // One side of a war: a single player, or a detected team shown as "A & B".
-function Side({ uids, players, onPick }) {
+function Side({ uids, players }) {
   return (
     <span className={`side${uids.length > 1 ? " team" : ""}`}>
       {uids.map((uid, index) => (
         <React.Fragment key={uid}>
           {index > 0 && <span className="muted">&</span>}
-          <button type="button" className="link-button" onClick={() => onPick(uid)}>
-            <PlayerBadge player={players.get(uid)} uid={uid} />
-          </button>
+          <PlayerBadge player={players.get(uid)} uid={uid} />
         </React.Fragment>
       ))}
     </span>
   );
 }
 
-function PlayerBadge({ player, uid }) {
+export function PlayerBadge({ player, uid }) {
+  const pick = useContext(PickPlayer);
   const color = typeof player?.color === "number" ? NP_COLORS[player.color % 8] : NP_COLORS[uid % 8];
   const shape = typeof player?.shape === "number" ? NP_SHAPES[player.shape % 8] : NP_SHAPES[Math.floor(uid / 8) % 8];
-  return (
-    <span className={`player-badge${player?.conceded ? " out" : ""}`}>
+  const content = (
+    <>
       <span dangerouslySetInnerHTML={{ __html: shapeSvg(shape, color, 18) }} />
       {player?.alias || `Player ${uid}`}
-    </span>
+    </>
+  );
+  if (!pick) {
+    return <span className={`player-badge${player?.conceded ? " out" : ""}`}>{content}</span>;
+  }
+  return (
+    <button
+      type="button"
+      className={`player-badge link-button${player?.conceded ? " out" : ""}`}
+      title="Open this player"
+      onClick={(event) => {
+        event.stopPropagation();
+        pick(uid);
+      }}
+    >{content}</button>
   );
 }
 
 // One line of evidence, phrased from the focused player's point of view.
-function describePair(pair, focus, name) {
+export function describePair(pair, focus, name) {
   const e = pair.evidence;
   const other = pair.a === focus ? pair.b : pair.a;
   const mine = (ab, ba) => (pair.a === focus ? [ab, ba] : [ba, ab]);
@@ -421,7 +364,7 @@ function describePair(pair, focus, name) {
   return parts.join(" · ") || "Weak signal.";
 }
 
-function verdictText(item, name) {
+export function verdictText(item, name) {
   const [first, second] = item.sides;
   const who = name(item.middle);
   switch (item.verdict) {
@@ -458,7 +401,7 @@ function summariseCaptures(events) {
   return [...lines.values()].sort((x, y) => y.stars.length - x.stars.length);
 }
 
-function groupTrades(events) {
+export function groupTrades(events) {
   const grouped = new Map();
   for (const event of events) {
     const detail = event.detail.replace(/ \(1 of \d+ possible sources\)$/, "");
