@@ -199,7 +199,8 @@ export async function listSnapshots(env, gameNumber, limit = 50) {
 // Lists snapshots without their (large) scan payloads, for history pickers.
 export async function listSnapshotMeta(env, gameNumber, { pinnedOnly = false, limit = 100 } = {}) {
   const rows = await env.DB.prepare(`
-    SELECT id, game_number, tick, source, captured_at, production_counter, production_rate, player_uid, game_name, pinned, label
+    SELECT id, game_number, tick, source, captured_at, production_counter, production_rate, player_uid, game_name, pinned, label,
+      LENGTH(data_json) AS size_bytes
     FROM snapshots
     WHERE game_number = ? ${pinnedOnly ? "AND pinned = 1" : ""}
     ORDER BY captured_at DESC
@@ -636,7 +637,8 @@ function snapshotMetaFromRow(row) {
     playerUid: row.player_uid,
     gameName: row.game_name,
     pinned: Boolean(row.pinned),
-    label: row.label || ""
+    label: row.label || "",
+    sizeBytes: row.size_bytes ?? row.data_json?.length ?? null
   };
 }
 

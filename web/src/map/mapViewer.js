@@ -303,8 +303,10 @@ export function mountMap(container, snapshot, options = {}) {
     document.head.appendChild(style);
   }
 
-  const model = normalizeSnapshot(snapshot);
-  const ranked = rankPlayers(model.players);
+  let model = normalizeSnapshot(snapshot);
+  let ranked = rankPlayers(model.players);
+  // Stars whose owner changed since the previous frame (timeline playback).
+  let changedStars = new Set();
   let notes = options.notes || {};
   let relations = options.relations || [];
   let showRelations = Boolean(options.showRelations ?? relations.length);
@@ -342,18 +344,22 @@ export function mountMap(container, snapshot, options = {}) {
   const canvas = root.querySelector("canvas");
   const ctx = canvas.getContext("2d");
 
-  root.querySelector(".npmap-title").textContent = model.gameName;
-  const subParts = [`Tick ${model.tick}`];
-  if (model.productionCounter !== undefined) subParts.push(`production counter ${model.productionCounter}`);
-  if (model.capturedAt) subParts.push(`captured ${new Date(model.capturedAt).toLocaleString()}`);
-  if (model.label) subParts.push(model.label);
-  root.querySelector(".npmap-sub").textContent = subParts.join(" · ");
+  function renderHeader() {
+    root.querySelector(".npmap-title").textContent = model.gameName;
+    const subParts = [`Tick ${model.tick}`];
+    if (model.productionCounter !== undefined) subParts.push(`production counter ${model.productionCounter}`);
+    if (model.capturedAt) subParts.push(`captured ${new Date(model.capturedAt).toLocaleString()}`);
+    if (model.label) subParts.push(model.label);
+    if (changedStars.size) subParts.push(`${changedStars.size} star${changedStars.size === 1 ? "" : "s"} changed hands`);
+    root.querySelector(".npmap-sub").textContent = subParts.join(" · ");
 
-  if (model.gameOver) {
-    banner.hidden = false;
-    const winner = ranked.find((player) => !player.conceded) || ranked[0];
-    banner.innerHTML = `<strong>GAME OVER!</strong><span>${winner ? `Winner: ${escapeHtml(winner.alias)}` : "Final state"}</span>`;
+    banner.hidden = !model.gameOver;
+    if (model.gameOver) {
+      const winner = ranked.find((player) => !player.conceded) || ranked[0];
+      banner.innerHTML = `<strong>GAME OVER!</strong><span>${winner ? `Winner: ${escapeHtml(winner.alias)}` : "Final state"}</span>`;
+    }
   }
+  renderHeader();
 
   const view = { scale: 1, x: 0, y: 0 };
   const selection = { star: null, fleet: null, player: null };
@@ -542,6 +548,15 @@ export function mountMap(container, snapshot, options = {}) {
       ctx.arc(sx, sy, star.owner ? Math.max(1.4, r * 0.28) : Math.max(1.2, r * 0.22), 0, Math.PI * 2);
       ctx.fill();
 
+      if (changedStars.has(star.uid)) {
+        ctx.globalAlpha = 1;
+        ctx.strokeStyle = "#ffe14d";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(sx, sy, r * 2.2, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
       if (star === selection.star) {
         ctx.globalAlpha = 1;
         ctx.strokeStyle = "#ffffff";
@@ -589,15 +604,19 @@ export function mountMap(container, snapshot, options = {}) {
   }
 
   // Alliance (green) and war (red) lines between each empire's centre of mass.
-  const centres = new Map();
-  for (const player of model.players) {
-    const owned = model.stars.filter((star) => star.puid === player.uid);
-    if (!owned.length) continue;
-    centres.set(player.uid, {
-      x: owned.reduce((sum, star) => sum + star.x, 0) / owned.length,
-      y: owned.reduce((sum, star) => sum + star.y, 0) / owned.length
-    });
+  let centres = new Map();
+  function computeCentres() {
+    centres = new Map();
+    for (const player of model.players) {
+      const owned = model.stars.filter((star) => star.puid === player.uid);
+      if (!owned.length) continue;
+      centres.set(player.uid, {
+        x: owned.reduce((sum, star) => sum + star.x, 0) / owned.length,
+        y: owned.reduce((sum, star) => sum + star.y, 0) / owned.length
+      });
+    }
   }
+  computeCentres();
 
   function drawRelations(focus) {
     for (const pair of relations) {
@@ -746,7 +765,28 @@ export function mountMap(container, snapshot, options = {}) {
   resize();
 
   return {
-    model,
+    get model() {
+      return model;
+    },
+    // Swaps in another snapshot of the same game (timeline), keeping pan/zoom
+    // and the selected player, and highlighting stars that changed owner.
+    setSnapshot(nextSnapshot) {
+      const previousOwners = new Map(model.stars.map((star) => [star.uid, star.puid]));
+      model = normalizeSnapshot(nextSnapshot);
+      ranked = rankPlayers(model.players);
+      changedStars = new Set(model.stars
+        .filter((star) => previousOwners.has(star.uid) && previousOwners.get(star.uid) !== star.puid)
+        .map((star) => star.uid));
+      const selectedUid = selection.player?.uid;
+      selection.player = model.players.find((player) => player.uid === selectedUid) || null;
+      selection.star = selection.star ? model.stars.find((star) => star.uid === selection.star.uid) || null : null;
+      selection.fleet = selection.fleet ? model.fleets.find((fleet) => fleet.uid === selection.fleet.uid) || null : null;
+      computeCentres();
+      renderHeader();
+      renderList();
+      renderDetail();
+      draw();
+    },
     setRelations(nextRelations) {
       relations = nextRelations || [];
       if (options.showRelations === undefined) showRelations = relations.length > 0;

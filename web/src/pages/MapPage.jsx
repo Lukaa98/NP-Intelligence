@@ -1,31 +1,45 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { api } from "../api.js";
 import { mountMap } from "../map/mapViewer.js";
 import { downloadStandaloneHtml } from "../map/exportHtml.js";
-import { formatDateTime, notesForExport } from "../format.js";
+import { formatBytes, formatDateTime, notesForExport } from "../format.js";
 import PlayerRating from "../components/PlayerRating.jsx";
+
+const PLAY_INTERVAL_MS = 1200;
 
 export default function MapPage({ snapshotId, notes }) {
   const containerRef = useRef(null);
   const viewerRef = useRef(null);
+  const cache = useRef(new Map());
+  // `snapshot` mounts the viewer; `frame` is whatever tick the timeline shows.
   const [snapshot, setSnapshot] = useState(null);
+  const [frame, setFrame] = useState(null);
+  const [frames, setFrames] = useState([]);
+  const [playing, setPlaying] = useState(false);
+  const [loadingFrame, setLoadingFrame] = useState(false);
   const [error, setError] = useState("");
   const [selected, setSelected] = useState(null);
   const [pinned, setPinned] = useState(false);
   const [relations, setRelations] = useState([]);
 
   const viewerNotes = useMemo(() => notesForExport(notes), [notes.list]);
+  const current = frame || snapshot;
+  const index = frames.findIndex((item) => item.id === current?.id);
 
   useEffect(() => {
     let cancelled = false;
     api.snapshot(snapshotId)
       .then((loaded) => {
         if (cancelled) return;
+        cache.current.set(loaded.id, loaded);
         setSnapshot(loaded);
         setPinned(loaded.pinned);
-        // Alliance lines are a bonus; the map works without them.
+        // Alliance lines and the timeline are extras; the map works without them.
         api.diplomacy(loaded.gameNumber)
           .then((diplomacy) => !cancelled && setRelations(diplomacy.pairs || []))
+          .catch(() => {});
+        api.snapshots(loaded.gameNumber, { limit: 500 })
+          .then((list) => !cancelled && setFrames(timelineFrames(list)))
           .catch(() => {});
       })
       .catch((loadError) => !cancelled && setError(loadError.message));
@@ -44,7 +58,7 @@ export default function MapPage({ snapshotId, notes }) {
       viewerRef.current?.destroy();
       viewerRef.current = null;
     };
-    // Notes are pushed separately below so a rating doesn't reset pan/zoom.
+    // Notes and relations are pushed separately so they don't reset pan/zoom.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [snapshot]);
 
@@ -56,6 +70,53 @@ export default function MapPage({ snapshotId, notes }) {
     viewerRef.current?.setRelations(relations);
   }, [relations, snapshot]);
 
+  const fetchFrame = useCallback(async (meta) => {
+    if (!cache.current.has(meta.id)) {
+      cache.current.set(meta.id, await api.snapshot(meta.id));
+    }
+    return cache.current.get(meta.id);
+  }, []);
+
+  const showFrame = useCallback(async (nextIndex) => {
+    const meta = frames[nextIndex];
+    if (!meta) return false;
+    setLoadingFrame(true);
+    try {
+      const loaded = await fetchFrame(meta);
+      viewerRef.current?.setSnapshot(loaded);
+      setFrame(loaded);
+      setPinned(loaded.pinned);
+      // Warm the next frame so playback doesn't stall on the network.
+      if (frames[nextIndex + 1]) fetchFrame(frames[nextIndex + 1]).catch(() => {});
+      return true;
+    } catch (frameError) {
+      setError(frameError.message);
+      return false;
+    } finally {
+      setLoadingFrame(false);
+    }
+  }, [fetchFrame, frames]);
+
+  useEffect(() => {
+    if (!playing) return undefined;
+    if (index >= frames.length - 1) {
+      setPlaying(false);
+      return undefined;
+    }
+    const timer = setTimeout(() => showFrame(index + 1), PLAY_INTERVAL_MS);
+    return () => clearTimeout(timer);
+  }, [playing, index, frames.length, showFrame]);
+
+  useEffect(() => {
+    const onKey = (event) => {
+      if (event.target.closest?.("input, textarea")) return;
+      if (event.key === "ArrowLeft" && index > 0) showFrame(index - 1);
+      if (event.key === "ArrowRight" && index < frames.length - 1) showFrame(index + 1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [index, frames.length, showFrame]);
+
   if (error) {
     return <div className="card map-error"><p className="error">{error}</p><a href="#/">Back to games</a></div>;
   }
@@ -63,24 +124,24 @@ export default function MapPage({ snapshotId, notes }) {
   return (
     <div className="map-page">
       <div className="map-bar">
-        <a href={snapshot ? `#/game/${snapshot.gameNumber}` : "#/"} className="ghost-link">← {snapshot?.gameName || "Back"}</a>
+        <a href={current ? `#/game/${current.gameNumber}` : "#/"} className="ghost-link">← {current?.gameName || "Back"}</a>
         <span className="muted small">
-          {snapshot ? `Tick ${snapshot.tick} · ${formatDateTime(snapshot.capturedAt)}${snapshot.label ? ` · ${snapshot.label}` : ""}` : "Loading snapshot…"}
+          {current ? `Tick ${current.tick} · ${formatDateTime(current.capturedAt)}${current.label ? ` · ${current.label}` : ""}` : "Loading snapshot…"}
         </span>
-        {selected && snapshot && (
+        {selected && current && (
           <div className="map-rating">
             <strong>{selected.alias}</strong>
-            <PlayerRating alias={selected.alias} notes={notes} game={{ gameNumber: snapshot.gameNumber, gameName: snapshot.gameName }} compact />
+            <PlayerRating alias={selected.alias} notes={notes} game={{ gameNumber: current.gameNumber, gameName: current.gameName }} compact />
           </div>
         )}
         <div className="actions">
-          {snapshot && (
+          {current && (
             <button type="button" className="ghost" onClick={async () => {
               try {
                 if (pinned) {
-                  await api.unpinSnapshot(snapshot.id);
+                  await api.unpinSnapshot(current.id);
                 } else {
-                  await api.pinSnapshot(snapshot.id, "Manual capture");
+                  await api.pinSnapshot(current.id, "Manual capture");
                 }
                 setPinned(!pinned);
               } catch (pinError) {
@@ -88,12 +149,55 @@ export default function MapPage({ snapshotId, notes }) {
               }
             }}>{pinned ? "★ Pinned" : "☆ Pin as capture"}</button>
           )}
-          {snapshot && (
-            <button type="button" className="primary" onClick={() => downloadStandaloneHtml(snapshot, viewerNotes, relations)}>Download HTML</button>
+          {current && (
+            <button type="button" className="primary" onClick={() => downloadStandaloneHtml(current, viewerNotes, relations)}>Download HTML</button>
           )}
         </div>
       </div>
+
+      {frames.length > 1 && (
+        <div className="timeline">
+          <button type="button" className="ghost" disabled={index <= 0} onClick={() => showFrame(index - 1)} title="Previous tick (←)">◀</button>
+          <button
+            type="button"
+            className="primary play"
+            onClick={() => {
+              if (!playing && index >= frames.length - 1) showFrame(0);
+              setPlaying(!playing);
+            }}
+          >{playing ? "❚❚ Pause" : "▶ Play"}</button>
+          <button type="button" className="ghost" disabled={index >= frames.length - 1} onClick={() => showFrame(index + 1)} title="Next tick (→)">▶</button>
+          <input
+            type="range"
+            min={0}
+            max={frames.length - 1}
+            value={Math.max(index, 0)}
+            onChange={(event) => {
+              setPlaying(false);
+              showFrame(Number(event.target.value));
+            }}
+            aria-label="Timeline"
+          />
+          <span className="timeline-label">
+            tick {current?.tick ?? "?"} <span className="muted">({Math.max(index, 0) + 1}/{frames.length})</span>
+            {loadingFrame && <span className="muted"> · loading…</span>}
+          </span>
+          <span className="muted small timeline-hint">Yellow rings = stars that changed owner since the previous frame · ~{formatBytes(frames[Math.max(index, 0)]?.sizeBytes)} per frame</span>
+        </div>
+      )}
+
       <div className="map-host" ref={containerRef} />
     </div>
   );
+}
+
+// One frame per tick, oldest first. When several scans share a tick (a
+// capture right after a scheduled scan), keep the newest.
+function timelineFrames(list) {
+  const byTick = new Map();
+  for (const item of list) {
+    const existing = byTick.get(item.tick);
+    if (!existing || item.capturedAt > existing.capturedAt) byTick.set(item.tick, item);
+  }
+  return [...byTick.values()].sort((x, y) => x.tick - y.tick);
 }

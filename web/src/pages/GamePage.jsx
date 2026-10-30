@@ -2,8 +2,8 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { api } from "../api.js";
 import { navigate } from "../router.js";
 import { buildPlayerIntel } from "../intel.js";
-import { formatDateTime, gameFacts, gameTitle, notesForExport, renderMentions } from "../format.js";
-import { downloadStandaloneHtml } from "../map/exportHtml.js";
+import { formatBytes, formatDateTime, gameFacts, gameTitle, notesForExport, renderMentions } from "../format.js";
+import { downloadStandaloneHtml, EXPORT_OVERHEAD_BYTES } from "../map/exportHtml.js";
 import PlayerRating from "../components/PlayerRating.jsx";
 import Diplomacy, { PickPlayer, PlayerBadge as DiplomacyBadge, STATUS_HINTS, STATUS_LABELS, describePair, groupTrades, useDiplomacy, verdictText } from "../components/Diplomacy.jsx";
 import RenameGame from "../components/RenameGame.jsx";
@@ -222,7 +222,7 @@ export default function GamePage({ gameNumber, notes }) {
 
       <section className="card">
         <div className="section-head">
-          <h2>Snapshot history <span className="muted">({snapshots.length})</span></h2>
+          <h2>Snapshot history <span className="muted">({snapshots.length} · {formatBytes(snapshots.reduce((sum, item) => sum + (item.sizeBytes || 0), 0))} stored)</span></h2>
           {snapshots.length > 12 && (
             <button type="button" className="ghost" onClick={() => setShowAllSnapshots((value) => !value)}>
               {showAllSnapshots ? "Show fewer" : "Show all"}
@@ -356,7 +356,10 @@ function SnapshotRow({ snapshot, onDownload, onPinToggle }) {
           Tick {snapshot.tick}
           {snapshot.label && <span className="pill">{snapshot.label}</span>}
         </div>
-        <div className="meta">{formatDateTime(snapshot.capturedAt)} · {snapshot.source}</div>
+        <div className="meta">
+          {formatDateTime(snapshot.capturedAt)} · {snapshot.source}
+          {snapshot.sizeBytes ? ` · ${formatBytes(snapshot.sizeBytes)} stored · HTML ≈ ${formatBytes(snapshot.sizeBytes + EXPORT_OVERHEAD_BYTES)}` : ""}
+        </div>
       </div>
       <div className="actions">
         <button type="button" className="secondary" onClick={() => navigate(`/snapshot/${snapshot.id}`)}>View map</button>

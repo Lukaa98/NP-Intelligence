@@ -214,3 +214,8 @@ input:focus, textarea:focus { outline: 2px solid var(--accent-2); outline-offset
 .detail-box h4 { margin: 10px 0 4px; font-size: 14px; color: var(--accent); }
 .eliminated summary { cursor: pointer; color: var(--muted); padding: 8px 0; }
 .player-line { scroll-margin-top: 70px; }
+.timeline { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 6px 12px; background: #18163f; border-bottom: 1px solid var(--line); }
+.timeline input[type="range"] { flex: 1 1 240px; padding: 0; accent-color: var(--accent); background: none; border: 0; }
+.timeline .play { min-width: 84px; }
+.timeline-label { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.timeline-hint { flex-basis: 100%; }

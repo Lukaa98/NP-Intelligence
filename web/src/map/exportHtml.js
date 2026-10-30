@@ -1,5 +1,8 @@
 import viewerSource from "./mapViewer.js?raw";
 
+// Bytes the inlined viewer adds to each exported page, on top of the scan data.
+export const EXPORT_OVERHEAD_BYTES = viewerSource.length + 1024;
+
 // Builds a single self-contained HTML file for a snapshot: the viewer source is
 // inlined (with its ES exports stripped) and the scan data is embedded as JSON,
 // so the page keeps working after NP deletes the game and offline.
