@@ -64,12 +64,14 @@ export function buildDiplomacy({ rows, events, players, viewerUid, snapshotsProc
 
   const active = new Map(players.map((player) => [player.uid, player]));
   const teams = findTeams(meaningful, active);
+  const conflicts = findConflicts(meaningful.filter((pair) => pair.status === "war"), teams);
 
   return {
     coverage: { snapshotsProcessed, latestTick },
     viewerUid,
     pairs: meaningful.sort((left, right) => right.allyScore + right.warScore - (left.allyScore + left.warScore)),
     teams,
+    conflicts,
     events: events.map((event) => ({ ...event }))
   };
 }
@@ -197,6 +199,79 @@ function findTeams(pairs, players) {
       };
     })
     .sort((left, right) => right.stars - left.stars);
+}
+
+// Merges pairwise wars into conflicts read from one side's point of view:
+// whoever fights the most enemies becomes the centre ("A vs B + C"), then the
+// next, until every war is used exactly once. Known teams count as one side.
+// No transitive chaining: A vs B and B vs C never make A and C a side.
+function findConflicts(wars, teams) {
+  const unitOf = new Map();
+  teams.forEach((team, index) => team.members.forEach((uid) => unitOf.set(uid, `t${index}`)));
+  const unitKey = (uid) => unitOf.get(uid) || `p${uid}`;
+  const unitMembers = (key) => (key.startsWith("t") ? teams[Number(key.slice(1))].members : [Number(key.slice(1))]);
+
+  // Fold player-level wars into unit-level fronts, oriented low key -> high key.
+  const fronts = new Map();
+  for (const pair of wars) {
+    const ua = unitKey(pair.a);
+    const ub = unitKey(pair.b);
+    if (ua === ub) continue;
+    const [left, right] = ua < ub ? [ua, ub] : [ub, ua];
+    const flip = left !== ua;
+    const key = `${left}|${right}`;
+    const front = fronts.get(key) || { left, right, leftTook: 0, rightTook: 0, active: false, lastTick: -1, pairs: [] };
+    front.leftTook += flip ? pair.evidence.capturesBA : pair.evidence.capturesAB;
+    front.rightTook += flip ? pair.evidence.capturesAB : pair.evidence.capturesBA;
+    front.active ||= pair.warActive;
+    front.lastTick = Math.max(front.lastTick, pair.evidence.lastCaptureTick);
+    front.pairs.push(pair);
+    fronts.set(key, front);
+  }
+
+  const remaining = new Set(fronts.keys());
+  const conflicts = [];
+  while (remaining.size) {
+    const degree = new Map();
+    for (const key of remaining) {
+      const front = fronts.get(key);
+      for (const unit of [front.left, front.right]) {
+        const entry = degree.get(unit) || { count: 0, active: 0, captures: 0 };
+        entry.count += 1;
+        entry.active += front.active ? 1 : 0;
+        entry.captures += front.leftTook + front.rightTook;
+        degree.set(unit, entry);
+      }
+    }
+    const [hub] = [...degree.entries()].sort((x, y) =>
+      y[1].count - x[1].count || y[1].active - x[1].active || y[1].captures - x[1].captures)[0];
+
+    const enemies = [];
+    for (const key of [...remaining]) {
+      const front = fronts.get(key);
+      if (front.left !== hub && front.right !== hub) continue;
+      const hubIsLeft = front.left === hub;
+      enemies.push({
+        members: unitMembers(hubIsLeft ? front.right : front.left),
+        took: hubIsLeft ? front.leftTook : front.rightTook,
+        lost: hubIsLeft ? front.rightTook : front.leftTook,
+        active: front.active,
+        lastTick: front.lastTick
+      });
+      remaining.delete(key);
+    }
+    enemies.sort((x, y) => Number(y.active) - Number(x.active) || (y.took + y.lost) - (x.took + x.lost));
+    conflicts.push({
+      side: unitMembers(hub),
+      enemies,
+      took: enemies.reduce((sum, enemy) => sum + enemy.took, 0),
+      lost: enemies.reduce((sum, enemy) => sum + enemy.lost, 0),
+      active: enemies.some((enemy) => enemy.active),
+      lastTick: Math.max(...enemies.map((enemy) => enemy.lastTick))
+    });
+  }
+
+  return conflicts.sort((x, y) => Number(y.active) - Number(x.active) || (y.took + y.lost) - (x.took + x.lost));
 }
 
 function round(value) {

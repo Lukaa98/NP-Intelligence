@@ -281,7 +281,7 @@ async function diplomacyForGame(env, gameNumber) {
 
   const [rows, events, latest, pending] = await Promise.all([
     relationRows(env, gameNumber),
-    recentRelationEvents(env, gameNumber),
+    recentRelationEvents(env, gameNumber, 1000),
     latestSnapshot(env, gameNumber),
     pendingRelationSnapshots(env, gameNumber)
   ]);

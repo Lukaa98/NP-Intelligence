@@ -71,9 +71,9 @@ export default function Diplomacy({ gameNumber, refreshKey }) {
 
   const focus = focusUid ?? data.viewerUid ?? active[0]?.uid;
   const focusPairs = data.pairs.filter((pair) => pair.a === focus || pair.b === focus);
-  const wars = data.pairs.filter((pair) => pair.status === "war").sort((left, right) => Number(right.warActive) - Number(left.warActive) || right.warScore - left.warScore);
+  const conflicts = data.conflicts || [];
   const trades = groupTrades(data.events.filter((event) => event.kind === "tech_trade"));
-  const captures = data.events.filter((event) => event.kind === "capture").slice(0, 25);
+  const captureTicks = groupByTick(data.events.filter((event) => event.kind === "capture")).slice(0, 24);
   const name = (uid) => players.get(uid)?.alias || `Player ${uid}`;
 
   return (
@@ -147,20 +147,35 @@ export default function Diplomacy({ gameNumber, refreshKey }) {
       <div className="two-col">
         <div>
           <h3>Wars</h3>
-          {!wars.length ? <p className="muted">No star captures between players recorded yet.</p> : (
+          {!conflicts.length ? <p className="muted">No star captures between players recorded yet.</p> : (
             <ul className="relation-list compact">
-              {wars.slice(0, 20).map((pair) => (
-                <li key={`${pair.a}:${pair.b}`} className="war">
+              {conflicts.slice(0, 20).map((conflict, index) => (
+                <li key={index} className="war conflict">
                   <div className="relation-head">
-                    <PlayerBadge player={players.get(pair.a)} uid={pair.a} />
-                    <span className="muted">vs</span>
-                    <PlayerBadge player={players.get(pair.b)} uid={pair.b} />
-                    {pair.warActive && <span className="pill danger">active</span>}
+                    <Side uids={conflict.side} players={players} onPick={setFocusUid} />
+                    <span className="versus">⚔</span>
+                    {conflict.enemies.map((enemy, enemyIndex) => (
+                      <React.Fragment key={enemyIndex}>
+                        {enemyIndex > 0 && <span className="muted">+</span>}
+                        <Side uids={enemy.members} players={players} onPick={setFocusUid} />
+                      </React.Fragment>
+                    ))}
+                    {conflict.active && <span className="pill danger">active</span>}
                   </div>
                   <div className="meta">
-                    {name(pair.a)} took {pair.evidence.capturesAB} · {name(pair.b)} took {pair.evidence.capturesBA}
-                    {pair.evidence.lastCaptureTick >= 0 && ` · last at tick ${pair.evidence.lastCaptureTick}`}
+                    {conflict.side.length > 1 ? "Team" : name(conflict.side[0])} took {conflict.took} · lost {conflict.lost}
+                    {conflict.lastTick >= 0 && ` · last capture tick ${conflict.lastTick}`}
                   </div>
+                  {conflict.enemies.length > 1 && (
+                    <ul className="front-list">
+                      {conflict.enemies.map((enemy, enemyIndex) => (
+                        <li key={enemyIndex}>
+                          vs {enemy.members.map(name).join(" + ")}: took {enemy.took}, lost {enemy.lost}
+                          {enemy.active ? <span className="pill danger">active</span> : <span className="muted"> · quiet since tick {enemy.lastTick}</span>}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </li>
               ))}
             </ul>
@@ -189,21 +204,46 @@ export default function Diplomacy({ gameNumber, refreshKey }) {
         </div>
       </div>
 
-      {!!captures.length && (
+      {!!captureTicks.length && (
         <>
-          <h3>Recent captures</h3>
+          <h3>Star captures by tick</h3>
+          <p className="muted small">Every star that changed owner, per scan. Battles where the defender held aren't shown here.</p>
           <ul className="relation-list compact">
-            {captures.map((event, index) => (
-              <li key={index} className="war">
-                <div className="meta">
-                  tick {event.tick}: <strong>{name(event.a)}</strong> took <strong>{event.detail}</strong> from <strong>{name(event.b)}</strong>
+            {captureTicks.map(({ tick, events }) => (
+              <li key={tick} className="war">
+                <div className="relation-head">
+                  <strong>tick {tick}</strong>
+                  <span className="muted small">{events.length} capture{events.length === 1 ? "" : "s"}</span>
                 </div>
+                <ul className="front-list">
+                  {summariseCaptures(events).map((line) => (
+                    <li key={line.key}>
+                      <strong>{name(line.a)}</strong> took {line.stars.join(", ")} from <strong>{name(line.b)}</strong>
+                    </li>
+                  ))}
+                </ul>
               </li>
             ))}
           </ul>
         </>
       )}
     </section>
+  );
+}
+
+// One side of a war: a single player, or a detected team shown as "A & B".
+function Side({ uids, players, onPick }) {
+  return (
+    <span className={`side${uids.length > 1 ? " team" : ""}`}>
+      {uids.map((uid, index) => (
+        <React.Fragment key={uid}>
+          {index > 0 && <span className="muted">&</span>}
+          <button type="button" className="link-button" onClick={() => onPick(uid)}>
+            <PlayerBadge player={players.get(uid)} uid={uid} />
+          </button>
+        </React.Fragment>
+      ))}
+    </span>
   );
 }
 
@@ -237,6 +277,27 @@ function describePair(pair, focus, name) {
   if ((routeOut || routeIn) && !pair.allied) parts.push(`fleets heading at each other (${routeOut} / ${routeIn} scans)`);
   if (e.contact && !captured && !lost) parts.push(`neighbours for ${e.contact} scans without fighting`);
   return parts.join(" · ") || "Weak signal.";
+}
+
+function groupByTick(events) {
+  const ticks = new Map();
+  for (const event of events) {
+    if (!ticks.has(event.tick)) ticks.set(event.tick, []);
+    ticks.get(event.tick).push(event);
+  }
+  return [...ticks.entries()].sort((x, y) => y[0] - x[0]).map(([tick, list]) => ({ tick, events: list }));
+}
+
+// "A took S1, S2 from B" instead of one line per star.
+function summariseCaptures(events) {
+  const lines = new Map();
+  for (const event of events) {
+    const key = `${event.a}:${event.b}`;
+    const line = lines.get(key) || { key, a: event.a, b: event.b, stars: [] };
+    line.stars.push(event.detail);
+    lines.set(key, line);
+  }
+  return [...lines.values()].sort((x, y) => y.stars.length - x.stars.length);
 }
 
 function groupTrades(events) {

@@ -115,3 +115,26 @@ assert.equal(afterGameOver.pairs[0].status, "allied");
 const overSnapshot = extractRelations({ ...snapshot(102, { owners: {}, weapons: { 1: 3, 2: 3, 3: 5, 4: 5, 5: 4, 6: 4 } }), gameOver: true }, second.state);
 assert.equal(overSnapshot.observations.filter((item) => item.kind.startsWith("ally_")).length, 0);
 console.log("Game-over alliance tests passed.");
+
+// One player fighting two others becomes one conflict, not two rows; the
+// enemies' own war with each other is a separate conflict, used once.
+const multiFront = buildDiplomacy({
+  rows: [
+    pair(1, 2, "capture", { count: 3 }),
+    pair(3, 1, "capture", { count: 1 }),
+    pair(5, 6, "capture", { count: 2 })
+  ],
+  events: [],
+  players: [1, 2, 3, 5, 6].map((uid) => ({ uid, alias: `P${uid}`, totalStars: 10 })),
+  viewerUid: 99,
+  snapshotsProcessed: 10,
+  latestTick: 10
+});
+const hub = multiFront.conflicts.find((conflict) => conflict.side.includes(1));
+assert.deepEqual(hub.enemies.map((enemy) => enemy.members[0]).sort(), [2, 3]);
+assert.equal(hub.took, 3);
+assert.equal(hub.lost, 1);
+assert.equal(multiFront.conflicts.length, 2, "1 vs (2, 3) and 5 vs 6");
+const usedPairs = multiFront.conflicts.reduce((sum, conflict) => sum + conflict.enemies.length, 0);
+assert.equal(usedPairs, 3, "every war appears exactly once");
+console.log("Conflict grouping tests passed.");
