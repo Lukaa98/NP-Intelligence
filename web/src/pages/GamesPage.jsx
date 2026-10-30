@@ -133,7 +133,9 @@ export default function GamesPage() {
                 <div className="game-actions" onClick={(event) => event.stopPropagation()}>
                   <button type="button" className="secondary" disabled={!!busy} onClick={() => run(game.gameNumber, `Scanning ${gameTitle(game)}`, async () => {
                     const payload = await api.scanGame(game.gameNumber);
-                    return `Scanned ${gameTitle(game)}. Latest tick ${payload.snapshot.tick}.`;
+                    return payload.unchanged
+                      ? `${gameTitle(game)}: no new tick yet (still tick ${payload.snapshot.tick}).`
+                      : `Scanned ${gameTitle(game)}. Latest tick ${payload.snapshot.tick}.`;
                   })}>Scan</button>
                   <button type="button" className="primary" disabled={!!busy} onClick={() => run(game.gameNumber, `Capturing ${gameTitle(game)}`, async () => {
                     const payload = await api.captureGame(game.gameNumber);

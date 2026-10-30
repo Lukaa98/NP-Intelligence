@@ -32,6 +32,10 @@ jobs:
         with:
           node-version: 20
 
+      - name: Refuse to deploy a test NP endpoint
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        run: grep -q 'NP_API_URL = "https://np.ironhelmet.com/api"' backend/src/npApi.js
+
       - name: Install wrangler
         if: env.CLOUDFLARE_API_TOKEN != ''
         working-directory: backend
