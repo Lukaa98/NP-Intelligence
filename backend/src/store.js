@@ -255,6 +255,7 @@ export async function pruneInactiveGames(env, staleHours) {
       AND key_status = 'needs_fresh_key'
       AND COALESCE(last_sync_at, created_at) < ?
       AND ${RELATIONS_CAUGHT_UP}
+      AND exported_at IS NOT NULL
   `).bind(cutoff).all();
   for (const row of stale.results) {
     await env.DB.prepare(`
@@ -270,7 +271,9 @@ export async function pruneInactiveGames(env, staleHours) {
     WHERE pinned = 0
       AND game_number IN (
         SELECT game_number FROM games
-        WHERE (archived_at IS NOT NULL OR finished_at IS NOT NULL) AND ${RELATIONS_CAUGHT_UP}
+        WHERE (archived_at IS NOT NULL OR finished_at IS NOT NULL)
+          AND ${RELATIONS_CAUGHT_UP}
+          AND exported_at IS NOT NULL
       )
   `).run();
   await env.DB.prepare(`DELETE FROM scan_attempts WHERE attempted_at < ?`).bind(cutoff).run();
@@ -385,6 +388,29 @@ export async function pendingRelationSnapshots(env, gameNumber) {
     WHERE game_number = ?
   `).bind(gameNumber).first();
   return row?.n || 0;
+}
+
+// Games that stopped producing data and are ready for the GitHub archive:
+// finished, deleted, or failing scans for `staleHours`, with relationship
+// intel fully processed, and not exported yet.
+export async function gamesReadyForArchive(env, staleHours) {
+  const cutoff = new Date(Date.now() - staleHours * 60 * 60 * 1000).toISOString();
+  const rows = await env.DB.prepare(`
+    SELECT * FROM games
+    WHERE exported_at IS NULL
+      AND (
+        archived_at IS NOT NULL
+        OR finished_at IS NOT NULL
+        OR (key_status = 'needs_fresh_key' AND COALESCE(last_sync_at, created_at) < ?)
+      )
+      AND ${RELATIONS_CAUGHT_UP}
+  `).bind(cutoff).all();
+  return rows.results.map(gameFromRow);
+}
+
+export async function markExported(env, gameNumber, archiveRef) {
+  await env.DB.prepare(`UPDATE games SET exported_at = ?, archive_ref = ?, updated_at = ? WHERE game_number = ?`)
+    .bind(nowIso(), archiveRef || null, nowIso(), gameNumber).run();
 }
 
 export async function gamesWithPendingRelations(env) {
@@ -619,6 +645,8 @@ function gameFromRow(row) {
     playerCount: row.player_count ?? null,
     myAlias: row.my_alias || "",
     relationTick: row.relation_tick ?? null,
+    exportedAt: row.exported_at || null,
+    archiveRef: row.archive_ref || null,
     relationSnapshots: row.relation_snapshots ?? 0,
     finishedAt: row.finished_at || null,
     apiKeyPreview: maskKey(row.code)

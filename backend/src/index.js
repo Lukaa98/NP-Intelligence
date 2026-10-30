@@ -18,7 +18,9 @@ import {
   listSnapshotMeta,
   markKeyProblem,
   pinSnapshot,
+  gamesReadyForArchive,
   gamesWithPendingRelations,
+  markExported,
   pendingRelationSnapshots,
   processRelations,
   pruneInactiveGames,
@@ -74,6 +76,17 @@ export default {
       // every write must carry it. Reads stay open (API codes are masked).
       if (request.method !== "GET" && env.ADMIN_TOKEN && request.headers.get("authorization") !== `Bearer ${env.ADMIN_TOKEN}`) {
         return json({ error: "Write token missing or wrong. Set it in the dashboard settings." }, 401);
+      }
+
+      if (request.method === "GET" && url.pathname === "/api/archive/pending") {
+        return json({ games: await gamesReadyForArchive(env, STALE_GAME_HOURS) });
+      }
+
+      if (request.method === "POST" && matchPath(url.pathname, "/api/games/:gameNumber/exported")) {
+        const { gameNumber } = pathParams(url.pathname, "/api/games/:gameNumber/exported");
+        const payload = await request.json().catch(() => ({}));
+        await markExported(env, gameNumber, payload.ref);
+        return json({ game: await getGame(env, gameNumber) });
       }
 
       if (request.method === "GET" && url.pathname === "/api/players") {
