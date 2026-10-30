@@ -21,6 +21,7 @@ export default function Diplomacy({ gameNumber, refreshKey }) {
   const [error, setError] = useState("");
   const [progress, setProgress] = useState(null);
   const [focusUid, setFocusUid] = useState(null);
+  const [openMember, setOpenMember] = useState(null);
   const analysing = useRef(false);
 
   const load = useCallback(async () => {
@@ -72,6 +73,16 @@ export default function Diplomacy({ gameNumber, refreshKey }) {
   const focus = focusUid ?? data.viewerUid ?? active[0]?.uid;
   const focusPairs = data.pairs.filter((pair) => pair.a === focus || pair.b === focus);
   const conflicts = data.conflicts || [];
+  const teamIndex = new Map();
+  data.teams.forEach((team, index) => team.members.forEach((uid) => teamIndex.set(uid, index)));
+  const sameTeam = (pair) => teamIndex.has(pair.a) && teamIndex.get(pair.a) === teamIndex.get(pair.b);
+  const friendly = (pair) => ["allied", "possible_allies", "peaceful"].includes(pair.status);
+  // Allied pairs split across teams: someone is friendly with a rival bloc.
+  const doubleTies = data.pairs.filter((pair) => pair.status === "allied" && teamIndex.has(pair.a) && teamIndex.has(pair.b) && !sameTeam(pair));
+  const forming = data.pairs
+    .filter((pair) => friendly(pair) && pair.status !== "allied" && !sameTeam(pair))
+    .sort((x, y) => y.allyScore - x.allyScore)
+    .slice(0, 15);
   const trades = groupTrades(data.events.filter((event) => event.kind === "tech_trade"));
   const captureTicks = groupByTick(data.events.filter((event) => event.kind === "capture")).slice(0, 24);
   const name = (uid) => players.get(uid)?.alias || `Player ${uid}`;
@@ -106,19 +117,71 @@ export default function Diplomacy({ gameNumber, refreshKey }) {
               </div>
               <div className="team-members">
                 {team.members.map((uid) => (
-                  <button key={uid} type="button" className="member" onClick={() => setFocusUid(uid)}>
+                  <button
+                    key={uid}
+                    type="button"
+                    className={`member${openMember === uid ? " open" : ""}`}
+                    onClick={() => setOpenMember(openMember === uid ? null : uid)}
+                  >
                     <PlayerBadge player={players.get(uid)} uid={uid} />
                     <span className="muted small">{players.get(uid)?.totalStars ?? 0}★</span>
                   </button>
                 ))}
               </div>
               <div className="meta">{team.stars} stars · {team.ships.toLocaleString()} ships · {team.links} of {team.members.length * (team.members.length - 1) / 2} pairs directly linked</div>
+              {team.members.includes(openMember) && (
+                <MemberRelations
+                  uid={openMember}
+                  pairs={data.pairs.filter((pair) => pair.a === openMember || pair.b === openMember)}
+                  teamIndex={teamIndex}
+                  ownTeam={index}
+                  players={players}
+                  name={name}
+                />
+              )}
             </article>
           ))}
         </div>
       )}
 
-      <h3>Player relations</h3>
+      {!!doubleTies.length && (
+        <>
+          <h3>⚠ Double ties</h3>
+          <p className="muted small">Players who look allied with someone in a rival team (the two teams are at war somewhere).</p>
+          <ul className="relation-list compact">
+            {doubleTies.map((pair) => (
+              <li key={`${pair.a}:${pair.b}`} className="tension">
+                <div className="relation-head">
+                  <PlayerBadge player={players.get(pair.a)} uid={pair.a} />
+                  <span className="muted">↔</span>
+                  <PlayerBadge player={players.get(pair.b)} uid={pair.b} />
+                  <span className="status allied">{pair.confirmed ? "Allied (formal)" : "Allied"}</span>
+                </div>
+                <div className="meta">{describePair(pair, pair.a, name)}</div>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+
+      <h3>Alliances forming</h3>
+      {!forming.length ? <p className="muted">Nothing yet. Pairs that start visiting each other's stars, trading tech, or sharing a border without fighting show up here.</p> : (
+        <ul className="relation-list compact">
+          {forming.map((pair) => (
+            <li key={`${pair.a}:${pair.b}`} className={pair.status}>
+              <div className="relation-head">
+                <PlayerBadge player={players.get(pair.a)} uid={pair.a} />
+                <span className="muted">+</span>
+                <PlayerBadge player={players.get(pair.b)} uid={pair.b} />
+                <span className={`status ${pair.status}`}>{STATUS_LABELS[pair.status]}</span>
+              </div>
+              <div className="meta">{describePair(pair, pair.a, name)}</div>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <h3>Any player's relations</h3>
       <div className="chip-row">
         {active.map((player) => (
           <button key={player.uid} type="button" className={`chip${player.uid === focus ? " active" : ""}`} onClick={() => setFocusUid(player.uid)}>
@@ -206,8 +269,8 @@ export default function Diplomacy({ gameNumber, refreshKey }) {
 
       {!!captureTicks.length && (
         <>
-          <h3>Star captures by tick</h3>
-          <p className="muted small">Every star that changed owner, per scan. Battles where the defender held aren't shown here.</p>
+          <details className="capture-log">
+          <summary>Star capture log (every star that changed owner, by tick)</summary>
           <ul className="relation-list compact">
             {captureTicks.map(({ tick, events }) => (
               <li key={tick} className="war">
@@ -225,9 +288,43 @@ export default function Diplomacy({ gameNumber, refreshKey }) {
               </li>
             ))}
           </ul>
+          </details>
         </>
       )}
     </section>
+  );
+}
+
+// A team member's relations, shown inside their team card. Friendly ties to
+// players outside the team are the interesting part, so they come first.
+function MemberRelations({ uid, pairs, teamIndex, ownTeam, players, name }) {
+  const other = (pair) => (pair.a === uid ? pair.b : pair.a);
+  const outside = (pair) => teamIndex.get(other(pair)) !== ownTeam;
+  const order = { allied: 0, possible_allies: 1, war: 2, former_allies: 3, tension: 4, peaceful: 5 };
+  const sorted = pairs
+    .filter((pair) => outside(pair) || pair.status !== "allied")
+    .sort((x, y) => (order[x.status] ?? 9) - (order[y.status] ?? 9) || y.allyScore + y.warScore - (x.allyScore + x.warScore));
+  if (!sorted.length) {
+    return <p className="member-relations muted small">{name(uid)} has no relations outside this team on record.</p>;
+  }
+  return (
+    <ul className="member-relations relation-list compact">
+      {sorted.slice(0, 12).map((pair) => {
+        const them = other(pair);
+        const friendlyOutside = ["allied", "possible_allies"].includes(pair.status) && outside(pair);
+        return (
+          <li key={`${pair.a}:${pair.b}`} className={pair.status}>
+            <div className="relation-head">
+              <PlayerBadge player={players.get(them)} uid={them} />
+              <span className={`status ${pair.status}`}>{pair.confirmed ? "Allied (formal)" : STATUS_LABELS[pair.status]}</span>
+              {friendlyOutside && <span className="pill">⚠ outside team</span>}
+              {pair.warActive && <span className="pill danger">active</span>}
+            </div>
+            <div className="meta">{describePair(pair, uid, name)}</div>
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 

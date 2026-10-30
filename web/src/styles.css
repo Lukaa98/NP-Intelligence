@@ -204,3 +204,8 @@ input:focus, textarea:focus { outline: 2px solid var(--accent-2); outline-offset
 .front-list .pill { margin-left: 6px; }
 .detail-box.inline { border-radius: 0 0 8px 8px; margin: 0 0 6px; border-left: 3px solid var(--accent-2); }
 .caret { color: var(--muted); font-size: 12px; display: inline-block; width: 10px; }
+.member.open { border-color: var(--accent); background: #232060; }
+.member-relations { margin-top: 4px; }
+.team-grid:has(.member-relations) { grid-template-columns: 1fr; }
+.capture-log summary { cursor: pointer; color: var(--muted); padding: 6px 0; }
+.capture-log[open] summary { color: var(--text); }
