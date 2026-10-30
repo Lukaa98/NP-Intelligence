@@ -33,6 +33,7 @@ export async function upsertGame(env, gameNumber, code, name, playerUid = null) 
       player_uid = COALESCE(excluded.player_uid, games.player_uid),
       enabled = 1,
       archived_at = NULL,
+      exported_at = NULL,
       key_status = 'valid',
       key_status_message = 'Saved key worked on the last successful scan.',
       updated_at = excluded.updated_at
@@ -166,7 +167,7 @@ export async function archiveGame(env, gameNumber) {
 export async function restoreGame(env, gameNumber) {
   await env.DB.prepare(`
     UPDATE games
-    SET archived_at = NULL, updated_at = ?
+    SET archived_at = NULL, exported_at = NULL, updated_at = ?
     WHERE game_number = ?
   `).bind(nowIso(), gameNumber).run();
 }

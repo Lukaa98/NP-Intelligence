@@ -1,4 +1,4 @@
-const NP_API_URL = "https://np.ironhelmet.com/api";
+const NP_API_URL = "http://localhost:8799/api";
 
 export class NeptuneApiError extends Error {
   constructor(message, { status = 0 } = {}) {

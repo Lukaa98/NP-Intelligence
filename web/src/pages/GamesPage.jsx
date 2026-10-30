@@ -51,7 +51,9 @@ export default function GamesPage() {
       const payload = await api.saveGame({ game_number: form.gameNumber.trim(), code: form.code.trim(), name: form.name.trim() });
       setForm({ gameNumber: "", code: "", name: "" });
       setFormOpen(false);
-      return `Saved ${payload.game.name}. First scan stored at tick ${payload.snapshot.tick}.`;
+      return payload.existing
+        ? `${gameTitle(payload.game)} was already tracked: API code updated, latest tick ${payload.snapshot.tick}.`
+        : `Now tracking ${gameTitle(payload.game)}. First scan stored at tick ${payload.snapshot.tick}.`;
     });
   }
 
@@ -88,8 +90,8 @@ export default function GamesPage() {
               <input type="password" value={form.code} onChange={(event) => setForm({ ...form, code: event.target.value })} placeholder="From Options → API in your game" />
             </label>
             <label className="field">
-              <span>Name (optional)</span>
-              <input value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} placeholder="Kappa Pollux" />
+              <span>Your name for it (optional)</span>
+              <input value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} placeholder="64p blob with TeFinete" />
             </label>
           </div>
           <div className="actions">

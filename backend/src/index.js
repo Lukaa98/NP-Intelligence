@@ -261,30 +261,47 @@ async function createGame(request, env) {
   const payload = await request.json();
   const gameNumber = String(payload.game_number || "").trim();
   const code = String(payload.code || "").trim();
+  const nickname = String(payload.name || "").trim();
 
   if (!gameNumber || !code) {
     return json({ error: "game_number and code are required" }, 400);
   }
 
+  let scanningData;
   try {
-    const scanningData = await fetchScan(gameNumber, code);
-    const name = payload.name || scanningData.name || scanningData.config?.name || `Game ${gameNumber}`;
-    await upsertGame(env, gameNumber, code, name, scanningData.playerUid || null);
-    const finished = isGameOver(scanningData);
-    const snapshot = await saveSnapshot(env, gameNumber, scanningData, "backend-register", finished ? { pinned: true, label: "Final state" } : {});
-    await updateGameAfterScan(env, gameNumber, scanningData, { finished });
-    await recordScanAttempt(env, { gameNumber, source: "backend-register", success: true });
-    return json({
-      game: await getGame(env, gameNumber),
-      snapshot: { ...snapshot, data: undefined }
-    });
+    scanningData = await fetchScan(gameNumber, code);
   } catch (error) {
-    if (error instanceof NeptuneApiError) {
-      await recordScanAttempt(env, { gameNumber, source: "backend-register", success: false, errorMessage: error.message });
-      return json({ error: `Could not validate NP key: ${error.message}` }, 400);
-    }
-    throw error;
+    const message = error instanceof NeptuneApiError
+      ? `Could not validate NP key: ${error.message}`
+      : `Could not reach Neptune's Pride: ${error.message || error}`;
+    await recordScanAttempt(env, { gameNumber, source: "backend-register", success: false, errorMessage: message });
+    return json({ error: message }, 400);
   }
+
+  const existing = await getGame(env, gameNumber);
+  const name = scanningData.name || scanningData.config?.name || `Game ${gameNumber}`;
+  await upsertGame(env, gameNumber, code, name, scanningData.playerUid ?? null);
+  // The form's "Name" is your own label; NP's name is refreshed by every scan.
+  if (nickname) {
+    await setNickname(env, gameNumber, nickname);
+  }
+
+  // Re-saving a tracked game (e.g. a fresh API code) shouldn't store a
+  // duplicate scan of a tick we already have.
+  const finished = isGameOver(scanningData);
+  const tick = Number(scanningData.tick || 0);
+  const latest = await latestSnapshotMeta(env, gameNumber);
+  let snapshot = latest;
+  if (!latest || latest.tick !== tick || (finished && !latest.pinned)) {
+    snapshot = await saveSnapshot(env, gameNumber, scanningData, "backend-register", finished ? { pinned: true, label: "Final state" } : {});
+  }
+  await updateGameAfterScan(env, gameNumber, scanningData, { finished });
+  await recordScanAttempt(env, { gameNumber, source: "backend-register", success: true });
+  return json({
+    game: await getGame(env, gameNumber),
+    existing: Boolean(existing),
+    snapshot: { ...snapshot, data: undefined }
+  });
 }
 
 async function diplomacyForGame(env, gameNumber) {
