@@ -45,6 +45,11 @@ const STYLES = `
 .npmap-tools { position: absolute; right: 10px; top: 10px; display: flex; flex-direction: column; gap: 6px; z-index: 1; }
 .npmap-tools button { width: 36px; height: 36px; border-radius: 6px; border: 0; background: #5a57c9; color: white; font-size: 18px; cursor: pointer; }
 .npmap-tools button:hover { background: #6d6ae0; }
+.npmap.compact { min-height: 280px; }
+.npmap.compact .npmap-hint { display: none; }
+.npmap.compact .npmap-tools button { width: 30px; height: 30px; font-size: 15px; }
+.npmap-legend { position: absolute; left: 8px; top: 8px; display: flex; gap: 10px; flex-wrap: wrap; font-size: 12px; background: rgba(11, 10, 31, 0.75); padding: 4px 8px; border-radius: 6px; pointer-events: none; }
+.npmap-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; border: 2px solid; vertical-align: -1px; }
 .npmap-hint { position: absolute; left: 10px; bottom: 8px; font-size: 11px; color: #8e95cf; pointer-events: none; }
 @media (max-width: 720px) {
   .npmap { flex-direction: column; }
@@ -292,6 +297,7 @@ function noteIcon(note) {
  *   notes: { [lowercased alias]: { rating, note } } shown next to players
  *   onPlayerSelect(player | null): called when a player is opened
  *   showSidebar: default true
+ *   compact: small embedded map (no sidebar, no hint)
  *   relations: [{ a, b, status, allyScore, warScore }] diplomacy pairs to draw
  *              as lines between empires (toggle with the ⚭ button)
  */
@@ -312,8 +318,8 @@ export function mountMap(container, snapshot, options = {}) {
   let showRelations = Boolean(options.showRelations ?? relations.length);
 
   container.innerHTML = `
-    <div class="npmap">
-      <aside class="npmap-side${options.showSidebar === false ? " collapsed" : ""}">
+    <div class="npmap${options.compact ? " compact" : ""}">
+      <aside class="npmap-side${options.showSidebar === false || options.compact ? " collapsed" : ""}">
         <div class="npmap-head">
           <p class="npmap-title"></p>
           <div class="npmap-sub"></div>
@@ -331,6 +337,7 @@ export function mountMap(container, snapshot, options = {}) {
           <button type="button" data-act="out" title="Zoom out">−</button>
           <button type="button" data-act="fit" title="Fit galaxy">⤢</button>
         </div>
+        <div class="npmap-legend" hidden></div>
         <div class="npmap-hint">Drag to pan · scroll or pinch to zoom · click stars, fleets and players</div>
       </div>
     </div>`;
@@ -451,6 +458,37 @@ export function mountMap(container, snapshot, options = {}) {
     }
   }
 
+  // For the selected player: who counts as an ally and who as an enemy,
+  // taken from the diplomacy relations passed in.
+  function focusGroups(player) {
+    const allies = new Set();
+    const enemies = new Set();
+    if (player) {
+      for (const pair of relations) {
+        if (pair.a !== player.uid && pair.b !== player.uid) continue;
+        const other = pair.a === player.uid ? pair.b : pair.a;
+        if (pair.status === "allied" || pair.status === "possible_allies") allies.add(other);
+        if (pair.status === "war") enemies.add(other);
+      }
+    }
+    return { allies, enemies };
+  }
+
+  function renderLegend() {
+    const legend = root.querySelector(".npmap-legend");
+    const player = selection.player;
+    if (!player) {
+      legend.hidden = true;
+      return;
+    }
+    const { allies, enemies } = focusGroups(player);
+    legend.hidden = false;
+    legend.innerHTML = `
+      <span><i style="border-color:${player.color}"></i>${escapeHtml(player.alias)}</span>
+      <span><i style="border-color:#69d39f"></i>allies (${allies.size})</span>
+      <span><i style="border-color:#ff6b5e"></i>enemies (${enemies.size})</span>`;
+  }
+
   function selectPlayer(player, focus) {
     selection.player = player;
     if (player) {
@@ -459,8 +497,11 @@ export function mountMap(container, snapshot, options = {}) {
     }
     renderList();
     renderDetail();
+    renderLegend();
     if (player && focus) {
-      fitTo(model.stars.filter((star) => star.puid === player.uid));
+      const { allies, enemies } = focusGroups(player);
+      const involved = model.stars.filter((star) => star.puid === player.uid || allies.has(star.puid) || enemies.has(star.puid));
+      fitTo(involved.length ? involved : model.stars.filter((star) => star.puid === player.uid));
     }
     draw();
     options.onPlayerSelect?.(player);
@@ -510,10 +551,17 @@ export function mountMap(container, snapshot, options = {}) {
     ctx.fillRect(0, 0, width, height);
 
     const focus = selection.player;
-    const dim = (puid) => focus && puid !== focus.uid;
+    const groups = focusGroups(focus);
+    const dim = (puid) => focus && puid !== focus.uid && !groups.allies.has(puid) && !groups.enemies.has(puid);
     const r = Math.max(3, Math.min(view.scale * 0.09, 14));
 
-    if (showRelations && relations.length) drawRelations(focus);
+    if (focus) {
+      drawTerritory(groups.enemies, "#ff6b5e");
+      drawTerritory(groups.allies, "#69d39f");
+      drawTerritory(new Set([focus.uid]), focus.color === "#0000ff" ? "#5b7bff" : focus.color);
+    } else if (showRelations && relations.length) {
+      drawRelations(null);
+    }
 
     // Fleet routes first so stars draw on top.
     ctx.setLineDash([4, 4]);
@@ -600,6 +648,62 @@ export function mountMap(container, snapshot, options = {}) {
         ctx.fillText(String(fleet.ships), sx + r * 0.6, sy - r * 0.6);
       }
     }
+    ctx.globalAlpha = 1;
+  }
+
+  // Territory outline like NP's borders: the union of a circle around each star
+  // the players own. Drawn on an offscreen canvas: fill all circles, then cut
+  // out slightly smaller circles, which leaves only the outer edge.
+  const territoryCanvas = document.createElement("canvas");
+  let territoryRadius = 0;
+  function computeTerritoryRadius() {
+    const stars = model.stars.slice(0, 400);
+    const nearest = stars.map((star) => {
+      let best = Infinity;
+      for (const other of model.stars) {
+        if (other === star) continue;
+        const distance = Math.hypot(other.x - star.x, other.y - star.y);
+        if (distance < best) best = distance;
+      }
+      return best;
+    }).filter(Number.isFinite).sort((a, b) => a - b);
+    territoryRadius = (nearest[Math.floor(nearest.length / 2)] || 0.5) * 1.3;
+  }
+  computeTerritoryRadius();
+
+  function drawTerritory(uids, color) {
+    if (!uids.size) return;
+    const owned = model.stars.filter((star) => uids.has(star.puid));
+    if (!owned.length) return;
+    const dpr = window.devicePixelRatio || 1;
+    territoryCanvas.width = canvas.width;
+    territoryCanvas.height = canvas.height;
+    const off = territoryCanvas.getContext("2d");
+    off.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const radius = territoryRadius * view.scale;
+    const edge = 2.5;
+    off.fillStyle = color;
+    off.beginPath();
+    for (const star of owned) {
+      const [sx, sy] = toScreen(star.x, star.y);
+      off.moveTo(sx + radius, sy);
+      off.arc(sx, sy, radius, 0, Math.PI * 2);
+    }
+    off.fill();
+    // Faint fill for the inside, then punch out everything but the border.
+    ctx.globalAlpha = 0.08;
+    ctx.drawImage(territoryCanvas, 0, 0, width, height);
+    off.globalCompositeOperation = "destination-out";
+    off.beginPath();
+    for (const star of owned) {
+      const [sx, sy] = toScreen(star.x, star.y);
+      off.moveTo(sx + radius - edge, sy);
+      off.arc(sx, sy, Math.max(radius - edge, 0), 0, Math.PI * 2);
+    }
+    off.fill();
+    off.globalCompositeOperation = "source-over";
+    ctx.globalAlpha = 0.9;
+    ctx.drawImage(territoryCanvas, 0, 0, width, height);
     ctx.globalAlpha = 1;
   }
 
@@ -782,13 +886,16 @@ export function mountMap(container, snapshot, options = {}) {
       selection.star = selection.star ? model.stars.find((star) => star.uid === selection.star.uid) || null : null;
       selection.fleet = selection.fleet ? model.fleets.find((fleet) => fleet.uid === selection.fleet.uid) || null : null;
       computeCentres();
+      computeTerritoryRadius();
       renderHeader();
+      renderLegend();
       renderList();
       renderDetail();
       draw();
     },
     setRelations(nextRelations) {
       relations = nextRelations || [];
+      renderLegend();
       if (options.showRelations === undefined) showRelations = relations.length > 0;
       draw();
     },
@@ -796,6 +903,9 @@ export function mountMap(container, snapshot, options = {}) {
       notes = nextNotes || {};
       renderList();
       renderDetail();
+    },
+    selectPlayerByUid(uid) {
+      selectPlayer(model.players.find((player) => player.uid === Number(uid)) || null, true);
     },
     selectPlayerByAlias(alias) {
       selectPlayer(model.players.find((player) => player.alias === alias) || null, true);

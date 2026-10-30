@@ -78,8 +78,8 @@ export function useDiplomacy(gameNumber, refreshKey) {
   return { data, error, progress, players };
 }
 
-// The big picture: teams, wars, double ties, middlemen, alliances forming and
-// tech trades. Per-player detail lives in the player list on the game page.
+// The big picture: likely teams and wars. Everything else is per player, in
+// the player list on the game page.
 export default function Diplomacy({ diplomacy }) {
   const { data, error, progress, players } = diplomacy;
 
@@ -87,18 +87,6 @@ export default function Diplomacy({ diplomacy }) {
   if (!data) return <section className="card"><h2>Diplomacy</h2><p className="muted">Loading…</p></section>;
 
   const conflicts = data.conflicts || [];
-  const teamIndex = new Map();
-  data.teams.forEach((team, index) => team.members.forEach((uid) => teamIndex.set(uid, index)));
-  const sameTeam = (pair) => teamIndex.has(pair.a) && teamIndex.get(pair.a) === teamIndex.get(pair.b);
-  const friendly = (pair) => ["allied", "possible_allies", "peaceful"].includes(pair.status);
-  // Allied pairs split across teams: someone is friendly with a rival bloc.
-  const doubleTies = data.pairs.filter((pair) => pair.status === "allied" && teamIndex.has(pair.a) && teamIndex.has(pair.b) && !sameTeam(pair));
-  const forming = data.pairs
-    .filter((pair) => friendly(pair) && pair.status !== "allied" && !sameTeam(pair))
-    .sort((x, y) => y.allyScore - x.allyScore)
-    .slice(0, 15);
-  const trades = groupTrades(data.events.filter((event) => event.kind === "tech_trade"));
-  const captureTicks = groupByTick(data.events.filter((event) => event.kind === "capture")).slice(0, 24);
   const name = (uid) => players.get(uid)?.alias || `Player ${uid}`;
 
   return (
@@ -107,7 +95,7 @@ export default function Diplomacy({ diplomacy }) {
         <h2>Diplomacy</h2>
         <span className="muted small">
           Based on {data.coverage.snapshotsProcessed} scans{data.coverage.latestTick ? ` up to tick ${data.coverage.latestTick}` : ""}.
-          {" "}Only your own formal alliances are certain; everything else is inferred (hover a label to see how sure). Click any name to open that player.
+          {" "}Click any name to open that player: their map, allies, enemies and trades.
         </span>
       </div>
 
@@ -144,77 +132,7 @@ export default function Diplomacy({ diplomacy }) {
         </div>
       )}
 
-      {!!doubleTies.length && (
-        <>
-          <h3>⚠ Double ties</h3>
-          <p className="muted small">Players who look allied with someone in a rival team (the two teams are at war somewhere).</p>
-          <ul className="relation-list compact">
-            {doubleTies.map((pair) => (
-              <li key={`${pair.a}:${pair.b}`} className="tension">
-                <div className="relation-head">
-                  <PlayerBadge player={players.get(pair.a)} uid={pair.a} />
-                  <span className="muted">↔</span>
-                  <PlayerBadge player={players.get(pair.b)} uid={pair.b} />
-                  <span className="status allied">{pair.confirmed ? "Allied (formal)" : "Allied"}</span>
-                </div>
-                <div className="meta">{describePair(pair, pair.a, name)}</div>
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
-
-      {!!data.middlemen?.length && (
-        <>
-          <h3>Caught in the middle</h3>
-          <p className="muted small">Friendly with two players who are at war with each other, and who they actually help: tech sent, fleets parked at their stars, fleets flying to them.</p>
-          <ul className="relation-list compact">
-            {data.middlemen.slice(0, 15).map((item) => {
-              const [first, second] = item.sides;
-              return (
-                <li key={`${item.middle}:${first.uid}:${second.uid}`} className="trade">
-                  <div className="relation-head">
-                    <PlayerBadge player={players.get(item.middle)} uid={item.middle} />
-                    <span className="muted small">between</span>
-                    <PlayerBadge player={players.get(first.uid)} uid={first.uid} />
-                    <span className="versus">⚔</span>
-                    <PlayerBadge player={players.get(second.uid)} uid={second.uid} />
-                    {item.warActive && <span className="pill danger">war active</span>}
-                  </div>
-                  <div className="verdict">{verdictText(item, name)}</div>
-                  <div className="support-grid">
-                    {[first, second].map((side) => (
-                      <div key={side.uid} className="meta">
-                        to <strong>{name(side.uid)}</strong>: tech {side.tech || 0} · fleets parked {side.fleets} scans · fleets sent {side.routes} scans
-                        {side.attacks ? <span className="pill danger">took {side.attacks} of their stars</span> : null}
-                      </div>
-                    ))}
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
-        </>
-      )}
-
-      <h3>Alliances forming</h3>
-      {!forming.length ? <p className="muted">Nothing yet. Pairs that start visiting each other's stars, trading tech, or sharing a border without fighting show up here.</p> : (
-        <ul className="relation-list compact">
-          {forming.map((pair) => (
-            <li key={`${pair.a}:${pair.b}`} className={pair.status}>
-              <div className="relation-head">
-                <PlayerBadge player={players.get(pair.a)} uid={pair.a} />
-                <span className="muted">+</span>
-                <PlayerBadge player={players.get(pair.b)} uid={pair.b} />
-                <span className={`status ${pair.status}`} title={pair.confirmed ? "From your own game data." : STATUS_HINTS[pair.status]}>{STATUS_LABELS[pair.status]}</span>
-              </div>
-              <div className="meta">{describePair(pair, pair.a, name)}</div>
-            </li>
-          ))}
-        </ul>
-      )}
-
-      <div className="two-col">
+      <div>
         <div>
           <h3>Wars</h3>
           {!conflicts.length ? <p className="muted">No star captures between players recorded yet.</p> : (
@@ -251,54 +169,7 @@ export default function Diplomacy({ diplomacy }) {
             </ul>
           )}
         </div>
-        <div>
-          <h3>Possible tech trades</h3>
-          <p className="muted small">Each is roughly a coin flip: research or Experimentation can cause the same jump.</p>
-          {!trades.length ? <p className="muted">None spotted yet. A 2+ level jump in one hour, or reaching a level only one or two others had, gets flagged here.</p> : (
-            <ul className="relation-list compact">
-              {trades.slice(0, 25).map((trade) => (
-                <li key={trade.key} className="trade">
-                  <div className="relation-head">
-                    <span className="muted small">tick {trade.tick}</span>
-                    <PlayerBadge player={players.get(trade.receiver)} uid={trade.receiver} />
-                    <span className="small">{trade.detail}</span>
-                  </div>
-                  <div className="meta">
-                    likely from {trade.sources.map((uid, index) => (
-                      <React.Fragment key={uid}>{index ? " or " : ""}<strong>{name(uid)}</strong></React.Fragment>
-                    ))}
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
       </div>
-
-      {!!captureTicks.length && (
-        <>
-          <details className="capture-log">
-          <summary>Star capture log (every star that changed owner, by tick)</summary>
-          <ul className="relation-list compact">
-            {captureTicks.map(({ tick, events }) => (
-              <li key={tick} className="war">
-                <div className="relation-head">
-                  <strong>tick {tick}</strong>
-                  <span className="muted small">{events.length} capture{events.length === 1 ? "" : "s"}</span>
-                </div>
-                <ul className="front-list">
-                  {summariseCaptures(events).map((line) => (
-                    <li key={line.key}>
-                      <strong>{name(line.a)}</strong> took {line.stars.join(", ")} from <strong>{name(line.b)}</strong>
-                    </li>
-                  ))}
-                </ul>
-              </li>
-            ))}
-          </ul>
-          </details>
-        </>
-      )}
     </section>
   );
 }
@@ -378,27 +249,6 @@ export function verdictText(item, name) {
     case "fighting_both": return `${who} has taken stars from both: friendly on paper only.`;
     default: return `${who} is staying out of it (no tech, fleets or reinforcements seen for either).`;
   }
-}
-
-function groupByTick(events) {
-  const ticks = new Map();
-  for (const event of events) {
-    if (!ticks.has(event.tick)) ticks.set(event.tick, []);
-    ticks.get(event.tick).push(event);
-  }
-  return [...ticks.entries()].sort((x, y) => y[0] - x[0]).map(([tick, list]) => ({ tick, events: list }));
-}
-
-// "A took S1, S2 from B" instead of one line per star.
-function summariseCaptures(events) {
-  const lines = new Map();
-  for (const event of events) {
-    const key = `${event.a}:${event.b}`;
-    const line = lines.get(key) || { key, a: event.a, b: event.b, stars: [] };
-    line.stars.push(event.detail);
-    lines.set(key, line);
-  }
-  return [...lines.values()].sort((x, y) => y.stars.length - x.stars.length);
 }
 
 export function groupTrades(events) {

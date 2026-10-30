@@ -7,7 +7,7 @@ import PlayerRating from "../components/PlayerRating.jsx";
 
 const PLAY_INTERVAL_MS = 1200;
 
-export default function MapPage({ snapshotId, notes }) {
+export default function MapPage({ snapshotId, playerUid, notes }) {
   const containerRef = useRef(null);
   const viewerRef = useRef(null);
   const cache = useRef(new Map());
@@ -75,7 +75,11 @@ export default function MapPage({ snapshotId, notes }) {
 
   useEffect(() => {
     viewerRef.current?.setRelations(relations);
-  }, [relations, snapshot]);
+    // A ?player= link opens focused on that player once relations are in.
+    if (playerUid !== null && playerUid !== undefined && relations.length) {
+      viewerRef.current?.selectPlayerByUid(playerUid);
+    }
+  }, [relations, snapshot, playerUid]);
 
   const fetchFrame = useCallback(async (meta) => {
     if (!cache.current.has(meta.id)) {

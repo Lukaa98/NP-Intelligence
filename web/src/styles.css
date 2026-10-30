@@ -219,3 +219,7 @@ input:focus, textarea:focus { outline: 2px solid var(--accent-2); outline-offset
 .timeline .play { min-width: 84px; }
 .timeline-label { white-space: nowrap; font-variant-numeric: tabular-nums; }
 .timeline-hint { flex-basis: 100%; }
+.player-map { position: relative; margin: 8px 0; border-radius: 8px; overflow: hidden; border: 1px solid var(--line); }
+.player-map-host { height: 360px; }
+.player-map .open-full { position: absolute; right: 50px; top: 8px; background: rgba(11, 10, 31, 0.8); font-size: 12px; padding: 4px 8px; }
+@media (max-width: 640px) { .player-map-host { height: 280px; } }

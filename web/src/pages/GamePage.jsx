@@ -7,6 +7,7 @@ import { downloadStandaloneHtml, EXPORT_OVERHEAD_BYTES } from "../map/exportHtml
 import PlayerRating from "../components/PlayerRating.jsx";
 import Diplomacy, { PickPlayer, PlayerBadge as DiplomacyBadge, STATUS_HINTS, STATUS_LABELS, describePair, groupTrades, useDiplomacy, verdictText } from "../components/Diplomacy.jsx";
 import RenameGame from "../components/RenameGame.jsx";
+import PlayerMap from "../components/PlayerMap.jsx";
 
 const WINDOWS = [
   ["latest", "Latest"],
@@ -25,6 +26,8 @@ export default function GamePage({ gameNumber, notes }) {
   const [status, setStatus] = useState("");
   const [busy, setBusy] = useState(false);
   const [diplomacyKey, setDiplomacyKey] = useState(0);
+  // Latest full scan, loaded the first time a player is opened (for the mini map).
+  const [mapSnapshot, setMapSnapshot] = useState(null);
 
   const loadGame = useCallback(async () => {
     const games = await api.listGames();
@@ -67,6 +70,11 @@ export default function GamePage({ gameNumber, notes }) {
   const captures = snapshots.filter((snapshot) => snapshot.pinned);
   const history = showAllSnapshots ? snapshots : snapshots.slice(0, 12);
   const latest = snapshots[0];
+  useEffect(() => {
+    if (!selectedPlayer || !latest || mapSnapshot?.id === latest.id) return;
+    api.snapshot(latest.id).then(setMapSnapshot).catch(() => {});
+  }, [selectedPlayer, latest, mapSnapshot?.id]);
+
   const alive = players.filter((player) => player.stars > 0 || player.ships > 0);
   const eliminated = players.filter((player) => player.stars === 0 && player.ships === 0);
 
@@ -106,6 +114,8 @@ export default function GamePage({ gameNumber, notes }) {
             player={player}
             note={notes.byAlias[player.name.toLowerCase()]?.note}
             diplomacy={diplomacy}
+            mapSnapshot={mapSnapshot}
+            onOpenFull={latest ? () => navigate(`/snapshot/${latest.id}?player=${player.uid}`) : null}
           />
         )}
       </React.Fragment>
@@ -258,7 +268,7 @@ export default function GamePage({ gameNumber, notes }) {
 // note, diplomatic relations, recent changes and possible tech trades.
 const RELATION_ORDER = { allied: 0, possible_allies: 1, war: 2, former_allies: 3, tension: 4, peaceful: 5 };
 
-function PlayerDetail({ player, note, diplomacy }) {
+function PlayerDetail({ player, note, diplomacy, mapSnapshot, onOpenFull }) {
   const uid = Number(player.uid);
   const data = diplomacy.data;
   const name = (other) => diplomacy.players.get(other)?.alias || `Player ${other}`;
@@ -277,6 +287,10 @@ function PlayerDetail({ player, note, diplomacy }) {
         {team && ` · in a likely team of ${team.members.length}`}
       </p>
       {note && <p className="note-text">📝 {note}</p>}
+
+      {mapSnapshot
+        ? <PlayerMap snapshot={mapSnapshot} relations={data?.pairs || []} uid={uid} onOpenFull={onOpenFull} />
+        : <p className="muted small">Loading map…</p>}
 
       <h4>Relations</h4>
       {!data ? <p className="muted small">Loading…</p> : !relations.length ? <p className="muted small">Nothing recorded yet.</p> : (
