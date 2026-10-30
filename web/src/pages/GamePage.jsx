@@ -5,7 +5,7 @@ import { buildPlayerIntel } from "../intel.js";
 import { formatBytes, formatDateTime, gameFacts, gameTitle, notesForExport, renderMentions } from "../format.js";
 import { downloadStandaloneHtml, EXPORT_OVERHEAD_BYTES } from "../map/exportHtml.js";
 import PlayerRating from "../components/PlayerRating.jsx";
-import Diplomacy, { PickPlayer, PlayerBadge as DiplomacyBadge, STATUS_HINTS, STATUS_LABELS, describePair, groupTrades, useDiplomacy, verdictText } from "../components/Diplomacy.jsx";
+import Diplomacy, { PickPlayer, PlayerBadge as DiplomacyBadge, PlayerIcon, STATUS_HINTS, STATUS_LABELS, describePair, groupTrades, useDiplomacy, verdictText } from "../components/Diplomacy.jsx";
 import RenameGame from "../components/RenameGame.jsx";
 import PlayerMap from "../components/PlayerMap.jsx";
 
@@ -84,41 +84,30 @@ export default function GamePage({ gameNumber, notes }) {
     if (!alias) return;
     setSelectedPlayer(alias);
     requestAnimationFrame(() => {
-      document.getElementById(`player-${uid}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      document.getElementById("player-panel")?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   }, [diplomacy.players]);
 
-  const renderPlayer = (player) => {
+  // Compact name chip; the selected player's panel opens under the grid.
+  const renderChip = (player) => {
     const open = activePlayer?.name === player.name;
+    const trend = player.tone === "danger" ? "down" : player.tone === "success" ? "up" : "";
+    const rating = notes.byAlias[player.name.toLowerCase()]?.rating || 0;
     return (
-      <React.Fragment key={player.name}>
-        <div
-          id={`player-${player.uid}`}
-          className={`player-line${open ? " active" : ""}`}
-          onClick={() => setSelectedPlayer(open ? "" : player.name)}
-          aria-expanded={open}
-        >
-          <div className="player-name">
-            <strong><span className="caret">{open ? "▾" : "▸"}</span> {player.name}</strong>
-            <span className="muted small">{player.quickSummary}</span>
-          </div>
-          <div className="player-stats small">
-            <span>{player.stars}★</span>
-            <span>{player.ships} ships</span>
-            <span className={`pill ${player.tone === "danger" ? "danger" : player.tone === "success" ? "success" : ""}`}>{player.badge}</span>
-          </div>
-          <PlayerRating alias={player.name} notes={notes} game={gameContext} compact />
-        </div>
-        {open && (
-          <PlayerDetail
-            player={player}
-            note={notes.byAlias[player.name.toLowerCase()]?.note}
-            diplomacy={diplomacy}
-            mapSnapshot={mapSnapshot}
-            onOpenFull={latest ? () => navigate(`/snapshot/${latest.id}?player=${player.uid}`) : null}
-          />
-        )}
-      </React.Fragment>
+      <button
+        key={player.name}
+        type="button"
+        className={`pchip${open ? " active" : ""}`}
+        title={player.quickSummary}
+        onClick={() => setSelectedPlayer(open ? "" : player.name)}
+      >
+        <PlayerIcon player={diplomacy.players.get(Number(player.uid))} uid={Number(player.uid)} />
+        <span className="pchip-name">{player.name}</span>
+        {rating > 0 && <span className="small">👍</span>}
+        {rating < 0 && <span className="small">👎</span>}
+        <span className="pchip-stars">{player.stars}★</span>
+        {trend && <span className={`trend ${trend}`}>{trend === "down" ? "▼" : "▲"}</span>}
+      </button>
     );
   };
 
@@ -194,17 +183,29 @@ export default function GamePage({ gameNumber, notes }) {
           </div>
         </div>
         {intel?.summary?.players?.length ? (
-          <p className="muted small">Click a player for everything: stats, allies, wars, recent changes and possible tech trades. Tick {intel.summary.tick} · {alive.length} still in the game.</p>
+          <p className="muted small">Tick {intel.summary.tick} · {alive.length} still in the game · ▲▼ = gained or lost in the selected window. Click a name for their map, allies and enemies.</p>
         ) : <p className="muted">No intel yet for this game.</p>}
 
-        <div className="player-table">
-          {alive.map(renderPlayer)}
-        </div>
+        <div className="chip-grid">{alive.map(renderChip)}</div>
         {!!eliminated.length && (
           <details className="eliminated">
             <summary>Eliminated or empty ({eliminated.length})</summary>
-            <div className="player-table">{eliminated.map(renderPlayer)}</div>
+            <div className="chip-grid">{eliminated.map(renderChip)}</div>
           </details>
+        )}
+
+        {activePlayer && (
+          <div id="player-panel">
+            <PlayerDetail
+              player={activePlayer}
+              notes={notes}
+              gameContext={gameContext}
+              diplomacy={diplomacy}
+              mapSnapshot={mapSnapshot}
+              onClose={() => setSelectedPlayer("")}
+              onOpenFull={latest ? () => navigate(`/snapshot/${latest.id}?player=${activePlayer.uid}`) : null}
+            />
+          </div>
         )}
       </section>
 
@@ -268,7 +269,17 @@ export default function GamePage({ gameNumber, notes }) {
 // note, diplomatic relations, recent changes and possible tech trades.
 const RELATION_ORDER = { allied: 0, possible_allies: 1, war: 2, former_allies: 3, tension: 4, peaceful: 5 };
 
-function PlayerDetail({ player, note, diplomacy, mapSnapshot, onOpenFull }) {
+const SUMMARY_GROUPS = [
+  ["war", "⚔ At war with"],
+  ["allied", "🤝 Allied with"],
+  ["possible_allies", "Probably cooperating with"],
+  ["peaceful", "Not fighting (maybe a NAP)"],
+  ["tension", "Fleets heading at"],
+  ["former_allies", "Former allies"]
+];
+
+function PlayerDetail({ player, notes, gameContext, diplomacy, mapSnapshot, onOpenFull, onClose }) {
+  const note = notes.byAlias[player.name.toLowerCase()]?.note;
   const uid = Number(player.uid);
   const data = diplomacy.data;
   const name = (other) => diplomacy.players.get(other)?.alias || `Player ${other}`;
@@ -280,7 +291,12 @@ function PlayerDetail({ player, note, diplomacy, mapSnapshot, onOpenFull }) {
   const trades = groupTrades((data?.events || []).filter((event) => event.kind === "tech_trade" && (event.a === uid || event.b === uid))).slice(0, 6);
 
   return (
-    <div className="detail-box inline">
+    <div className="detail-box player-panel">
+      <div className="panel-head">
+        <h3><BadgeFor uid={uid} diplomacy={diplomacy} /></h3>
+        <PlayerRating alias={player.name} notes={notes} game={gameContext} compact />
+        <button type="button" className="ghost close-panel" onClick={onClose}>✕</button>
+      </div>
       <p className="muted small">
         {player.stars} stars · {player.ships} ships · Eco {player.economy} · Ind {player.industry} · Sci {player.science}
         {player.stars === 0 && " · no stars left"}
@@ -288,12 +304,28 @@ function PlayerDetail({ player, note, diplomacy, mapSnapshot, onOpenFull }) {
       </p>
       {note && <p className="note-text">📝 {note}</p>}
 
+      {!data ? <p className="muted small">Loading relations…</p> : !relations.length ? <p className="muted small">No relations recorded yet.</p> : (
+        <div className="summary-lines">
+          {SUMMARY_GROUPS.map(([status, label]) => {
+            const others = relations.filter((pair) => pair.status === status).map((pair) => (pair.a === uid ? pair.b : pair.a));
+            if (!others.length) return null;
+            return (
+              <div key={status} className={`summary-line ${status}`}>
+                <span className="summary-label">{label}</span>
+                <span className="summary-names">{others.map((other) => <BadgeFor key={other} uid={other} diplomacy={diplomacy} />)}</span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
       {mapSnapshot
         ? <PlayerMap snapshot={mapSnapshot} relations={data?.pairs || []} uid={uid} onOpenFull={onOpenFull} />
         : <p className="muted small">Loading map…</p>}
 
-      <h4>Relations</h4>
-      {!data ? <p className="muted small">Loading…</p> : !relations.length ? <p className="muted small">Nothing recorded yet.</p> : (
+      {!!relations.length && (
+      <details className="why">
+        <summary>Why? Evidence for each relation</summary>
         <ul className="relation-list compact">
           {relations.slice(0, 15).map((pair) => {
             const other = pair.a === uid ? pair.b : pair.a;
@@ -312,6 +344,7 @@ function PlayerDetail({ player, note, diplomacy, mapSnapshot, onOpenFull }) {
             );
           })}
         </ul>
+      </details>
       )}
 
       {!!middle.length && (

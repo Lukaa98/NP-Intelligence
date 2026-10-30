@@ -223,3 +223,27 @@ input:focus, textarea:focus { outline: 2px solid var(--accent-2); outline-offset
 .player-map-host { height: 360px; }
 .player-map .open-full { position: absolute; right: 50px; top: 8px; background: rgba(11, 10, 31, 0.8); font-size: 12px; padding: 4px 8px; }
 @media (max-width: 640px) { .player-map-host { height: 280px; } }
+.chip-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+.pchip { display: inline-flex; align-items: center; gap: 5px; padding: 4px 9px; background: #0b0a1f; border: 1px solid var(--line); border-radius: 999px; font-size: 13px; }
+.pchip:hover { border-color: var(--accent-2); }
+.pchip.active { border-color: var(--accent); background: #232060; }
+.pchip-name { color: var(--accent); max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pchip-stars { color: var(--muted); font-size: 12px; }
+.player-icon { display: inline-flex; }
+.trend { font-size: 10px; }
+.trend.up { color: var(--success); }
+.trend.down { color: var(--danger); }
+#player-panel { scroll-margin-top: 70px; margin-top: 8px; }
+.player-panel { border-left: 3px solid var(--accent); border-radius: 8px; }
+.panel-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.panel-head h3 { margin: 0; font-size: 18px; }
+.close-panel { margin-left: auto; padding: 2px 10px; }
+.summary-lines { display: flex; flex-direction: column; gap: 4px; margin: 6px 0; }
+.summary-line { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; padding: 4px 8px; border-radius: 6px; background: #0b0a1f; border-left: 3px solid var(--line); }
+.summary-line.war { border-left-color: var(--danger); }
+.summary-line.allied { border-left-color: var(--success); }
+.summary-line.possible_allies, .summary-line.peaceful { border-left-color: #7fbf9f; }
+.summary-line.tension { border-left-color: #ffc000; }
+.summary-label { color: var(--muted); font-size: 13px; min-width: 170px; }
+.summary-names { display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.why summary { cursor: pointer; color: var(--muted); padding: 6px 0; }

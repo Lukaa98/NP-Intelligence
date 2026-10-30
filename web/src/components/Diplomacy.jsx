@@ -188,6 +188,13 @@ function Side({ uids, players }) {
   );
 }
 
+// Just the empire's colour/shape icon (for chips that are buttons themselves).
+export function PlayerIcon({ player, uid, size = 16 }) {
+  const color = typeof player?.color === "number" ? NP_COLORS[player.color % 8] : NP_COLORS[uid % 8];
+  const shape = typeof player?.shape === "number" ? NP_SHAPES[player.shape % 8] : NP_SHAPES[Math.floor(uid / 8) % 8];
+  return <span className="player-icon" dangerouslySetInnerHTML={{ __html: shapeSvg(shape, color, size) }} />;
+}
+
 export function PlayerBadge({ player, uid }) {
   const pick = useContext(PickPlayer);
   const color = typeof player?.color === "number" ? NP_COLORS[player.color % 8] : NP_COLORS[uid % 8];
