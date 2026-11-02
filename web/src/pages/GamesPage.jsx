@@ -3,6 +3,7 @@ import { api } from "../api.js";
 import { navigate } from "../router.js";
 import { formatDateTime, gameFacts, gameTitle } from "../format.js";
 import RenameGame from "../components/RenameGame.jsx";
+import KnownPlayers from "../components/KnownPlayers.jsx";
 
 export default function GamesPage() {
   const [games, setGames] = useState([]);
@@ -12,6 +13,8 @@ export default function GamesPage() {
   const [formOpen, setFormOpen] = useState(false);
   const [form, setForm] = useState({ gameNumber: "", code: "", name: "" });
   const [query, setQuery] = useState("");
+  // Players from the game just added that you have met before.
+  const [known, setKnown] = useState(null);
 
   const load = useCallback(async () => {
     try {
@@ -49,6 +52,7 @@ export default function GamesPage() {
     }
     await run("save", "Saving and validating key", async () => {
       const payload = await api.saveGame({ game_number: form.gameNumber.trim(), code: form.code.trim(), name: form.name.trim() });
+      setKnown(payload.knownPlayers?.length ? { gameNumber: payload.game.gameNumber, title: gameTitle(payload.game), players: payload.knownPlayers } : null);
       setForm({ gameNumber: "", code: "", name: "" });
       setFormOpen(false);
       return payload.existing
@@ -101,6 +105,14 @@ export default function GamesPage() {
       )}
 
       {status && <p className="status banner">{status}</p>}
+
+      {known && (
+        <KnownPlayers
+          title={`You've met players in ${known.title} before`}
+          players={known.players}
+          onDismiss={() => setKnown(null)}
+        />
+      )}
 
       <section className="card">
         <div className="section-head">

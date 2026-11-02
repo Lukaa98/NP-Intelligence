@@ -70,6 +70,85 @@ export async function updateGameAfterScan(env, gameNumber, scanningData, { finis
     timestamp,
     gameNumber
   ).run();
+  await recordGamePlayers(env, gameNumber, scanningData);
+}
+
+// Remembers who is in a game (refreshed by every scan; INSERT OR REPLACE keeps
+// it current if someone renames).
+export async function recordGamePlayers(env, gameNumber, scanningData) {
+  const players = Object.values(scanningData?.players || {}).filter((player) => player?.alias);
+  if (!players.length) return;
+  const statement = env.DB.prepare(`
+    INSERT OR REPLACE INTO game_players (game_number, alias_key, alias, uid) VALUES (?, ?, ?, ?)
+  `);
+  await env.DB.batch(players.map((player) => statement.bind(String(gameNumber), aliasKey(player.alias), String(player.alias), Number(player.uid))));
+}
+
+// One-off fill for games tracked before game_players existed: reads each
+// such game's newest snapshot.
+export async function backfillGamePlayers(env, limit = 3) {
+  const rows = await env.DB.prepare(`
+    SELECT game_number FROM games
+    WHERE NOT EXISTS (SELECT 1 FROM game_players gp WHERE gp.game_number = games.game_number)
+      AND EXISTS (SELECT 1 FROM snapshots s WHERE s.game_number = games.game_number)
+    LIMIT ?
+  `).bind(limit).all();
+  for (const row of rows.results) {
+    const latest = await latestSnapshot(env, row.game_number);
+    if (latest) await recordGamePlayers(env, row.game_number, latest.data);
+  }
+  return rows.results.length;
+}
+
+// Players in `gameNumber` you have met before: rated in your player book
+// and/or present in your other tracked games, with how they related to you
+// there (formal alliance, stars taken either way).
+export async function knownPlayers(env, gameNumber) {
+  const game = await env.DB.prepare(`SELECT player_uid FROM games WHERE game_number = ?`).bind(gameNumber).first();
+  const here = (await env.DB.prepare(`SELECT alias_key, alias, uid FROM game_players WHERE game_number = ?`).bind(gameNumber).all()).results
+    .filter((row) => row.uid !== game?.player_uid);
+  if (!here.length) return [];
+  const keys = JSON.stringify(here.map((row) => row.alias_key));
+
+  const notes = (await env.DB.prepare(`
+    SELECT * FROM player_notes WHERE alias_key IN (SELECT value FROM json_each(?))
+  `).bind(keys).all()).results.map(playerNoteFromRow);
+
+  const elsewhere = (await env.DB.prepare(`
+    SELECT gp.alias_key, gp.uid, gp.game_number, g.name, g.nickname, g.player_uid AS my_uid, g.finished_at, g.archived_at, g.last_tick
+    FROM game_players gp
+    JOIN games g ON g.game_number = gp.game_number
+    WHERE gp.alias_key IN (SELECT value FROM json_each(?)) AND gp.game_number != ?
+  `).bind(keys, gameNumber).all()).results;
+
+  const gameNumbers = JSON.stringify([...new Set(elsewhere.map((row) => row.game_number))]);
+  const relationRowsFound = elsewhere.length ? (await env.DB.prepare(`
+    SELECT game_number, kind, a_uid, b_uid, count FROM relations
+    WHERE kind IN ('ally_confirmed', 'capture') AND game_number IN (SELECT value FROM json_each(?))
+  `).bind(gameNumbers).all()).results : [];
+
+  const byKey = new Map(here.map((row) => [row.alias_key, { alias: row.alias, uid: row.uid, note: null, games: [] }]));
+  for (const note of notes) {
+    byKey.get(note.aliasKey).note = { rating: note.rating, note: note.note };
+  }
+  for (const row of elsewhere) {
+    const me = row.my_uid;
+    const them = row.uid;
+    const between = relationRowsFound.filter((rel) => rel.game_number === row.game_number);
+    const count = (kind, a, b) => between.filter((rel) => rel.kind === kind && rel.a_uid === a && rel.b_uid === b).reduce((sum, rel) => sum + rel.count, 0);
+    byKey.get(row.alias_key).games.push({
+      gameNumber: row.game_number,
+      title: row.nickname || row.name,
+      over: Boolean(row.finished_at || row.archived_at),
+      wasAlly: me !== null && count("ally_confirmed", Math.min(me, them), Math.max(me, them)) > 0,
+      youTook: me === null ? 0 : count("capture", me, them),
+      theyTook: me === null ? 0 : count("capture", them, me)
+    });
+  }
+
+  return [...byKey.values()]
+    .filter((player) => player.note || player.games.length)
+    .sort((x, y) => Math.abs(y.note?.rating || 0) - Math.abs(x.note?.rating || 0) || y.games.length - x.games.length);
 }
 
 export async function markKeyProblem(env, gameNumber, message) {
@@ -179,6 +258,7 @@ export async function setNickname(env, gameNumber, nickname) {
 }
 
 export async function purgeGame(env, gameNumber) {
+  await env.DB.prepare(`DELETE FROM game_players WHERE game_number = ?`).bind(gameNumber).run();
   await env.DB.prepare(`DELETE FROM relation_events WHERE game_number = ?`).bind(gameNumber).run();
   await env.DB.prepare(`DELETE FROM relations WHERE game_number = ?`).bind(gameNumber).run();
   await env.DB.prepare(`DELETE FROM scan_attempts WHERE game_number = ?`).bind(gameNumber).run();

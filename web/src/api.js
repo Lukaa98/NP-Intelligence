@@ -65,6 +65,7 @@ export const api = {
   archiveGame: (gameNumber) => request(game(gameNumber), { method: "DELETE" }),
   purgeGame: (gameNumber) => request(`${game(gameNumber)}?purge=1`, { method: "DELETE" }),
   renameGame: (gameNumber, nickname) => request(game(gameNumber), { method: "PUT", body: JSON.stringify({ nickname }) }),
+  knownPlayers: (gameNumber) => request(`${game(gameNumber)}/known-players`).then((payload) => payload.players || []),
   diplomacy: (gameNumber) => request(`${game(gameNumber)}/diplomacy`),
   processRelations: (gameNumber) => request(`${game(gameNumber)}/relations/process`, { method: "POST" }),
   restoreGame: (gameNumber) => request(`${game(gameNumber)}/restore`, { method: "POST" }),

@@ -3,6 +3,8 @@ import { diffSnapshots, strategicIntel, summarize } from "./intel.js";
 import { fetchScan, isGameOver, NeptuneApiError } from "./npApi.js";
 import {
   archiveGame,
+  backfillGamePlayers,
+  knownPlayers,
   comparisonSnapshotsForWindow,
   deletePlayerNote,
   enabledGamesWithCodes,
@@ -172,6 +174,12 @@ export default {
         return json(await processRelations(env, gameNumber, RELATION_BATCH_REQUEST));
       }
 
+      if (request.method === "GET" && matchPath(url.pathname, "/api/games/:gameNumber/known-players")) {
+        const { gameNumber } = pathParams(url.pathname, "/api/games/:gameNumber/known-players");
+        await backfillGamePlayers(env, 10);
+        return json({ players: await knownPlayers(env, gameNumber) });
+      }
+
       if (request.method === "GET" && matchPath(url.pathname, "/api/games/:gameNumber/diplomacy")) {
         const { gameNumber } = pathParams(url.pathname, "/api/games/:gameNumber/diplomacy");
         return diplomacyForGame(env, gameNumber);
@@ -251,6 +259,7 @@ export default {
         const { processed } = await processRelations(env, gameNumber, Math.min(RELATION_BATCH_CRON, budget));
         budget -= Math.max(processed, 1);
       }
+      await backfillGamePlayers(env, 3);
       // Only prunes games whose history relationship intel has fully read.
       await pruneInactiveGames(env, STALE_GAME_HOURS);
     })());
@@ -297,9 +306,11 @@ async function createGame(request, env) {
   }
   await updateGameAfterScan(env, gameNumber, scanningData, { finished });
   await recordScanAttempt(env, { gameNumber, source: "backend-register", success: true });
+  await backfillGamePlayers(env, 10);
   return json({
     game: await getGame(env, gameNumber),
     existing: Boolean(existing),
+    knownPlayers: await knownPlayers(env, gameNumber),
     snapshot: { ...snapshot, data: undefined }
   });
 }

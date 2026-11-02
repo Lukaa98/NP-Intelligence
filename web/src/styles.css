@@ -247,3 +247,8 @@ input:focus, textarea:focus { outline: 2px solid var(--accent-2); outline-offset
 .summary-label { color: var(--muted); font-size: 13px; min-width: 170px; }
 .summary-names { display: flex; flex-wrap: wrap; gap: 4px 12px; }
 .why summary { cursor: pointer; color: var(--muted); padding: 6px 0; }
+.known-players { border-color: var(--accent); }
+.known-name { color: var(--accent); font-size: 15px; }
+.summary-line.history { border-left-color: var(--accent); margin: 6px 0; }
+.known-others { line-height: 1.8; }
+.known-others .known-name { font-size: 14px; }

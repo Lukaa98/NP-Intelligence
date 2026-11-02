@@ -8,6 +8,7 @@ import PlayerRating from "../components/PlayerRating.jsx";
 import Diplomacy, { PickPlayer, PlayerBadge as DiplomacyBadge, PlayerIcon, STATUS_HINTS, STATUS_LABELS, describePair, groupTrades, useDiplomacy, verdictText } from "../components/Diplomacy.jsx";
 import RenameGame from "../components/RenameGame.jsx";
 import PlayerMap from "../components/PlayerMap.jsx";
+import KnownPlayers, { historyText } from "../components/KnownPlayers.jsx";
 
 const WINDOWS = [
   ["latest", "Latest"],
@@ -28,6 +29,11 @@ export default function GamePage({ gameNumber, notes }) {
   const [diplomacyKey, setDiplomacyKey] = useState(0);
   // Latest full scan, loaded the first time a player is opened (for the mini map).
   const [mapSnapshot, setMapSnapshot] = useState(null);
+  const [known, setKnown] = useState([]);
+
+  useEffect(() => {
+    api.knownPlayers(gameNumber).then(setKnown).catch(() => setKnown([]));
+  }, [gameNumber, notes.list]);
 
   const loadGame = useCallback(async () => {
     const games = await api.listGames();
@@ -170,6 +176,8 @@ export default function GamePage({ gameNumber, notes }) {
 
       {status && <p className="status banner">{status}</p>}
 
+      <KnownPlayers players={known} title="Players you know from before" onPick={openPlayer} />
+
       <Diplomacy diplomacy={diplomacy} />
 
       <section className="card">
@@ -202,6 +210,7 @@ export default function GamePage({ gameNumber, notes }) {
               gameContext={gameContext}
               diplomacy={diplomacy}
               mapSnapshot={mapSnapshot}
+              history={known.find((item) => item.alias === activePlayer.name)}
               onClose={() => setSelectedPlayer("")}
               onOpenFull={latest ? () => navigate(`/snapshot/${latest.id}?player=${activePlayer.uid}`) : null}
             />
@@ -278,7 +287,7 @@ const SUMMARY_GROUPS = [
   ["former_allies", "Former allies"]
 ];
 
-function PlayerDetail({ player, notes, gameContext, diplomacy, mapSnapshot, onOpenFull, onClose }) {
+function PlayerDetail({ player, notes, gameContext, diplomacy, mapSnapshot, history, onOpenFull, onClose }) {
   const note = notes.byAlias[player.name.toLowerCase()]?.note;
   const uid = Number(player.uid);
   const data = diplomacy.data;
@@ -303,6 +312,16 @@ function PlayerDetail({ player, notes, gameContext, diplomacy, mapSnapshot, onOp
         {team && ` · in a likely team of ${team.members.length}`}
       </p>
       {note && <p className="note-text">📝 {note}</p>}
+      {!!history?.games.length && (
+        <div className="summary-line history">
+          <span className="summary-label">Your history with them</span>
+          <span className="summary-names">
+            {history.games.map((item) => (
+              <span key={item.gameNumber}><a href={`#/game/${item.gameNumber}`}>{item.title}</a>: {historyText(item)}</span>
+            ))}
+          </span>
+        </div>
+      )}
 
       {!data ? <p className="muted small">Loading relations…</p> : !relations.length ? <p className="muted small">No relations recorded yet.</p> : (
         <div className="summary-lines">
