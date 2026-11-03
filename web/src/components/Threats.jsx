@@ -19,7 +19,7 @@ function formatMinutes(minutes) {
 // opens the map zoomed on the star and the incoming fleet.
 export default function Threats({ threats, currentTick, tickMinutes = 60, onPickPlayer }) {
   const [showClosed, setShowClosed] = useState(false);
-  const open = threats.filter((threat) => threat.status === "open");
+  const open = threats.filter((threat) => threat.status === "open" && !(threat.defenders > 0 && threat.ships < threat.defenders * 0.05));
   const closed = threats.filter((threat) => threat.status !== "open");
   if (!threats.length) return null;
 

@@ -1,4 +1,5 @@
 import { extractRelations, RELATIONS_VERSION } from "./relations.js";
+import { isNegligible } from "./threats.js";
 
 function nowIso() {
   return new Date().toISOString();
@@ -868,6 +869,11 @@ export async function updateThreats(env, gameNumber, tick, detected, scanningDat
 
   for (const row of existing) {
     if (row.status !== "open" || seen.has(row.key)) continue;
+    // Raised before tiny fleets were filtered out: drop instead of closing.
+    if (isNegligible(row.ships, row.defenders)) {
+      statements.push(env.DB.prepare(`DELETE FROM threats WHERE game_number = ? AND key = ?`).bind(gameNumber, row.key));
+      continue;
+    }
     const ownerNow = scanningData.stars?.[row.target_uid]?.puid;
     const outcome = ownerNow === row.owner_uid ? "fell" : tick >= row.eta_tick ? "held" : "gone";
     statements.push(env.DB.prepare(`UPDATE threats SET status = 'closed', outcome = ?, updated_at = ? WHERE game_number = ? AND key = ?`)

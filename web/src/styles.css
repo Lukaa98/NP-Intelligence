@@ -266,3 +266,5 @@ code { background: #0b0a1f; padding: 1px 6px; border-radius: 4px; }
 .bell-item { width: 100%; text-align: left; display: flex; flex-direction: column; gap: 2px; background: #0b0a1f; border: 1px solid transparent; border-left: 3px solid var(--line); border-radius: 6px; padding: 7px 9px; }
 .bell-item.new { border-left-color: var(--danger); }
 .bell-item:hover { border-color: var(--accent-2); }
+.bell-group { display: flex; flex-direction: column; gap: 4px; }
+.bell-game { font-weight: 600; text-decoration: none; padding: 2px 2px; }

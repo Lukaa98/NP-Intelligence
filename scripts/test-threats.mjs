@@ -48,3 +48,9 @@ away.fleets[5] = { uid: 5, puid: 4, x: 14, y: 0, lx: 13.5, ly: 0, st: 30, speed:
 away.fleets[6] = { uid: 6, puid: 4, x: 14, y: 0, lx: 14.5, ly: 2, st: 30, speed: 0.5, o: [] };
 assert.equal(detectThreats(away).length, 0);
 console.log("Threat detection tests passed.");
+
+// A 1-ship scout at a heavily defended star is not an alert.
+const scout = base();
+scout.fleets[7] = { uid: 7, puid: 3, x: 0, y: 3, st: 1, speed: 0.5, o: [[0, 10, 0, 0]] };
+assert.equal(detectThreats(scout).length, 0, "tiny fleets are ignored");
+console.log("Negligible-fleet filter test passed.");

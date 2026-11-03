@@ -11,6 +11,13 @@
 const WEAPONS_TECH = "5";
 const HEADING_MAX_ANGLE = (8 * Math.PI) / 180;
 const HEADING_MAX_TICKS = 48;
+// Fleets smaller than this share of the defence at their target (scouts,
+// leftovers) are not worth an alert.
+export const MIN_SHARE_OF_DEFENCE = 0.05;
+
+export function isNegligible(ships, defenders) {
+  return defenders > 0 && ships < defenders * MIN_SHARE_OF_DEFENCE;
+}
 
 export function detectThreats(data) {
   const viewer = Number(data.playerUid ?? data.player_uid ?? -1);
@@ -66,6 +73,7 @@ export function detectThreats(data) {
     const defenders = Number(target.st || 0) + fleets
       .filter((other) => other.puid === viewer && other.x === target.x && other.y === target.y)
       .reduce((sum, other) => sum + Number(other.st || 0), 0);
+    if (isNegligible(ships, defenders)) continue;
     // Rough NP combat: the defender fires first with +1 weapons. Compare how
     // many rounds each side needs to destroy the other.
     const attackRounds = defenders / Math.max(weapons(owner), 1);

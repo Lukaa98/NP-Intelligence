@@ -79,7 +79,7 @@ export default function App() {
         <nav>
           <a className={route.name === "games" || route.name === "game" ? "active" : ""} href="#/">Games</a>
           <a className={route.name === "players" ? "active" : ""} href="#/players">Players</a>
-          <AlertBell />
+          <AlertBell gameNumber={route.gameNumber || (route.snapshotId ? route.snapshotId.split("-")[0] : null)} />
           <button type="button" className="ghost" onClick={() => setSettingsOpen(true)}>Settings</button>
         </nav>
       </header>
