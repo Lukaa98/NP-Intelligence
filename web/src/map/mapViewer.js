@@ -369,6 +369,8 @@ export function mountMap(container, snapshot, options = {}) {
   renderHeader();
 
   const view = { scale: 1, x: 0, y: 0 };
+  // Star under attack (from an alert link), ringed in red.
+  let markedStarUid = null;
   const selection = { star: null, fleet: null, player: null };
   let width = 0;
   let height = 0;
@@ -522,11 +524,18 @@ export function mountMap(container, snapshot, options = {}) {
     return { minX, minY, maxX, maxY };
   }
 
-  function fitTo(stars) {
+  // Zoom requests made before the canvas has a real size (just mounted, or in
+  // a hidden panel) are remembered and applied on the first real layout.
+  let pendingFit = null;
+  function fitTo(stars, margin = 60) {
+    if (width < 50 || height < 50) {
+      pendingFit = { stars, margin };
+      return;
+    }
     const box = bounds(stars.length ? stars : model.stars);
     const spanX = Math.max(box.maxX - box.minX, 0.5);
     const spanY = Math.max(box.maxY - box.minY, 0.5);
-    view.scale = Math.min((width - 60) / spanX, (height - 60) / spanY);
+    view.scale = Math.min((width - margin) / spanX, (height - margin) / spanY);
     view.scale = Math.max(4, Math.min(view.scale, 400));
     view.x = width / 2 - ((box.minX + box.maxX) / 2) * view.scale;
     view.y = height / 2 - ((box.minY + box.maxY) / 2) * view.scale;
@@ -595,6 +604,15 @@ export function mountMap(container, snapshot, options = {}) {
       ctx.beginPath();
       ctx.arc(sx, sy, star.owner ? Math.max(1.4, r * 0.28) : Math.max(1.2, r * 0.22), 0, Math.PI * 2);
       ctx.fill();
+
+      if (star.uid === markedStarUid) {
+        ctx.globalAlpha = 1;
+        ctx.strokeStyle = "#ff4d4d";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(sx, sy, r * 2.8, 0, Math.PI * 2);
+        ctx.stroke();
+      }
 
       if (changedStars.has(star.uid)) {
         ctx.globalAlpha = 1;
@@ -747,13 +765,17 @@ export function mountMap(container, snapshot, options = {}) {
 
   function resize() {
     const rect = stage.getBoundingClientRect();
-    const firstLayout = width === 0;
+    const wasLaidOut = width >= 50 && height >= 50;
     width = Math.max(rect.width, 1);
     height = Math.max(rect.height, 1);
     const dpr = window.devicePixelRatio || 1;
     canvas.width = Math.round(width * dpr);
     canvas.height = Math.round(height * dpr);
-    if (firstLayout) {
+    if (pendingFit && width >= 50 && height >= 50) {
+      const { stars, margin } = pendingFit;
+      pendingFit = null;
+      fitTo(stars, margin);
+    } else if (!wasLaidOut) {
       fitTo(model.stars);
     } else {
       draw();
@@ -903,6 +925,22 @@ export function mountMap(container, snapshot, options = {}) {
       notes = nextNotes || {};
       renderList();
       renderDetail();
+    },
+    // Alert view: zoom to the attacked star and the incoming fleet, select the
+    // fleet so its route and details show.
+    focusThreat(starUid, fleetUid) {
+      const star = model.stars.find((item) => item.uid === Number(starUid));
+      const fleet = model.fleets.find((item) => item.uid === Number(fleetUid));
+      markedStarUid = star ? star.uid : null;
+      selection.player = null;
+      selection.star = fleet ? null : star || null;
+      selection.fleet = fleet || null;
+      renderList();
+      renderDetail();
+      renderLegend();
+      const points = [star, fleet, ...(fleet?.route || [])].filter(Boolean);
+      if (points.length) fitTo(points, 200);
+      draw();
     },
     selectPlayerByUid(uid) {
       selectPlayer(model.players.find((player) => player.uid === Number(uid)) || null, true);

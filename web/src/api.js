@@ -84,6 +84,9 @@ export const api = {
     if (!response.ok) throw new Error(`Archived tick not found (${response.status})`);
     return response.json();
   },
+  threats: (gameNumber) => request(`${game(gameNumber)}/threats`).then((payload) => payload.threats || []),
+  threatCounts: () => request("/api/threats").then((payload) => payload.counts || {}),
+  openThreats: () => request("/api/threats").then((payload) => payload.threats || []),
   listPlayers: () => request("/api/players").then((payload) => payload.players || []),
   savePlayer: (body) => request("/api/players", { method: "PUT", body: JSON.stringify(body) }).then((payload) => payload.player),
   deletePlayer: (alias) => request(`/api/players/${encodeURIComponent(alias)}`, { method: "DELETE" })

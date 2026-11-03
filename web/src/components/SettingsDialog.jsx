@@ -6,7 +6,6 @@ export default function SettingsDialog({ onClose }) {
   const [backendUrl, setBackendUrl] = useState(initial.backendUrl);
   const [writeToken, setWriteToken] = useState(initial.writeToken);
   const [status, setStatus] = useState("");
-
   async function test() {
     saveSettings({ backendUrl, writeToken });
     try {
@@ -46,6 +45,7 @@ export default function SettingsDialog({ onClose }) {
           <button type="button" className="primary" onClick={save}>Save</button>
         </div>
         {status && <p className="status">{status}</p>}
+
       </div>
     </div>
   );

@@ -1,8 +1,17 @@
+import { sendNtfy, threatNotification } from "./alerts.js";
 import { buildDiplomacy } from "./diplomacy.js";
+import { detectThreats } from "./threats.js";
 import { diffSnapshots, strategicIntel, summarize } from "./intel.js";
 import { fetchScan, isGameOver, NeptuneApiError } from "./npApi.js";
 import {
   archiveGame,
+  getSetting,
+  listThreats,
+  markThreatsNotified,
+  openThreatCounts,
+  openThreats,
+  setSetting,
+  updateThreats,
   backfillGamePlayers,
   knownPlayers,
   comparisonSnapshotsForWindow,
@@ -78,6 +87,47 @@ export default {
       // every write must carry it. Reads stay open (API codes are masked).
       if (request.method !== "GET" && env.ADMIN_TOKEN && request.headers.get("authorization") !== `Bearer ${env.ADMIN_TOKEN}`) {
         return json({ error: "Write token missing or wrong. Set it in the dashboard settings." }, 401);
+      }
+
+      if (request.method === "GET" && url.pathname === "/api/settings") {
+        const topic = await getSetting(env, "ntfy_topic");
+        // The topic works like a password for your alerts, so only a hint is returned.
+        return json({ ntfyTopicSet: Boolean(topic), ntfyTopicHint: topic ? `…${topic.slice(-4)}` : "" });
+      }
+
+      if (request.method === "PUT" && url.pathname === "/api/settings") {
+        const payload = await request.json();
+        if (payload.ntfyTopic !== undefined) {
+          const topic = String(payload.ntfyTopic || "").trim();
+          if (topic && !/^[A-Za-z0-9_-]{6,64}$/.test(topic)) {
+            return json({ error: "Topic must be 6-64 letters, numbers, - or _." }, 400);
+          }
+          await setSetting(env, "ntfy_topic", topic);
+        }
+        return json({ ok: true });
+      }
+
+      if (request.method === "POST" && url.pathname === "/api/alerts/test") {
+        const topic = await getSetting(env, "ntfy_topic");
+        if (!topic) {
+          return json({ error: "Save an ntfy topic first." }, 400);
+        }
+        await sendNtfy(topic, {
+          title: "NP Intelligence test alert",
+          message: "If you can read this, attack alerts will reach this phone.",
+          tags: ["white_check_mark"],
+          priority: 3
+        });
+        return json({ ok: true });
+      }
+
+      if (request.method === "GET" && url.pathname === "/api/threats") {
+        return json({ counts: await openThreatCounts(env), threats: await openThreats(env) });
+      }
+
+      if (request.method === "GET" && matchPath(url.pathname, "/api/games/:gameNumber/threats")) {
+        const { gameNumber } = pathParams(url.pathname, "/api/games/:gameNumber/threats");
+        return json({ threats: await listThreats(env, gameNumber) });
       }
 
       if (request.method === "GET" && url.pathname === "/api/archive/pending") {
@@ -305,6 +355,9 @@ async function createGame(request, env) {
     snapshot = await saveSnapshot(env, gameNumber, scanningData, "backend-register", finished ? { pinned: true, label: "Final state" } : {});
   }
   await updateGameAfterScan(env, gameNumber, scanningData, { finished });
+  if (!finished) {
+    await checkThreats(env, await getGame(env, gameNumber), scanningData, snapshot.id);
+  }
   await recordScanAttempt(env, { gameNumber, source: "backend-register", success: true });
   await backfillGamePlayers(env, 10);
   return json({
@@ -396,6 +449,22 @@ async function captureGame(env, gameNumber) {
   });
 }
 
+// New tick: find enemy fleets heading at the viewer's stars, keep the threat
+// list current, and send one phone alert for any fleet seen for the first time.
+async function checkThreats(env, game, scanningData, snapshotId) {
+  try {
+    const fresh = await updateThreats(env, game.gameNumber, Number(scanningData.tick || 0), detectThreats(scanningData), scanningData, snapshotId);
+    if (!fresh.length) return;
+    const topic = await getSetting(env, "ntfy_topic");
+    if (!topic) return;
+    await sendNtfy(topic, threatNotification(env, game, fresh, snapshotId));
+    await markThreatsNotified(env, game.gameNumber, fresh.map((threat) => threat.key));
+  } catch (error) {
+    // Alerts must never break scanning; the in-app list still updates next tick.
+    console.error("threat check failed", game.gameNumber, error);
+  }
+}
+
 async function scanSavedGame(env, game, source, { pin = false } = {}) {
   try {
     const scanningData = await fetchScan(game.gameNumber, game.code);
@@ -406,7 +475,7 @@ async function scanSavedGame(env, game, source, { pin = false } = {}) {
     // Hourly scans often land on the same tick; don't store duplicates unless
     // this is a capture or the first time we see the game is over.
     if (!pin && latest && latest.tick === tick && (!finished || latest.pinned)) {
-      await updateGameAfterScan(env, game.gameNumber, scanningData, { finished });
+      await updateGameAfterScan(env, game.gameNumber, scanningData, { finished, players: false });
       await recordScanAttempt(env, { gameNumber: game.gameNumber, source, success: true });
       return { ok: true, gameNumber: game.gameNumber, unchanged: true, snapshot: latest };
     }
@@ -414,6 +483,9 @@ async function scanSavedGame(env, game, source, { pin = false } = {}) {
     const label = finished ? "Final state" : pin ? "Manual capture" : null;
     const snapshot = await saveSnapshot(env, game.gameNumber, scanningData, source, { pinned: pin || finished, label });
     await updateGameAfterScan(env, game.gameNumber, scanningData, { finished });
+    if (!finished) {
+      await checkThreats(env, game, scanningData, snapshot.id);
+    }
     await recordScanAttempt(env, { gameNumber: game.gameNumber, source, success: true });
     return { ok: true, gameNumber: game.gameNumber, snapshot: { ...snapshot, data: undefined } };
   } catch (error) {

@@ -15,10 +15,12 @@ export default function GamesPage() {
   const [query, setQuery] = useState("");
   // Players from the game just added that you have met before.
   const [known, setKnown] = useState(null);
+  const [threatCounts, setThreatCounts] = useState({});
 
   const load = useCallback(async () => {
     try {
       setGames(await api.listGames());
+      api.threatCounts().then(setThreatCounts).catch(() => {});
     } catch (error) {
       setStatus(error.message);
     } finally {
@@ -74,7 +76,7 @@ export default function GamesPage() {
         <div>
           <p className="eyebrow">Neptune's Pride intel</p>
           <h1>Your games</h1>
-          <p className="muted">Tracked games are scanned every hour, and their full history is kept while they run. When a game ends or you delete it, its final state, your captures and its full alliance and war record are kept, so finished games stay viewable after Neptune's Pride deletes them.</p>
+          <p className="muted">Tracked games are scanned every 10 minutes (a new scan is stored once per NP tick), and the 🔔 lights up when an enemy fleet is launched at one of your stars. When a game ends or you delete it, its final state, your captures and its full alliance and war record are kept, so finished games stay viewable after Neptune's Pride deletes them.</p>
         </div>
         <button type="button" className="primary" onClick={() => setFormOpen((open) => !open)}>
           {formOpen ? "Hide form" : "Track a game"}
@@ -136,6 +138,9 @@ export default function GamesPage() {
                   <div className="meta">{gameFacts(game)}</div>
                   <div className="meta">tick {game.lastTick ?? 0} · last scan {formatDateTime(game.lastSyncAt)}</div>
                   <div className="pills">
+                    {!!threatCounts[game.gameNumber] && (
+                      <span className="pill danger">🚨 {threatCounts[game.gameNumber]} incoming</span>
+                    )}
                     {game.finishedAt && <span className="pill">finished</span>}
                     <span className={`pill ${game.keyStatus === "needs_fresh_key" ? "danger" : "success"}`}>
                       {game.keyStatus === "needs_fresh_key" ? "key failing" : "key ok"}

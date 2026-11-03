@@ -7,7 +7,7 @@ import PlayerRating from "../components/PlayerRating.jsx";
 
 const PLAY_INTERVAL_MS = 1200;
 
-export default function MapPage({ snapshotId, playerUid, notes }) {
+export default function MapPage({ snapshotId, playerUid, starUid, fleetUid, notes }) {
   const containerRef = useRef(null);
   const viewerRef = useRef(null);
   const cache = useRef(new Map());
@@ -61,6 +61,10 @@ export default function MapPage({ snapshotId, playerUid, notes }) {
       notes: viewerNotes,
       onPlayerSelect: (player) => setSelected(player ? { alias: player.alias } : null)
     });
+    // Links from attack alerts open on the threatened star and incoming fleet.
+    if (starUid !== null && starUid !== undefined) {
+      viewerRef.current.focusThreat(starUid, fleetUid);
+    }
     return () => {
       viewerRef.current?.destroy();
       viewerRef.current = null;

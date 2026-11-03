@@ -40,7 +40,7 @@ export async function upsertGame(env, gameNumber, code, name, playerUid = null) 
   `).bind(gameNumber, code, name, playerUid, timestamp, timestamp).run();
 }
 
-export async function updateGameAfterScan(env, gameNumber, scanningData, { finished = false } = {}) {
+export async function updateGameAfterScan(env, gameNumber, scanningData, { finished = false, players = true } = {}) {
   const timestamp = nowIso();
   const name = scanningData.name || scanningData.config?.name || `Game ${gameNumber}`;
   const playerUid = scanningData.playerUid ?? scanningData.player_uid;
@@ -70,7 +70,9 @@ export async function updateGameAfterScan(env, gameNumber, scanningData, { finis
     timestamp,
     gameNumber
   ).run();
-  await recordGamePlayers(env, gameNumber, scanningData);
+  if (players) {
+    await recordGamePlayers(env, gameNumber, scanningData);
+  }
 }
 
 // Remembers who is in a game (refreshed by every scan; INSERT OR REPLACE keeps
@@ -831,4 +833,127 @@ function maskKey(key = "") {
   }
 
   return `${key.slice(0, 3)}****${key.slice(-3)}`;
+}
+
+// Folds this tick's detected threats into the threats table. Returns the ones
+// seen for the first time (to notify about). Open threats that are no longer
+// detected are closed: "fell" if the attacker now owns the target, "held" if
+// the arrival time has passed, otherwise "gone" (turned away / out of view).
+export async function updateThreats(env, gameNumber, tick, detected, scanningData, snapshotId) {
+  const timestamp = nowIso();
+  const existing = (await env.DB.prepare(`SELECT * FROM threats WHERE game_number = ?`).bind(gameNumber).all()).results;
+  const byKey = new Map(existing.map((row) => [row.key, row]));
+  const seen = new Set();
+  const fresh = [];
+  const statements = [];
+
+  for (const threat of detected) {
+    seen.add(threat.key);
+    const row = byKey.get(threat.key);
+    if (!row || row.status !== "open") fresh.push(threat);
+    statements.push(env.DB.prepare(`
+      INSERT INTO threats (game_number, key, kind, fleet_uid, owner_uid, owner_alias, ships, target_uid, target_name,
+        eta_tick, eta_minutes, defenders, verdict, first_tick, last_tick, status, outcome, snapshot_id, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'open', NULL, ?, ?)
+      ON CONFLICT (game_number, key) DO UPDATE SET
+        kind = excluded.kind, ships = excluded.ships, eta_tick = excluded.eta_tick, eta_minutes = excluded.eta_minutes,
+        defenders = excluded.defenders, verdict = excluded.verdict, last_tick = excluded.last_tick,
+        first_tick = CASE WHEN threats.status = 'open' THEN threats.first_tick ELSE excluded.first_tick END,
+        notified_at = CASE WHEN threats.status = 'open' THEN threats.notified_at ELSE NULL END,
+        status = 'open', outcome = NULL, snapshot_id = excluded.snapshot_id, updated_at = excluded.updated_at
+    `).bind(gameNumber, threat.key, threat.kind, threat.fleetUid, threat.ownerUid, threat.ownerAlias, threat.ships,
+      threat.targetUid, threat.targetName, tick + threat.etaTicks, threat.etaMinutes, threat.defenders, threat.verdict,
+      tick, tick, snapshotId, timestamp));
+  }
+
+  for (const row of existing) {
+    if (row.status !== "open" || seen.has(row.key)) continue;
+    const ownerNow = scanningData.stars?.[row.target_uid]?.puid;
+    const outcome = ownerNow === row.owner_uid ? "fell" : tick >= row.eta_tick ? "held" : "gone";
+    statements.push(env.DB.prepare(`UPDATE threats SET status = 'closed', outcome = ?, updated_at = ? WHERE game_number = ? AND key = ?`)
+      .bind(outcome, timestamp, gameNumber, row.key));
+  }
+
+  // Keep a day of closed alerts for context.
+  statements.push(env.DB.prepare(`DELETE FROM threats WHERE game_number = ? AND status = 'closed' AND updated_at < ?`)
+    .bind(gameNumber, new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()));
+  if (statements.length) await env.DB.batch(statements);
+  return fresh;
+}
+
+export async function markThreatsNotified(env, gameNumber, keys) {
+  if (!keys.length) return;
+  await env.DB.prepare(`UPDATE threats SET notified_at = ? WHERE game_number = ? AND key IN (SELECT value FROM json_each(?))`)
+    .bind(nowIso(), gameNumber, JSON.stringify(keys)).run();
+}
+
+export async function listThreats(env, gameNumber) {
+  const rows = (await env.DB.prepare(`
+    SELECT * FROM threats WHERE game_number = ? ORDER BY status = 'open' DESC, eta_tick ASC
+  `).bind(gameNumber).all()).results;
+  return rows.map((row) => ({
+    key: row.key,
+    kind: row.kind,
+    fleetUid: row.fleet_uid,
+    ownerUid: row.owner_uid,
+    ownerAlias: row.owner_alias,
+    ships: row.ships,
+    targetUid: row.target_uid,
+    targetName: row.target_name,
+    etaTick: row.eta_tick,
+    etaMinutes: row.eta_minutes,
+    defenders: row.defenders,
+    verdict: row.verdict,
+    firstTick: row.first_tick,
+    lastTick: row.last_tick,
+    status: row.status,
+    outcome: row.outcome,
+    snapshotId: row.snapshot_id,
+    updatedAt: row.updated_at
+  }));
+}
+
+// Open threats across all games (for the in-app notification bell).
+export async function openThreats(env) {
+  const rows = (await env.DB.prepare(`
+    SELECT t.*, g.name AS game_name, g.nickname AS game_nickname, g.last_tick AS game_tick
+    FROM threats t JOIN games g ON g.game_number = t.game_number
+    WHERE t.status = 'open'
+    ORDER BY t.first_tick DESC
+  `).all()).results;
+  return rows.map((row) => ({
+    gameNumber: row.game_number,
+    gameTitle: row.game_nickname || row.game_name,
+    gameTick: row.game_tick,
+    key: row.key,
+    kind: row.kind,
+    ownerUid: row.owner_uid,
+    ownerAlias: row.owner_alias,
+    ships: row.ships,
+    targetUid: row.target_uid,
+    targetName: row.target_name,
+    fleetUid: row.fleet_uid,
+    etaTick: row.eta_tick,
+    defenders: row.defenders,
+    verdict: row.verdict,
+    snapshotId: row.snapshot_id,
+    firstSeenAt: row.notified_at || row.updated_at
+  }));
+}
+
+export async function openThreatCounts(env) {
+  const rows = (await env.DB.prepare(`SELECT game_number, COUNT(*) AS n FROM threats WHERE status = 'open' GROUP BY game_number`).all()).results;
+  return Object.fromEntries(rows.map((row) => [row.game_number, row.n]));
+}
+
+export async function getSetting(env, key) {
+  return (await env.DB.prepare(`SELECT value FROM settings WHERE key = ?`).bind(key).first())?.value ?? null;
+}
+
+export async function setSetting(env, key, value) {
+  if (value === null || value === "") {
+    await env.DB.prepare(`DELETE FROM settings WHERE key = ?`).bind(key).run();
+  } else {
+    await env.DB.prepare(`INSERT INTO settings (key, value) VALUES (?, ?) ON CONFLICT (key) DO UPDATE SET value = excluded.value`).bind(key, String(value)).run();
+  }
 }

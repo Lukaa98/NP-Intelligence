@@ -6,7 +6,7 @@ compatibility_date = "2026-07-05"
 enabled = true
 
 [triggers]
-crons = ["7 * * * *"]
+crons = ["*/10 * * * *"]
 
 [[d1_databases]]
 binding = "DB"

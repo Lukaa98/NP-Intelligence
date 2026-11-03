@@ -24,6 +24,7 @@ Neptune's Pride intel dashboard: track your games, keep their history after NP d
   - a tech jump of 2+ levels within a few hours, or to a level only one or two players had, flags a likely trade and its sources;
   - neighbours who never fight count as peaceful.
   Evidence is aggregated in D1 as scans arrive, so it outlives snapshot pruning. Pruning waits until a game's history has been processed.
+- **Incoming attack alerts**: every scan (every 10 minutes; a new scan is stored once per NP tick) checks for non-allied fleets whose route ends at one of your stars, or that fly straight at one with their route hidden. Each attack is one alert in the 🔔 bell (all games) and the game's Incoming box, with arrival time, your defence there and a rough verdict; it closes with the outcome (fell / held / turned away). Clicking it opens the map on the star and the fleet. The backend can also push phone alerts via ntfy (`PUT /api/settings {"ntfyTopic": "..."}`), off by default.
 - **Nicknames**: rename any game for yourself (✎). The games list shows player count and your alias, and has a search box.
 - **Player intel**: per-player captures, losses, ship and tech changes over latest / 1h / 6h / 32h windows, plus fetch health.
 

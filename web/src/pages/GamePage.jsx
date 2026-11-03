@@ -9,6 +9,7 @@ import Diplomacy, { PickPlayer, PlayerBadge as DiplomacyBadge, PlayerIcon, STATU
 import RenameGame from "../components/RenameGame.jsx";
 import PlayerMap from "../components/PlayerMap.jsx";
 import KnownPlayers, { historyText } from "../components/KnownPlayers.jsx";
+import Threats from "../components/Threats.jsx";
 
 const WINDOWS = [
   ["latest", "Latest"],
@@ -30,6 +31,15 @@ export default function GamePage({ gameNumber, notes }) {
   // Latest full scan, loaded the first time a player is opened (for the mini map).
   const [mapSnapshot, setMapSnapshot] = useState(null);
   const [known, setKnown] = useState([]);
+  const [threats, setThreats] = useState([]);
+
+  useEffect(() => {
+    const load = () => api.threats(gameNumber).then(setThreats).catch(() => {});
+    load();
+    // Keep the alert list fresh while the page is open (scans run every 10 min).
+    const timer = setInterval(load, 2 * 60 * 1000);
+    return () => clearInterval(timer);
+  }, [gameNumber, diplomacyKey]);
 
   useEffect(() => {
     api.knownPlayers(gameNumber).then(setKnown).catch(() => setKnown([]));
@@ -175,6 +185,8 @@ export default function GamePage({ gameNumber, notes }) {
       </section>
 
       {status && <p className="status banner">{status}</p>}
+
+      <Threats threats={threats} currentTick={game?.lastTick ?? 0} onPickPlayer={openPlayer} />
 
       <KnownPlayers players={known} title="Players you know from before" onPick={openPlayer} />
 
