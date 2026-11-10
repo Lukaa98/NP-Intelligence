@@ -2,7 +2,7 @@ import { TECH_NAMES } from "./intel.js";
 
 // Bump when extraction rules change: games whose hourly history still exists
 // are re-processed from scratch with the new rules.
-export const RELATIONS_VERSION = 3;
+export const RELATIONS_VERSION = 4;
 
 // Pulls relationship evidence out of one NP4 snapshot, diffing against the
 // compact state left by the previous one. Pure: no I/O, so it can be unit
@@ -16,6 +16,9 @@ export const RELATIONS_VERSION = 3;
 // Events (counted once when they happen):
 //   capture         a took a star from b
 //   tech_trade      a gained tech that b already had (b is a likely source)
+//   activity        a did something only a human does (a === b): bought
+//                   infrastructure, built carriers, or gave visible fleets
+//                   new orders. Detail is "infra" | "carriers" | "orders".
 export function extractRelations(data, previousState) {
   const tick = Number(data.tick || 0);
   const viewer = Number(data.playerUid ?? data.player_uid ?? -1);
@@ -74,7 +77,23 @@ export function extractRelations(data, previousState) {
     tech[player.uid] = Object.fromEntries(Object.entries(player.tech || {}).map(([kind, value]) => [kind, Number(value?.level ?? 0)]));
   }
 
+  const totals = {};
+  for (const player of Object.values(players)) {
+    totals[player.uid] = {
+      e: Number(player.totalEconomy ?? player.total_economy ?? 0),
+      i: Number(player.totalIndustry ?? player.total_industry ?? 0),
+      s: Number(player.totalScience ?? player.total_science ?? 0),
+      fleets: Number(player.totalFleets ?? player.total_fleets ?? 0)
+    };
+  }
+  const routesByFleet = {};
+  for (const fleet of fleets) {
+    if (fleet.l === 1 || fleet.l === true) continue; // looping fleets move on their own
+    routesByFleet[fleet.uid] = { puid: Number(fleet.puid), stops: (fleet.o || []).map((order) => (Array.isArray(order) ? order[1] : null)).filter((stop) => stop !== null) };
+  }
+
   if (previousState && previousState.tick < tick) {
+    events.push(...activityEvents(previousState, { totals, routesByFleet }, stars, players));
     for (const star of Object.values(stars)) {
       const before = previousState.owners?.[star.uid];
       if (before !== undefined && before >= 0 && star.puid >= 0 && before !== star.puid) {
@@ -84,7 +103,48 @@ export function extractRelations(data, previousState) {
     events.push(...techTradeEvents(previousState.tech || {}, tech, tick - previousState.tick, players));
   }
 
-  return { tick, observations, events, state: { version: RELATIONS_VERSION, tick, owners, tech } };
+  return { tick, observations, events, state: { version: RELATIONS_VERSION, tick, owners, tech, totals, routesByFleet } };
+}
+
+// Actions only a human player takes. Ship counts and research grow on their
+// own, so they are not used. Infrastructure bought = the rise in a player's
+// Eco/Ind/Sci beyond what stars captured this tick brought with them.
+function activityEvents(previousState, current, stars, players) {
+  const events = [];
+  const previousTotals = previousState.totals || {};
+  const infraDelta = {};
+  for (const star of Object.values(stars)) {
+    const before = previousState.owners?.[star.uid];
+    if (before === undefined || before === star.puid) continue;
+    const infra = Number(star.e || 0) + Number(star.i || 0) + Number(star.s || 0);
+    if (star.puid >= 0) infraDelta[star.puid] = (infraDelta[star.puid] || 0) + infra;
+    if (before >= 0) infraDelta[before] = (infraDelta[before] || 0) - infra;
+  }
+
+  for (const [uid, now] of Object.entries(current.totals)) {
+    const before = previousTotals[uid];
+    if (!before || !players[uid]) continue;
+    const owner = Number(uid);
+    const bought = (now.e + now.i + now.s) - (before.e + before.i + before.s) - (infraDelta[uid] || 0);
+    if (bought > 0) events.push({ kind: "activity", a: owner, b: owner, weight: bought, detail: "infra" });
+    const built = now.fleets - before.fleets;
+    if (built > 0) events.push({ kind: "activity", a: owner, b: owner, weight: built, detail: "carriers" });
+  }
+
+  // Visible fleets (present in both scans) that gained a stop they didn't
+  // have before: someone changed their orders. Following an existing route
+  // only removes stops from the front, so it doesn't count.
+  const reordered = {};
+  for (const [fleetUid, route] of Object.entries(current.routesByFleet)) {
+    const previous = previousState.routesByFleet?.[fleetUid];
+    if (!previous || !(route.puid >= 0)) continue;
+    const known = new Set(previous.stops);
+    if (route.stops.some((stop) => !known.has(stop))) reordered[route.puid] = (reordered[route.puid] || 0) + 1;
+  }
+  for (const [uid, count] of Object.entries(reordered)) {
+    events.push({ kind: "activity", a: Number(uid), b: Number(uid), weight: count, detail: "orders" });
+  }
+  return events;
 }
 
 // A player gaining a tech level is normally research (+1). A jump of 2+

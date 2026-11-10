@@ -268,3 +268,9 @@ code { background: #0b0a1f; padding: 1px 6px; border-radius: 4px; }
 .bell-item:hover { border-color: var(--accent-2); }
 .bell-group { display: flex; flex-direction: column; gap: 4px; }
 .bell-game { font-weight: 600; text-decoration: none; padding: 2px 2px; }
+.summary-line.activity { margin: 6px 0; }
+.summary-line.activity.active { border-left-color: var(--success); }
+.summary-line.activity.possibly_afk { border-left-color: #ffc000; }
+.summary-line.activity.afk, .summary-line.activity.ai { border-left-color: var(--danger); }
+.pill.warning { background: rgba(255, 192, 0, 0.15); color: #ffc000; }
+.dim { opacity: 0.55; }

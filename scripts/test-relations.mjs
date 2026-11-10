@@ -163,3 +163,40 @@ assert.equal(toTwo.fleets, 4);
 assert.equal(toThree.fleets, 3);
 assert.equal(entry.verdict, entry.sides[0].uid === 2 ? "leans_first" : "leans_second");
 console.log("Middleman tests passed.");
+
+// Activity: only human actions count.
+const scan = (tick, { totals, owners = {}, fleets = {} }) => ({
+  tick,
+  playerUid: 1,
+  players: Object.fromEntries([1, 2, 3, 4].map((uid) => [uid, {
+    uid, alias: `P${uid}`, tech: {},
+    totalEconomy: totals[uid].e, totalIndustry: totals[uid].i, totalScience: 0, totalFleets: totals[uid].f
+  }])),
+  stars: {
+    1: { uid: 1, n: "A", x: 0, y: 0, puid: owners[1] ?? 1, e: 0, i: 0, s: 0 },
+    2: { uid: 2, n: "B", x: 9, y: 0, puid: owners[2] ?? 2, e: 4, i: 2, s: 0 }
+  },
+  fleets
+});
+const t0 = extractRelations(scan(10, {
+  totals: { 1: { e: 10, i: 5, f: 3 }, 2: { e: 10, i: 5, f: 3 }, 3: { e: 10, i: 5, f: 3 }, 4: { e: 10, i: 5, f: 3 } },
+  fleets: {
+    1: { uid: 1, puid: 3, x: 1, y: 1, o: [[0, 1, 0, 0], [0, 2, 0, 0]] },
+    2: { uid: 2, puid: 4, x: 1, y: 1, o: [[0, 1, 0, 0]] },
+    3: { uid: 3, puid: 4, x: 2, y: 2, l: 1, o: [[0, 1, 0, 0]] }
+  }
+}), null);
+const t1 = extractRelations(scan(11, {
+  // P1 bought 2 eco; P2 lost star B (6 infra) to P4 with no purchase; P4's
+  // totals rise only by B's infra; P3 built a carrier.
+  totals: { 1: { e: 12, i: 5, f: 3 }, 2: { e: 6, i: 3, f: 3 }, 3: { e: 10, i: 5, f: 4 }, 4: { e: 14, i: 7, f: 3 } },
+  owners: { 2: 4 },
+  fleets: {
+    1: { uid: 1, puid: 3, x: 1, y: 1, o: [[0, 2, 0, 0]] }, // just following its route
+    2: { uid: 2, puid: 4, x: 1, y: 1, o: [[0, 1, 0, 0], [0, 2, 0, 0]] }, // new stop: new orders
+    3: { uid: 3, puid: 4, x: 2, y: 2, l: 1, o: [[0, 2, 0, 0]] } // looping: ignored
+  }
+}), t0.state);
+const acts = t1.events.filter((event) => event.kind === "activity").map((event) => `${event.a}:${event.detail}:${event.weight}`).sort();
+assert.deepEqual(acts, ["1:infra:2", "3:carriers:1", "4:orders:1"]);
+console.log("Activity detection tests passed.");

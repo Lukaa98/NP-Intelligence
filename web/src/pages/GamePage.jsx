@@ -122,6 +122,7 @@ export default function GamePage({ gameNumber, notes }) {
         {rating > 0 && <span className="small">👍</span>}
         {rating < 0 && <span className="small">👎</span>}
         <span className="pchip-stars">{player.stars}★</span>
+        <ActivityMarker activity={diplomacy.data?.activity?.[Number(player.uid)]} />
         {trend && <span className={`trend ${trend}`}>{trend === "down" ? "▼" : "▲"}</span>}
       </button>
     );
@@ -324,6 +325,7 @@ function PlayerDetail({ player, notes, gameContext, diplomacy, mapSnapshot, hist
         {team && ` · in a likely team of ${team.members.length}`}
       </p>
       {note && <p className="note-text">📝 {note}</p>}
+      <ActivityLine activity={data?.activity?.[uid]} />
       {!!history?.games.length && (
         <div className="summary-line history">
           <span className="summary-label">Your history with them</span>
@@ -418,6 +420,57 @@ function PlayerDetail({ player, notes, gameContext, diplomacy, mapSnapshot, hist
           </ul>
         </>
       )}
+    </div>
+  );
+}
+
+const ACTIVITY_LABELS = {
+  active: ["Active", "success"],
+  possibly_afk: ["Possibly AFK", "warning"],
+  afk: ["AFK", "danger"],
+  ai: ["AI / out", "danger"],
+  unknown: ["Activity unknown", ""]
+};
+
+function ActivityMarker({ activity }) {
+  if (!activity) return null;
+  if (activity.status === "ai") return <span className="small" title="AI-controlled or conceded">🤖</span>;
+  if (activity.status === "afk") return <span className="small" title="No manual actions for 48h+">💤</span>;
+  if (activity.status === "possibly_afk") return <span className="small dim" title="No manual actions in the last 24h">💤</span>;
+  return null;
+}
+
+function hoursAgo(ticks) {
+  if (ticks === null || ticks === undefined) return null;
+  return ticks <= 1 ? "within the last hour" : ticks < 48 ? `~${ticks}h ago` : `~${Math.round(ticks / 24)} days ago`;
+}
+
+// Is this player at the keyboard? Only counts things a human must do:
+// buying infrastructure, building carriers, giving fleets new orders
+// (visible fleets only) and capturing stars. Ship growth and research are
+// automatic, so they don't count.
+function ActivityLine({ activity }) {
+  if (!activity) return null;
+  const [label, tone] = ACTIVITY_LABELS[activity.status] || [activity.status, ""];
+  const window = activity.status === "active" ? activity.day : activity.twoDays;
+  const parts = [];
+  if (window.infra) parts.push(`bought ${window.infra} infra`);
+  if (window.carriers) parts.push(`built ${window.carriers} carrier${window.carriers === 1 ? "" : "s"}`);
+  if (window.orders) parts.push(`${window.orders} new fleet order${window.orders === 1 ? "" : "s"}`);
+  if (window.captures) parts.push(`took ${window.captures} star${window.captures === 1 ? "" : "s"}`);
+  const last = hoursAgo(activity.ticksSinceAction);
+
+  let detail;
+  if (activity.status === "ai") detail = "NP has the AI playing for them (inactive or conceded).";
+  else if (activity.status === "unknown") detail = `Not enough history yet (${activity.observedTicks}h of scans; needs ~12h).`;
+  else if (activity.status === "active") detail = `Last 24h: ${parts.join(", ")}.${last ? ` Last action ${last}.` : ""}`;
+  else if (activity.status === "possibly_afk") detail = `No manual actions in the last 24h.${last ? ` Last action ${last}.` : ` None seen in ${activity.observedTicks}h of scans.`}`;
+  else detail = `No manual actions for 48h+.${last ? ` Last action ${last}.` : ` None seen in ${activity.observedTicks}h of scans.`}`;
+
+  return (
+    <div className={`summary-line activity ${activity.status}`}>
+      <span className="summary-label"><span className={`pill ${tone}`}>{label}</span></span>
+      <span className="small" title="Counts only human actions: buying infrastructure, building carriers, new fleet orders (fleets in your scanning range) and captures. Ship growth and research happen on their own.">{detail}</span>
     </div>
   );
 }

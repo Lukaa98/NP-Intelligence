@@ -4,6 +4,7 @@ import { detectThreats } from "./threats.js";
 import { diffSnapshots, strategicIntel, summarize } from "./intel.js";
 import { fetchScan, isGameOver, NeptuneApiError } from "./npApi.js";
 import {
+  activityByPlayer,
   archiveGame,
   getSetting,
   listThreats,
@@ -374,11 +375,12 @@ async function diplomacyForGame(env, gameNumber) {
     return json({ error: "Game not found" }, 404);
   }
 
-  const [rows, events, latest, pending] = await Promise.all([
+  const [rows, events, latest, pending, activity] = await Promise.all([
     relationRows(env, gameNumber),
     recentRelationEvents(env, gameNumber, 1000),
     latestSnapshot(env, gameNumber),
-    pendingRelationSnapshots(env, gameNumber)
+    pendingRelationSnapshots(env, gameNumber),
+    activityByPlayer(env, gameNumber, game.relationTick ?? 0)
   ]);
 
   const players = Object.values(latest?.data?.players || {}).map((player) => ({
@@ -395,6 +397,7 @@ async function diplomacyForGame(env, gameNumber) {
   return json({
     gameNumber,
     pendingSnapshots: pending,
+    activity: activityVerdicts(activity, players, game.relationTick ?? 0),
     players,
     ...buildDiplomacy({
       rows,
@@ -405,6 +408,33 @@ async function diplomacyForGame(env, gameNumber) {
       latestTick: game.relationTick ?? 0
     })
   });
+}
+
+// Turns raw action counts into a verdict per player. Ticks are hourly, so a
+// 24-tick window is roughly a day.
+function activityVerdicts(activity, players, latestTick) {
+  const result = {};
+  for (const player of players) {
+    const stats = activity.players[player.uid] || {
+      day: { infra: 0, carriers: 0, orders: 0, captures: 0 },
+      twoDays: { infra: 0, carriers: 0, orders: 0, captures: 0 },
+      lastActionTick: null
+    };
+    const any = (window) => Object.values(window).some((value) => value > 0);
+    let status;
+    if (player.ai || player.conceded) status = "ai";
+    else if (any(stats.day)) status = "active";
+    else if (activity.observedTicks < 12) status = "unknown";
+    else if (any(stats.twoDays) || activity.observedTicks < 48) status = "possibly_afk";
+    else status = "afk";
+    result[player.uid] = {
+      status,
+      ...stats,
+      ticksSinceAction: stats.lastActionTick === null ? null : latestTick - stats.lastActionTick,
+      observedTicks: activity.observedTicks
+    };
+  }
+  return result;
 }
 
 async function scanGame(env, gameNumber) {

@@ -963,3 +963,35 @@ export async function setSetting(env, key, value) {
     await env.DB.prepare(`INSERT INTO settings (key, value) VALUES (?, ?) ON CONFLICT (key) DO UPDATE SET value = excluded.value`).bind(key, String(value)).run();
   }
 }
+
+// Per player: human actions in the last 24 / 48 ticks (hourly ticks, so ~hours)
+// and the tick of their latest action, from the activity and capture events.
+export async function activityByPlayer(env, gameNumber, latestTick) {
+  const since = latestTick - 48;
+  const rows = (await env.DB.prepare(`
+    SELECT a_uid, kind, detail, tick, weight FROM relation_events
+    WHERE game_number = ? AND kind IN ('activity', 'capture') AND tick > ?
+  `).bind(gameNumber, since).all()).results;
+  const last = (await env.DB.prepare(`
+    SELECT a_uid, MAX(tick) AS last_tick FROM relation_events
+    WHERE game_number = ? AND kind IN ('activity', 'capture')
+    GROUP BY a_uid
+  `).bind(gameNumber).all()).results;
+  const firstTick = (await env.DB.prepare(`SELECT MIN(first_tick) AS t FROM relations WHERE game_number = ?`).bind(gameNumber).first())?.t;
+
+  const byPlayer = {};
+  const entry = (uid) => (byPlayer[uid] ||= {
+    day: { infra: 0, carriers: 0, orders: 0, captures: 0 },
+    twoDays: { infra: 0, carriers: 0, orders: 0, captures: 0 },
+    lastActionTick: null
+  });
+  for (const row of rows) {
+    const key = row.kind === "capture" ? "captures" : row.detail;
+    const amount = row.kind === "capture" ? 1 : row.weight;
+    const player = entry(row.a_uid);
+    player.twoDays[key] += amount;
+    if (row.tick > latestTick - 24) player.day[key] += amount;
+  }
+  for (const row of last) entry(row.a_uid).lastActionTick = row.last_tick;
+  return { observedTicks: firstTick === null || firstTick === undefined ? 0 : latestTick - firstTick, players: byPlayer };
+}
