@@ -1,0 +1,21 @@
+name: D1 usage per database
+
+# Manual: rows written/read per D1 database per day (read-only analytics).
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "scripts/d1-usage.mjs"
+      - ".github/workflows/d1-usage.yml"
+
+jobs:
+  usage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/d1-usage.mjs
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
