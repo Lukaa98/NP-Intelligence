@@ -219,7 +219,7 @@ function UsageBar({ usage }) {
     ? "Scans are paused until 00:00 UTC to stay on the free plan."
     : usage.state === "paused_optional"
       ? "Analysis and clean-up are paused until 00:00 UTC; scans and alerts keep running."
-      : "Optional work pauses at 60%, scans at 85%, so the free limit is never reached.";
+      : "Optional work pauses at 40%, scans at 75%, so the free limit is never reached.";
   return (
     <section className="card usage">
       <div className="section-head">

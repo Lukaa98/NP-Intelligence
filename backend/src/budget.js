@@ -1,4 +1,6 @@
 // Keeps the Worker inside D1's free plan (100,000 rows written per UTC day).
+// Normal use is ~5-10k a day; the margins leave room for writes this count
+// can miss (e.g. invocations that crash before saving their total).
 // Every statement's result reports how many rows it wrote (indexes
 // included); a wrapped DB adds those up, and each invocation saves its total
 // to usage_daily with one extra write. Work is gated on the day's total:
@@ -7,8 +9,8 @@
 //                     pauses; scans and attack alerts keep running
 //   above HARD_LIMIT  nothing is written until the next UTC day
 export const DAILY_WRITE_LIMIT = 100000;
-export const SOFT_LIMIT = 60000;
-export const HARD_LIMIT = 85000;
+export const SOFT_LIMIT = 40000;
+export const HARD_LIMIT = 75000;
 
 export function today() {
   return new Date().toISOString().slice(0, 10);
