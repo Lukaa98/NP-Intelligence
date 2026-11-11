@@ -9,6 +9,15 @@ const VERDICT = {
 };
 const OUTCOME = { fell: "star fell", held: "attack held / landed", gone: "turned away or left view" };
 
+// "now at Azmidiske → Alula → Alchiba → Lucida (your star, stop 3)"
+export function routeText(threat) {
+  const stops = (threat.route || []).map((stop) => stop.name);
+  if (!stops.length) stops.push(threat.targetName);
+  const start = threat.origin ? `${threat.origin.at ? "now at" : "now near"} ${threat.origin.name} → ` : "";
+  const last = stops.length > 1 ? `your star, stop ${stops.length}` : "your star";
+  return `${start}${[...stops.slice(0, -1), `${stops.at(-1)} (${last})`].join(" → ")}`;
+}
+
 function formatMinutes(minutes) {
   if (minutes <= 0) return "now";
   if (minutes < 60) return `${minutes}m`;
@@ -30,8 +39,8 @@ export default function Threats({ threats, currentTick, tickMinutes = 60, onPick
     setOpenKey(initialOpenKey);
     requestAnimationFrame(() => sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
   }, [initialOpenKey, threats.length]);
-  const open = threats.filter((threat) => threat.status === "open" && !(threat.defenders > 0 && threat.ships < threat.defenders * 0.05));
-  const closed = threats.filter((threat) => threat.status !== "open");
+  const open = threats.filter((threat) => threat.status === "open" && threat.kind !== "heading" && !(threat.defenders > 0 && threat.ships < threat.defenders * 0.05));
+  const closed = threats.filter((threat) => threat.status !== "open" && threat.kind !== "heading");
   if (!threats.length) return null;
 
   const fullMap = (threat) => threat.snapshotId && navigate(`/snapshot/${threat.snapshotId}?star=${threat.targetUid}&fleet=${threat.fleetUid}`);
@@ -60,11 +69,11 @@ export default function Threats({ threats, currentTick, tickMinutes = 60, onPick
                 {threat.status === "open"
                   ? <span className={`pill ${tone}`}>{verdict}</span>
                   : <span className="pill">{OUTCOME[threat.outcome] || threat.outcome}</span>}
-                {threat.kind === "heading" && <span className="pill" title="No visible route; judged from its direction of travel.">route hidden</span>}
                 <button type="button" className="ghost small" onClick={(event) => { event.stopPropagation(); setOpenKey(openKey === threat.key ? null : threat.key); }}>
                   {openKey === threat.key ? "Hide map ▴" : "Show map ▾"}
                 </button>
               </div>
+              <div className="meta route-line">{routeText(threat)}</div>
               <div className="meta">
                 {threat.status === "open"
                   ? <>arrives tick {threat.etaTick} · in ~{formatMinutes(remaining)} ({arrival.toLocaleString([], remaining > 20 * 60 ? { weekday: "short", hour: "2-digit", minute: "2-digit" } : { hour: "2-digit", minute: "2-digit" })}) · you have {threat.defenders} ships there · first seen tick {threat.firstTick}</>

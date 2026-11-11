@@ -2,15 +2,12 @@
 // scan's scanning_data and returns the enemy fleets heading at the viewer's
 // stars, so it can be unit tested and run after every new tick.
 //
-// A threat is any fleet not owned by the viewer or a formal ally that either
-//   - has a route (fleet.o) whose next stops include one of the viewer's
-//     stars ("route": certain), or
-//   - has no visible route but is flying straight at one of the viewer's
-//     stars, judged from its last and current position ("heading": likely).
+// A threat is any fleet not owned by the viewer or a formal ally whose route
+// (fleet.o) includes one of the viewer's stars, at any stop: fleets stop at
+// every star on their route. Fleets without a visible route are not guessed
+// at: their last movement is not a reliable sign of where they go next.
 
 const WEAPONS_TECH = "5";
-const HEADING_MAX_ANGLE = (8 * Math.PI) / 180;
-const HEADING_MAX_TICKS = 48;
 // Fleets smaller than this share of the defence at their target (scouts,
 // leftovers) are not worth an alert.
 export const MIN_SHARE_OF_DEFENCE = 0.05;
@@ -29,9 +26,9 @@ export function detectThreats(data) {
   const allies = new Set(Object.entries(players[viewer].war || {})
     .filter(([, value]) => Number(value) === 0)
     .map(([uid]) => Number(uid)));
-  const myStars = Object.values(stars).filter((star) => star.puid === viewer);
-  if (!myStars.length) return [];
-  const myStarIds = new Set(myStars.map((star) => star.uid));
+  const myStarIds = new Set(Object.values(stars).filter((star) => star.puid === viewer).map((star) => star.uid));
+  if (!myStarIds.size) return [];
+  const starAt = new Map(Object.values(stars).map((star) => [`${star.x},${star.y}`, star]));
   const defaultSpeed = Number(data.fleetSpeed || data.fleet_speed || 1 / 24);
   const tickMinutes = Number(data.tickRate || data.tick_rate || 60);
   const weapons = (uid) => Number(players[uid]?.tech?.[WEAPONS_TECH]?.level ?? 1);
@@ -44,27 +41,20 @@ export function detectThreats(data) {
     if (!ships) continue;
     const speed = Number(fleet.speed) > 0 ? Number(fleet.speed) : defaultSpeed;
 
+    // Walk the route stop by stop until it reaches one of the viewer's stars.
     let target = null;
     let distance = 0;
-    let kind = "route";
     let position = { x: fleet.x, y: fleet.y };
+    const route = [];
     for (const order of Array.isArray(fleet.o) ? fleet.o : []) {
       const stop = stars[Array.isArray(order) ? order[1] : -1];
       if (!stop) break;
       distance += Math.hypot(stop.x - position.x, stop.y - position.y);
       position = stop;
+      route.push({ uid: stop.uid, name: stop.n || `Star ${stop.uid}` });
       if (myStarIds.has(stop.uid)) {
         target = stop;
         break;
-      }
-    }
-
-    if (!target && !(fleet.o || []).length) {
-      const heading = headingTarget(fleet, myStars, speed);
-      if (heading) {
-        target = heading.star;
-        distance = heading.distance;
-        kind = "heading";
       }
     }
     if (!target) continue;
@@ -80,9 +70,13 @@ export function detectThreats(data) {
     const defendRounds = ships / Math.max(weapons(viewer) + 1, 1);
     const verdict = defenders === 0 ? "undefended" : attackRounds < defendRounds ? "likely_falls" : "likely_holds";
 
+    // Where it is now: at a star (orbiting / just left) or in deep space.
+    const here = starAt.get(`${fleet.x},${fleet.y}`);
+    const origin = here ? { name: here.n, at: true } : { name: nearestStarName(stars, fleet), at: false };
+
     threats.push({
       key: `${fleet.uid}:${target.uid}`,
-      kind,
+      kind: "route",
       fleetUid: fleet.uid,
       fleetName: fleet.n || `Fleet ${fleet.uid}`,
       ownerUid: owner,
@@ -90,6 +84,8 @@ export function detectThreats(data) {
       ships,
       targetUid: target.uid,
       targetName: target.n || `Star ${target.uid}`,
+      route,
+      origin,
       etaTicks,
       etaMinutes: etaTicks * tickMinutes,
       defenders,
@@ -99,22 +95,15 @@ export function detectThreats(data) {
   return threats.sort((x, y) => x.etaTicks - y.etaTicks);
 }
 
-// Fleet with no visible route: if its movement since the last tick points at
-// one of the viewer's stars (within a few degrees) and it would get there
-// within two days, treat that star as the likely target.
-function headingTarget(fleet, myStars, speed) {
-  const dx = fleet.x - (fleet.lx ?? fleet.x);
-  const dy = fleet.y - (fleet.ly ?? fleet.y);
-  const moved = Math.hypot(dx, dy);
-  if (moved < 1e-6) return null;
+function nearestStarName(stars, fleet) {
   let best = null;
-  for (const star of myStars) {
-    const tx = star.x - fleet.x;
-    const ty = star.y - fleet.y;
-    const distance = Math.hypot(tx, ty);
-    if (!distance || distance / speed > HEADING_MAX_TICKS) continue;
-    const angle = Math.acos(Math.max(-1, Math.min(1, (dx * tx + dy * ty) / (moved * distance))));
-    if (angle <= HEADING_MAX_ANGLE && (!best || distance < best.distance)) best = { star, distance };
+  let bestDistance = Infinity;
+  for (const star of Object.values(stars)) {
+    const distance = Math.hypot(star.x - fleet.x, star.y - fleet.y);
+    if (distance < bestDistance) {
+      best = star;
+      bestDistance = distance;
+    }
   }
-  return best;
+  return best?.n || "deep space";
 }

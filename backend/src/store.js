@@ -854,17 +854,20 @@ export async function updateThreats(env, gameNumber, tick, detected, scanningDat
     if (!row || row.status !== "open") fresh.push(threat);
     statements.push(env.DB.prepare(`
       INSERT INTO threats (game_number, key, kind, fleet_uid, owner_uid, owner_alias, ships, target_uid, target_name,
-        eta_tick, eta_minutes, defenders, verdict, first_tick, last_tick, status, outcome, snapshot_id, updated_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'open', NULL, ?, ?)
+        eta_tick, eta_minutes, defenders, verdict, first_tick, last_tick, status, outcome, snapshot_id, updated_at,
+        route_json, origin_name, origin_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'open', NULL, ?, ?, ?, ?, ?)
       ON CONFLICT (game_number, key) DO UPDATE SET
         kind = excluded.kind, ships = excluded.ships, eta_tick = excluded.eta_tick, eta_minutes = excluded.eta_minutes,
         defenders = excluded.defenders, verdict = excluded.verdict, last_tick = excluded.last_tick,
         first_tick = CASE WHEN threats.status = 'open' THEN threats.first_tick ELSE excluded.first_tick END,
         notified_at = CASE WHEN threats.status = 'open' THEN threats.notified_at ELSE NULL END,
-        status = 'open', outcome = NULL, snapshot_id = excluded.snapshot_id, updated_at = excluded.updated_at
+        status = 'open', outcome = NULL, snapshot_id = excluded.snapshot_id, updated_at = excluded.updated_at,
+        route_json = excluded.route_json, origin_name = excluded.origin_name, origin_at = excluded.origin_at
     `).bind(gameNumber, threat.key, threat.kind, threat.fleetUid, threat.ownerUid, threat.ownerAlias, threat.ships,
       threat.targetUid, threat.targetName, tick + threat.etaTicks, threat.etaMinutes, threat.defenders, threat.verdict,
-      tick, tick, snapshotId, timestamp));
+      tick, tick, snapshotId, timestamp,
+      JSON.stringify(threat.route || []), threat.origin?.name || null, threat.origin?.at ? 1 : 0));
   }
 
   for (const row of existing) {
@@ -915,7 +918,9 @@ export async function listThreats(env, gameNumber) {
     status: row.status,
     outcome: row.outcome,
     snapshotId: row.snapshot_id,
-    updatedAt: row.updated_at
+    updatedAt: row.updated_at,
+    route: JSON.parse(row.route_json || "[]"),
+    origin: row.origin_name ? { name: row.origin_name, at: Boolean(row.origin_at) } : null
   }));
 }
 
@@ -943,7 +948,9 @@ export async function openThreats(env) {
     defenders: row.defenders,
     verdict: row.verdict,
     snapshotId: row.snapshot_id,
-    firstSeenAt: row.notified_at || row.updated_at
+    firstSeenAt: row.notified_at || row.updated_at,
+    route: JSON.parse(row.route_json || "[]"),
+    origin: row.origin_name ? { name: row.origin_name, at: Boolean(row.origin_at) } : null
   }));
 }
 

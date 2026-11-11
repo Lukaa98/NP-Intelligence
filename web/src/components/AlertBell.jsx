@@ -24,7 +24,7 @@ function writeSeen(seen) {
 
 const idOf = (threat) => `${threat.gameNumber}:${threat.key}`;
 // Same rule as the backend: ignore fleets under 5% of the defence there.
-const negligible = (threat) => threat.defenders > 0 && threat.ships < threat.defenders * 0.05;
+const negligible = (threat) => threat.kind === "heading" || (threat.defenders > 0 && threat.ships < threat.defenders * 0.05);
 
 // 🔔 In-app attack notifications: one per launched enemy fleet heading at
 // your stars, across all games. Counted as new until you have seen it.
@@ -113,11 +113,11 @@ export default function AlertBell({ gameNumber = null }) {
                   <li key={idOf(threat)}>
                     <button type="button" className={`bell-item${seen.has(idOf(threat)) ? "" : " new"}`} onClick={() => openThreat(threat)}>
                       <span>🚨 <strong>{threat.ownerAlias}</strong> · {threat.ships} ships → <strong>{threat.targetName}</strong></span>
+                      {threat.route?.length > 1 && <span className="muted small">via {threat.route.slice(0, -1).map((stop) => stop.name).join(" → ")}</span>}
                       <span className="muted small">
                         in ~{eta} · you have {threat.defenders} there
                         {threat.verdict === "likely_falls" && " · likely to fall"}
                         {threat.verdict === "undefended" && " · undefended"}
-                        {threat.kind === "heading" && " · route hidden"}
                       </span>
                     </button>
                   </li>

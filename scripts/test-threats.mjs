@@ -33,14 +33,24 @@ assert.equal(hit.etaTicks, 20);
 assert.equal(hit.etaMinutes, 1200);
 assert.equal(hit.defenders, 65, "garrison plus my fleet at the star");
 assert.equal(hit.verdict, "likely_falls");
+assert.deepEqual(hit.route.map((stop) => stop.name), ["Waypoint", "Home"], "whole route up to my star");
+assert.equal(hit.origin.name, "Waypoint", "nearest star when in deep space");
 
-// No visible route, but flying straight at Edge (undefended).
+// No visible route: not guessed at, even if it last moved toward my star.
 const sneaky = base();
 sneaky.fleets[4] = { uid: 4, puid: 4, x: 14, y: 0, lx: 14.5, ly: 0, st: 30, speed: 0.5, o: [] };
-const [guess] = detectThreats(sneaky);
-assert.equal(guess.kind, "heading");
-assert.equal(guess.targetName, "Edge");
-assert.equal(guess.verdict, "undefended");
+assert.equal(detectThreats(sneaky).length, 0);
+
+// Multi-stop route where my star is the third stop.
+const multi = base();
+multi.stars[21] = { uid: 21, n: "Alula", x: 20, y: 0, puid: 3, st: 0 };
+multi.stars[22] = { uid: 22, n: "Alchiba", x: 15, y: 0, puid: 3, st: 0 };
+multi.fleets[8] = { uid: 8, puid: 3, x: 20, y: 0, st: 40, speed: 0.5, o: [[0, 21, 0, 0], [0, 22, 0, 0], [0, 11, 0, 0]] };
+const [chain] = detectThreats(multi);
+assert.equal(chain.targetName, "Edge");
+assert.deepEqual(chain.route.map((stop) => stop.name), ["Alula", "Alchiba", "Edge"]);
+assert.equal(chain.origin.at, true, "fleet sitting at Alula");
+assert.equal(chain.etaTicks, 20, "0 + 5 + 5 distance at 0.5 per tick");
 
 // Moving away, or off by a wide angle: nothing.
 const away = base();

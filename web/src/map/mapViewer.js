@@ -566,7 +566,8 @@ export function mountMap(container, snapshot, options = {}) {
     const focus = selection.player;
     const groups = focusGroups(focus);
     const dim = (puid) => focus && puid !== focus.uid && !groups.allies.has(puid) && !groups.enemies.has(puid);
-    const dimStar = (star) => (threat ? star.uid !== threat.starUid : dim(star.puid));
+    const routeStops = threat ? new Set(threatPath().stops.map((stop) => stop.uid)) : null;
+    const dimStar = (star) => (threat ? !routeStops.has(star.uid) : dim(star.puid));
     const dimFleet = (fleet) => (threat ? fleet.uid !== threat.fleetUid : dim(fleet.puid));
     const r = Math.max(3, Math.min(view.scale * 0.09, 14));
 
@@ -677,10 +678,23 @@ export function mountMap(container, snapshot, options = {}) {
     if (threat) drawThreatArrow(r);
   }
 
-  // Red arrow from the attacking fleet to the threatened star, with a label.
-  function drawThreatArrow(r) {
+  // The attacking fleet's route up to the threatened star: earlier legs as
+  // numbered orange stops, the final leg as a red arrow into the ringed star.
+  function threatPath() {
     const star = model.stars.find((item) => item.uid === threat.starUid);
     const fleet = model.fleets.find((item) => item.uid === threat.fleetUid);
+    if (!star || !fleet) return { star, fleet, stops: star ? [star] : [] };
+    const stops = [];
+    for (const stop of fleet.route) {
+      stops.push(stop);
+      if (stop.uid === star.uid) break;
+    }
+    if (stops.at(-1)?.uid !== star.uid) stops.push(star);
+    return { star, fleet, stops };
+  }
+
+  function drawThreatArrow(r) {
+    const { star, fleet, stops } = threatPath();
     if (!star) return;
     const [tx, ty] = toScreen(star.x, star.y);
     ctx.globalAlpha = 1;
@@ -690,40 +704,67 @@ export function mountMap(container, snapshot, options = {}) {
     ctx.arc(tx, ty, r * 2.8, 0, Math.PI * 2);
     ctx.stroke();
     if (!fleet) return;
-    const [fx, fy] = toScreen(fleet.x, fleet.y);
-    const angle = Math.atan2(ty - fy, tx - fx);
-    const endX = tx - Math.cos(angle) * r * 3.2;
-    const endY = ty - Math.sin(angle) * r * 3.2;
-    ctx.setLineDash([8, 6]);
-    ctx.lineWidth = 2.5;
-    ctx.beginPath();
-    ctx.moveTo(fx, fy);
-    ctx.lineTo(endX, endY);
-    ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.fillStyle = "#ff4d4d";
-    ctx.beginPath();
-    ctx.moveTo(endX, endY);
-    ctx.lineTo(endX - Math.cos(angle - 0.4) * 14, endY - Math.sin(angle - 0.4) * 14);
-    ctx.lineTo(endX - Math.cos(angle + 0.4) * 14, endY - Math.sin(angle + 0.4) * 14);
-    ctx.closePath();
-    ctx.fill();
-    // Halo around the fleet.
+
+    let [px, py] = toScreen(fleet.x, fleet.y);
+    const [fx, fy] = [px, py];
+    stops.forEach((stop, index) => {
+      const last = index === stops.length - 1;
+      let [sx, sy] = toScreen(stop.x, stop.y);
+      const angle = Math.atan2(sy - py, sx - px);
+      if (last) {
+        sx -= Math.cos(angle) * r * 3.2;
+        sy -= Math.sin(angle) * r * 3.2;
+      }
+      ctx.strokeStyle = last ? "#ff4d4d" : "#ffa040";
+      ctx.lineWidth = last ? 2.5 : 2;
+      ctx.setLineDash([8, 6]);
+      ctx.beginPath();
+      ctx.moveTo(px, py);
+      ctx.lineTo(sx, sy);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      if (last) {
+        ctx.fillStyle = "#ff4d4d";
+        ctx.beginPath();
+        ctx.moveTo(sx, sy);
+        ctx.lineTo(sx - Math.cos(angle - 0.4) * 14, sy - Math.sin(angle - 0.4) * 14);
+        ctx.lineTo(sx - Math.cos(angle + 0.4) * 14, sy - Math.sin(angle + 0.4) * 14);
+        ctx.closePath();
+        ctx.fill();
+        if (threat.label) {
+          const mx = (px + sx) / 2;
+          const my = (py + sy) / 2;
+          ctx.font = "bold 13px Segoe UI, sans-serif";
+          const textWidth = ctx.measureText(threat.label).width;
+          ctx.fillStyle = "rgba(11, 10, 31, 0.85)";
+          ctx.fillRect(mx - textWidth / 2 - 6, my - 20, textWidth + 12, 20);
+          ctx.fillStyle = "#ffd2cc";
+          ctx.textAlign = "center";
+          ctx.fillText(threat.label, mx, my - 5);
+        }
+      } else {
+        // Numbered waypoint with its name.
+        ctx.fillStyle = "#ffa040";
+        ctx.beginPath();
+        ctx.arc(sx, sy, 9, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#14123a";
+        ctx.font = "bold 11px Segoe UI, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(String(index + 1), sx, sy + 4);
+        ctx.fillStyle = "#ffd9b3";
+        ctx.font = "12px Segoe UI, sans-serif";
+        ctx.fillText(stop.name, sx, sy - 13);
+      }
+      [px, py] = toScreen(stop.x, stop.y);
+    });
+
+    // Halo around the fleet, where the route starts.
+    ctx.strokeStyle = "#ff4d4d";
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.arc(fx, fy, Math.max(8, r * 1.4), 0, Math.PI * 2);
     ctx.stroke();
-    if (threat.label) {
-      const mx = (fx + endX) / 2;
-      const my = (fy + endY) / 2;
-      ctx.font = "bold 13px Segoe UI, sans-serif";
-      const textWidth = ctx.measureText(threat.label).width;
-      ctx.fillStyle = "rgba(11, 10, 31, 0.85)";
-      ctx.fillRect(mx - textWidth / 2 - 6, my - 20, textWidth + 12, 20);
-      ctx.fillStyle = "#ffd2cc";
-      ctx.textAlign = "center";
-      ctx.fillText(threat.label, mx, my - 5);
-    }
   }
 
   // Territory outline like NP's borders: the union of a circle around each star
@@ -996,7 +1037,7 @@ export function mountMap(container, snapshot, options = {}) {
       renderList();
       renderDetail();
       renderLegend();
-      const points = [star, fleet].filter(Boolean);
+      const points = threat ? [fleet, ...threatPath().stops].filter(Boolean) : [];
       if (points.length) fitTo(points, 140);
       draw();
     },

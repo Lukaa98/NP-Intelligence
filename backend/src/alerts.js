@@ -34,8 +34,8 @@ export function threatNotification(env, game, threats, snapshotId) {
   const first = threats[0];
   const gameName = game.nickname || game.name || `Game ${game.gameNumber}`;
   const lines = threats.map((threat) => {
-    const certainty = threat.kind === "heading" ? " (route hidden, judged by heading)" : "";
-    return `${threat.ownerAlias}: ${threat.ships} ships → ${threat.targetName} in ~${formatEta(threat.etaMinutes)} · you have ${threat.defenders} there · ${VERDICT_TEXT[threat.verdict]}${certainty}`;
+    const via = (threat.route || []).length > 1 ? ` via ${threat.route.slice(0, -1).map((stop) => stop.name).join(" → ")}` : "";
+    return `${threat.ownerAlias}: ${threat.ships} ships → ${threat.targetName} in ~${formatEta(threat.etaMinutes)} · you have ${threat.defenders} there · ${VERDICT_TEXT[threat.verdict]}${via}`;
   });
   return {
     title: threats.length === 1
