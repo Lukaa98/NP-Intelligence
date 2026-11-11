@@ -400,7 +400,10 @@ export async function processRelations(env, gameNumber, limit = 4) {
     if (meta.tick <= lastTick) continue;
     const row = await env.DB.prepare(`SELECT data_json FROM snapshots WHERE id = ?`).bind(meta.id).first();
     const result = extractRelations(JSON.parse(row.data_json), state);
-    await env.DB.batch(relationStatements(env, gameNumber, result, meta.captured_at));
+    // Quiet ticks between samples can have nothing to write; D1 rejects an
+    // empty batch.
+    const statements = relationStatements(env, gameNumber, result, meta.captured_at);
+    if (statements.length) await env.DB.batch(statements);
     state = result.state;
     lastTick = meta.tick;
     processed += 1;

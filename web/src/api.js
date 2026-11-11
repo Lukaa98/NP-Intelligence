@@ -88,6 +88,7 @@ export const api = {
   threats: (gameNumber) => request(`${game(gameNumber)}/threats`).then((payload) => payload.threats || []),
   threatCounts: () => request("/api/threats").then((payload) => payload.counts || {}),
   openThreats: () => request("/api/threats").then((payload) => payload.threats || []),
+  usage: () => request("/api/usage"),
   listPlayers: () => request("/api/players").then((payload) => payload.players || []),
   savePlayer: (body) => request("/api/players", { method: "PUT", body: JSON.stringify(body) }).then((payload) => payload.player),
   deletePlayer: (alias) => request(`/api/players/${encodeURIComponent(alias)}`, { method: "DELETE" })

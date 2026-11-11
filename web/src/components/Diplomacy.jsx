@@ -34,6 +34,7 @@ export function useDiplomacy(gameNumber, refreshKey) {
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
   const [progress, setProgress] = useState(null);
+  const [notice, setNotice] = useState("");
   const analysing = useRef(false);
 
   const load = useCallback(async () => {
@@ -63,7 +64,8 @@ export function useDiplomacy(gameNumber, refreshKey) {
       }
       await load();
     } catch (analyseError) {
-      setError(analyseError.message);
+      // e.g. paused to stay inside the free database limit: keep showing what we have.
+      setNotice(analyseError.message);
     } finally {
       analysing.current = false;
       setProgress(null);
@@ -71,17 +73,17 @@ export function useDiplomacy(gameNumber, refreshKey) {
   }, [data?.pendingSnapshots, gameNumber, load]);
 
   useEffect(() => {
-    if (data?.pendingSnapshots > 0 && !analysing.current) analyse();
-  }, [data?.pendingSnapshots, analyse]);
+    if (data?.pendingSnapshots > 0 && !analysing.current && !notice) analyse();
+  }, [data?.pendingSnapshots, analyse, notice]);
 
   const players = useMemo(() => new Map((data?.players || []).map((player) => [player.uid, player])), [data]);
-  return { data, error, progress, players };
+  return { data, error, progress, players, notice };
 }
 
 // The big picture: likely teams and wars. Everything else is per player, in
 // the player list on the game page.
 export default function Diplomacy({ diplomacy }) {
-  const { data, error, progress, players } = diplomacy;
+  const { data, error, progress, players, notice } = diplomacy;
 
   if (error) return <section className="card"><h2>Diplomacy</h2><p className="error">{error}</p></section>;
   if (!data) return <section className="card"><h2>Diplomacy</h2><p className="muted">Loading…</p></section>;
@@ -99,7 +101,8 @@ export default function Diplomacy({ diplomacy }) {
         </span>
       </div>
 
-      {(progress || data.pendingSnapshots > 0) && (
+      {notice && <p className="muted small">⏸ {notice} {data.pendingSnapshots} scans still to analyse.</p>}
+      {!notice && (progress || data.pendingSnapshots > 0) && (
         <div className="progress">
           <span>Analysing stored scans… {progress ? `${progress.done}/${progress.total}` : `${data.pendingSnapshots} to go`}</span>
           <div className="bar"><div style={{ width: `${progress ? (progress.done / Math.max(progress.total, 1)) * 100 : 0}%` }} /></div>

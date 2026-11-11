@@ -1,4 +1,5 @@
 import { sendNtfy, threatNotification } from "./alerts.js";
+import { budgetState, countingEnv, DAILY_WRITE_LIMIT, HARD_LIMIT, recordUsage, SOFT_LIMIT, today, usageToday } from "./budget.js";
 import { buildDiplomacy } from "./diplomacy.js";
 import { detectThreats } from "./threats.js";
 import { diffSnapshots, strategicIntel, summarize } from "./intel.js";
@@ -69,7 +70,53 @@ const CORS_HEADERS = {
 };
 
 export default {
-  async fetch(request, env, ctx) {
+  async fetch(request, rawEnv, ctx) {
+    // Count every row this request writes; saved to usage_daily at the end.
+    const { env, counter } = countingEnv(rawEnv);
+    try {
+      return await handleFetch(request, env, ctx, budgetState(await usageToday(rawEnv)));
+    } finally {
+      ctx.waitUntil(recordUsage(rawEnv, counter.written));
+    }
+  },
+
+  async scheduled(controller, rawEnv, ctx) {
+    const { env, counter } = countingEnv(rawEnv);
+    const budget = budgetState(await usageToday(rawEnv));
+    if (budget === "paused_all") {
+      console.log("D1 write budget used up for today; skipping scheduled work.");
+      return;
+    }
+    const games = await enabledGamesWithCodes(env);
+    ctx.waitUntil((async () => {
+      try {
+        await Promise.all(games.map((game) => scanSavedGame(env, game, "scheduler")));
+        if (budget === "ok") {
+          // Spread backlogs (e.g. a fresh backfill) over several runs so one
+          // cron invocation never parses more than RELATION_BUDGET_CRON snapshots.
+          let remaining = RELATION_BUDGET_CRON;
+          for (const gameNumber of await gamesWithPendingRelations(env)) {
+            if (remaining <= 0) break;
+            const { processed } = await processRelations(env, gameNumber, Math.min(RELATION_BATCH_CRON, remaining));
+            remaining -= Math.max(processed, 1);
+          }
+          await backfillGamePlayers(env, 3);
+          // Only prunes games whose history relationship intel has fully read.
+          await pruneInactiveGames(env, STALE_GAME_HOURS);
+        }
+      } finally {
+        await recordUsage(rawEnv, counter.written);
+      }
+    })());
+  }
+};
+
+const BUDGET_MESSAGES = {
+  paused_optional: "Paused for today to stay inside Cloudflare's free D1 limit; resumes at 00:00 UTC.",
+  paused_all: "Database writes are paused for today to stay inside Cloudflare's free D1 limit; resumes at 00:00 UTC."
+};
+
+async function handleFetch(request, env, ctx, budget) {
     const url = new URL(request.url);
 
     if (request.method === "OPTIONS") {
@@ -77,6 +124,24 @@ export default {
     }
 
     try {
+      if (request.method === "GET" && url.pathname === "/api/usage") {
+        const rowsWritten = await usageToday(env);
+        return json({ day: today(), rowsWritten, limit: DAILY_WRITE_LIMIT, softLimit: SOFT_LIMIT, hardLimit: HARD_LIMIT, state: budgetState(rowsWritten) });
+      }
+
+      // Writes that make new data stop once the day's budget is nearly used up.
+      const heavyWrite = request.method === "POST" && (
+        url.pathname === "/api/games"
+        || matchPath(url.pathname, "/api/games/:gameNumber/scan")
+        || matchPath(url.pathname, "/api/games/:gameNumber/capture")
+      );
+      if (heavyWrite && budget === "paused_all") {
+        return json({ error: BUDGET_MESSAGES.paused_all, budget }, 429);
+      }
+      if (request.method === "POST" && matchPath(url.pathname, "/api/games/:gameNumber/relations/process") && budget !== "ok") {
+        return json({ error: BUDGET_MESSAGES[budget], budget }, 429);
+      }
+
       if (request.method === "GET" && url.pathname === "/health") {
         return json({
           ok: true,
@@ -230,7 +295,9 @@ export default {
 
       if (request.method === "GET" && matchPath(url.pathname, "/api/games/:gameNumber/known-players")) {
         const { gameNumber } = pathParams(url.pathname, "/api/games/:gameNumber/known-players");
-        await backfillGamePlayers(env, 10);
+        if (budget === "ok") {
+          await backfillGamePlayers(env, 10);
+        }
         return json({ players: await knownPlayers(env, gameNumber) });
       }
 
@@ -304,26 +371,7 @@ export default {
     } catch (error) {
       return json({ error: error.message || String(error) }, 500);
     }
-  },
-
-  async scheduled(controller, env, ctx) {
-    const games = await enabledGamesWithCodes(env);
-    ctx.waitUntil((async () => {
-      await Promise.all(games.map((game) => scanSavedGame(env, game, "scheduler")));
-      // Spread backlogs (e.g. a fresh backfill) over several runs so one cron
-      // invocation never parses more than RELATION_BUDGET_CRON snapshots.
-      let budget = RELATION_BUDGET_CRON;
-      for (const gameNumber of await gamesWithPendingRelations(env)) {
-        if (budget <= 0) break;
-        const { processed } = await processRelations(env, gameNumber, Math.min(RELATION_BATCH_CRON, budget));
-        budget -= Math.max(processed, 1);
-      }
-      await backfillGamePlayers(env, 3);
-      // Only prunes games whose history relationship intel has fully read.
-      await pruneInactiveGames(env, STALE_GAME_HOURS);
-    })());
-  }
-};
+}
 
 async function createGame(request, env) {
   const payload = await request.json();

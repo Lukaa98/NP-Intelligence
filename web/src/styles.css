@@ -293,3 +293,8 @@ code { background: #0b0a1f; padding: 1px 6px; border-radius: 4px; }
 .full-map-link { position: absolute; right: 48px; top: 8px; background: rgba(11, 10, 31, 0.85); }
 .relation-list li.expanded { border-left-color: var(--danger); }
 @media (max-width: 640px) { .threat-map { height: 260px; } }
+.usage { gap: 6px; }
+.usage-bar { height: 6px; border-radius: 3px; background: #0b0a1f; overflow: hidden; }
+.usage-bar span { display: block; height: 100%; background: var(--success); }
+.usage-bar.paused_optional span { background: #ffc000; }
+.usage-bar.paused_all span { background: var(--danger); }

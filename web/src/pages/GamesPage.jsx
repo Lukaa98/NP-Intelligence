@@ -16,11 +16,13 @@ export default function GamesPage() {
   // Players from the game just added that you have met before.
   const [known, setKnown] = useState(null);
   const [threatCounts, setThreatCounts] = useState({});
+  const [usage, setUsage] = useState(null);
 
   const load = useCallback(async () => {
     try {
       setGames(await api.listGames());
       api.threatCounts().then(setThreatCounts).catch(() => {});
+      api.usage().then(setUsage).catch(() => {});
     } catch (error) {
       setStatus(error.message);
     } finally {
@@ -205,6 +207,26 @@ export default function GamesPage() {
           </div>
         )}
       </section>
+      {usage && <UsageBar usage={usage} />}
     </>
+  );
+}
+
+// Database writes today vs Cloudflare's free D1 limit (100k rows a day).
+function UsageBar({ usage }) {
+  const share = Math.min(1, usage.rowsWritten / usage.limit);
+  const note = usage.state === "paused_all"
+    ? "Scans are paused until 00:00 UTC to stay on the free plan."
+    : usage.state === "paused_optional"
+      ? "Analysis and clean-up are paused until 00:00 UTC; scans and alerts keep running."
+      : "Optional work pauses at 60%, scans at 85%, so the free limit is never reached.";
+  return (
+    <section className="card usage">
+      <div className="section-head">
+        <span className="small">Database writes today: <strong>{usage.rowsWritten.toLocaleString()}</strong> / {usage.limit.toLocaleString()} (Cloudflare free plan)</span>
+      </div>
+      <div className={`usage-bar ${usage.state}`}><span style={{ width: `${share * 100}%` }} /></div>
+      <p className="muted small">{note}</p>
+    </section>
   );
 }
