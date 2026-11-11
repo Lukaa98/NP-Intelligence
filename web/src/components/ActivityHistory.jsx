@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { api } from "../api.js";
 import { analyseActivity, formatHour, formatOffset } from "../activityHistory.js";
 
+const myOffsetInRange = (timezone, offset) => offset >= timezone.range[0] && offset <= timezone.range[1];
 const dayLabel = (ms) => new Date(ms).toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" });
 const dateTime = (ms) => new Date(ms).toLocaleString([], { month: "short", day: "numeric", hour: "numeric" });
 
@@ -73,16 +74,18 @@ export default function ActivityHistory({ gameNumber, uid }) {
         <div className="hour-labels muted small"><span>12am</span><span>6am</span><span>12pm</span><span>6pm</span><span>11pm</span></div>
         {result.busiest && (
           <p className="small">
-            Most active <strong>{formatHour(result.busiest.start)}–{formatHour(result.busiest.end)}</strong> your time
+            Plays mostly <strong>{formatHour(result.busiest.start)}–{formatHour(result.busiest.end)}</strong> your time
             {" "}({Math.round(result.busiest.share * 100)}% of their actions).
           </p>
         )}
         {result.timezone ? (
           <p className="small">
-            Likely timezone: <strong>{formatOffset(result.timezone.offset)}</strong>
-            {result.timezone.region && ` (${result.timezone.region})`}
-            {result.timezone.range[0] !== result.timezone.range[1] && <span className="muted"> · fits {formatOffset(result.timezone.range[0])} to {formatOffset(result.timezone.range[1])}</span>}
-            <span className="muted"> · {result.timezone.confidence}{result.timezone.offset === Math.round(myOffset) ? " · same as you" : ""}</span>
+            If that's their evening, they're around <strong>{formatOffset(result.timezone.offset)}</strong>
+            {result.timezone.region && ` (${result.timezone.region})`}, give or take 2 hours
+            <span className="muted"> ({formatOffset(result.timezone.range[0])} to {formatOffset(result.timezone.range[1])})</span>
+            <span className="muted"> · {result.timezone.confidence}{myOffsetInRange(result.timezone, myOffset) ? " · could be your timezone" : ""}</span>
+            <br />
+            <span className="muted">Night owls are further east than this, early players further west.</span>
           </p>
         ) : <p className="muted small">Not enough actions yet to guess a timezone (needs 5+ active hours).</p>}
       </div>

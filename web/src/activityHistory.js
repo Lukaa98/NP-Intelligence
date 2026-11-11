@@ -95,28 +95,33 @@ export function analyseActivity(history, { now = Date.now(), days: dayCount = 21
 // the day, most in the evening. Each UTC offset is scored by how well the
 // player's actions line up with it; neighbouring offsets that score nearly
 // as well form the reported range.
+// Evenings often run past midnight for gamers, so the plateau is 7pm-1am.
+// A night owl still reads a little further west than they are; the range
+// reported alongside the guess covers that.
 const TYPICAL_DAY = [
-  0.35, 0.15, 0.05, 0.03, 0.03, 0.05, 0.15, 0.35, 0.5, 0.55, 0.6, 0.6,
-  0.65, 0.65, 0.6, 0.6, 0.7, 0.85, 1, 1, 1, 0.95, 0.85, 0.6
+  0.8, 0.5, 0.2, 0.08, 0.04, 0.04, 0.1, 0.3, 0.45, 0.5, 0.55, 0.55,
+  0.6, 0.6, 0.55, 0.55, 0.65, 0.75, 0.85, 0.95, 1, 1, 1, 0.95
 ];
+
+// When someone plays fits a day pattern in several neighbouring timezones
+// (an evening player in Denver and a night owl in New York look the same),
+// so the guess is reported as the best fit plus or minus two hours.
+export const TIMEZONE_UNCERTAINTY = 2;
 
 export function guessTimezone(utc, samples) {
   if (samples < 5) return null;
   const total = utc.reduce((a, b) => a + b, 0) || 1;
   const scoreFor = (offset) => utc.reduce((score, count, hour) => score + count * TYPICAL_DAY[(hour + offset + 48) % 24], 0) / total;
-  const scores = new Map();
-  for (let offset = -10; offset <= 12; offset += 1) scores.set(offset, scoreFor(offset));
-  const ordered = [...scores.entries()].sort((x, y) => y[1] - x[1]);
-  const [bestOffset, bestScore] = ordered[0];
-  let low = bestOffset;
-  let high = bestOffset;
-  while (scores.has(low - 1) && scores.get(low - 1) >= bestScore * 0.93) low -= 1;
-  while (scores.has(high + 1) && scores.get(high + 1) >= bestScore * 0.93) high += 1;
+  let best = -10;
+  for (let offset = -10; offset <= 12; offset += 1) {
+    if (scoreFor(offset) > scoreFor(best)) best = offset;
+  }
+  const range = [Math.max(-12, best - TIMEZONE_UNCERTAINTY), Math.min(14, best + TIMEZONE_UNCERTAINTY)];
   return {
-    offset: bestOffset,
-    range: [low, high],
-    region: REGIONS[String(bestOffset)] || "",
-    confidence: samples >= 12 && high - low <= 3 ? "likely" : "rough guess"
+    offset: best,
+    range,
+    region: REGIONS[String(best)] || "",
+    confidence: samples >= 12 ? "estimate" : "rough guess"
   };
 }
 
