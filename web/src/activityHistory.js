@@ -81,6 +81,8 @@ export function analyseActivity(history, { now = Date.now(), days: dayCount = 21
 
   return {
     moments: moments.length,
+    // Newest first, for the "recent actions" list.
+    recent: moments.slice(-12).reverse(),
     lastAction: moments.at(-1)?.time ?? null,
     trackedSince: start,
     days,
@@ -99,8 +101,8 @@ export function analyseActivity(history, { now = Date.now(), days: dayCount = 21
 // A night owl still reads a little further west than they are; the range
 // reported alongside the guess covers that.
 const TYPICAL_DAY = [
-  0.8, 0.5, 0.2, 0.08, 0.04, 0.04, 0.1, 0.3, 0.45, 0.5, 0.55, 0.55,
-  0.6, 0.6, 0.55, 0.55, 0.65, 0.75, 0.85, 0.95, 1, 1, 1, 0.95
+  0.6, 0.35, 0.15, 0.06, 0.04, 0.04, 0.1, 0.3, 0.45, 0.5, 0.55, 0.55,
+  0.6, 0.6, 0.55, 0.55, 0.65, 0.8, 0.9, 1, 1, 1, 1, 0.85
 ];
 
 // When someone plays fits a day pattern in several neighbouring timezones

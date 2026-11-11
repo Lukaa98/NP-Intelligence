@@ -2,7 +2,22 @@ import React, { useEffect, useState } from "react";
 import { api } from "../api.js";
 import { analyseActivity, formatHour, formatOffset } from "../activityHistory.js";
 
-const myOffsetInRange = (timezone, offset) => offset >= timezone.range[0] && offset <= timezone.range[1];
+function ago(ms) {
+  const hours = Math.max(0, Math.round((Date.now() - ms) / 3600000));
+  if (hours < 1) return "within the hour";
+  if (hours < 48) return `${hours}h ago`;
+  return `${Math.round(hours / 24)} days ago`;
+}
+
+function describeMoment(moment) {
+  const parts = [];
+  if (moment.infra) parts.push(`bought ${moment.infra} infra`);
+  if (moment.carriers) parts.push(`built ${moment.carriers} carrier${moment.carriers === 1 ? "" : "s"}`);
+  if (moment.orders) parts.push(`${moment.orders} new fleet order${moment.orders === 1 ? "" : "s"}`);
+  if (moment.captures) parts.push(`took ${moment.captures} star${moment.captures === 1 ? "" : "s"}`);
+  return parts.join(", ") || "activity";
+}
+
 const dayLabel = (ms) => new Date(ms).toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" });
 const dateTime = (ms) => new Date(ms).toLocaleString([], { month: "short", day: "numeric", hour: "numeric" });
 
@@ -24,7 +39,6 @@ export default function ActivityHistory({ gameNumber, uid }) {
   if (!result.trackedSince) return <p className="muted small">No history recorded yet.</p>;
 
   const maxHour = Math.max(1, ...result.hours);
-  const myOffset = -new Date().getTimezoneOffset() / 60;
 
   return (
     <div className="activity-history">
@@ -45,6 +59,20 @@ export default function ActivityHistory({ gameNumber, uid }) {
           <span>{dayLabel(result.days[0].from)}</span>
           <span>today</span>
         </div>
+      </div>
+
+      <div className="history-block">
+        <div className="small"><strong>Recent actions</strong></div>
+        {!result.recent.length ? <p className="muted small">No manual actions recorded yet.</p> : (
+          <ul className="spell-list small">
+            {result.recent.map((moment) => (
+              <li key={moment.tick}>
+                <strong>{ago(moment.time)}</strong>
+                <span className="muted"> ({dateTime(moment.time)})</span>: {describeMoment(moment)}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
       <div className="history-block">
@@ -78,16 +106,12 @@ export default function ActivityHistory({ gameNumber, uid }) {
             {" "}({Math.round(result.busiest.share * 100)}% of their actions).
           </p>
         )}
-        {result.timezone ? (
-          <p className="small">
-            If that's their evening, they're around <strong>{formatOffset(result.timezone.offset)}</strong>
-            {result.timezone.region && ` (${result.timezone.region})`}, give or take 2 hours
-            <span className="muted"> ({formatOffset(result.timezone.range[0])} to {formatOffset(result.timezone.range[1])})</span>
-            <span className="muted"> · {result.timezone.confidence}{myOffsetInRange(result.timezone, myOffset) ? " · could be your timezone" : ""}</span>
-            <br />
-            <span className="muted">Night owls are further east than this, early players further west.</span>
+        {result.timezone && (
+          <p className="muted small">
+            Very rough timezone guess: around {formatOffset(result.timezone.offset)}
+            {result.timezone.region && ` (${result.timezone.region})`} ±2h. People play at all hours, so take it lightly.
           </p>
-        ) : <p className="muted small">Not enough actions yet to guess a timezone (needs 5+ active hours).</p>}
+        )}
       </div>
     </div>
   );
