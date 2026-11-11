@@ -56,8 +56,10 @@ const STALE_GAME_HOURS = 48;
 
 // Snapshots fed through relationship extraction per game per cron run, and
 // per manual "analyze" request. Each one parses a full scan (up to ~1 MB).
-const RELATION_BATCH_CRON = 6;
-const RELATION_BUDGET_CRON = 18;
+// A full re-process (after a rule change) is spread over many cron runs so
+// it doesn't burn the daily D1 write allowance at once.
+const RELATION_BATCH_CRON = 3;
+const RELATION_BUDGET_CRON = 4;
 const RELATION_BATCH_REQUEST = 3;
 
 const CORS_HEADERS = {
@@ -511,8 +513,9 @@ async function scanSavedGame(env, game, source, { pin = false } = {}) {
     // Hourly scans often land on the same tick; don't store duplicates unless
     // this is a capture or the first time we see the game is over.
     if (!pin && latest && latest.tick === tick && (!finished || latest.pinned)) {
+      // No new tick: only refresh "last scan" time. Successes are logged once
+      // per tick (failures always) to keep database writes down.
       await updateGameAfterScan(env, game.gameNumber, scanningData, { finished, players: false });
-      await recordScanAttempt(env, { gameNumber: game.gameNumber, source, success: true });
       return { ok: true, gameNumber: game.gameNumber, unchanged: true, snapshot: latest };
     }
 

@@ -3,6 +3,8 @@ import { TECH_NAMES } from "./intel.js";
 // Bump when extraction rules change: games whose hourly history still exists
 // are re-processed from scratch with the new rules.
 export const RELATIONS_VERSION = 5;
+const FLEET_SAMPLE = 3;
+const BORDER_SAMPLE = 6;
 
 // Pulls relationship evidence out of one NP4 snapshot, diffing against the
 // compact state left by the previous one. Pure: no I/O, so it can be unit
@@ -63,11 +65,21 @@ export function extractRelations(data, previousState) {
       bump(routes, `${owner}:${target.puid}`, { a: owner, b: target.puid, ships, sample: target.n });
     }
   }
-  for (const entry of guests.values()) observations.push({ kind: "guest", ...entry, samples: [...entry.samples] });
-  for (const entry of routes.values()) observations.push({ kind: "en_route", ...entry, samples: [...entry.samples] });
-
-  for (const [a, b] of borderPairs(Object.values(stars))) {
-    observations.push(pairObservation("contact", a, b));
+  // Continuous observations are sampled to save database writes (D1's free
+  // plan allows 100k rows written a day): fleets every FLEET_SAMPLE ticks and
+  // borders every BORDER_SAMPLE ticks, each counting for that many ticks.
+  // The first processed scan always counts, so a new game has data at once.
+  const first = !previousState;
+  if (first || tick % FLEET_SAMPLE === 0) {
+    const count = first ? 1 : FLEET_SAMPLE;
+    for (const entry of guests.values()) observations.push({ kind: "guest", ...entry, samples: [...entry.samples], count });
+    for (const entry of routes.values()) observations.push({ kind: "en_route", ...entry, samples: [...entry.samples], count });
+  }
+  if (first || tick % BORDER_SAMPLE === 0) {
+    const count = first ? 1 : BORDER_SAMPLE;
+    for (const [a, b] of borderPairs(Object.values(stars))) {
+      observations.push({ ...pairObservation("contact", a, b), count });
+    }
   }
 
   const owners = {};

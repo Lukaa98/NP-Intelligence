@@ -76,13 +76,13 @@ export async function updateGameAfterScan(env, gameNumber, scanningData, { finis
   }
 }
 
-// Remembers who is in a game (refreshed by every scan; INSERT OR REPLACE keeps
-// it current if someone renames).
+// Remembers who is in a game. INSERT OR IGNORE writes only players not seen
+// before, so repeat scans cost no database writes.
 export async function recordGamePlayers(env, gameNumber, scanningData) {
   const players = Object.values(scanningData?.players || {}).filter((player) => player?.alias);
   if (!players.length) return;
   const statement = env.DB.prepare(`
-    INSERT OR REPLACE INTO game_players (game_number, alias_key, alias, uid) VALUES (?, ?, ?, ?)
+    INSERT OR IGNORE INTO game_players (game_number, alias_key, alias, uid) VALUES (?, ?, ?, ?)
   `);
   await env.DB.batch(players.map((player) => statement.bind(String(gameNumber), aliasKey(player.alias), String(player.alias), Number(player.uid))));
 }
@@ -431,7 +431,7 @@ function relationStatements(env, gameNumber, { tick, observations, events }, at 
       samples_json = CASE WHEN excluded.samples_json = '[]' THEN relations.samples_json ELSE excluded.samples_json END
   `);
   const statements = observations.map((item) => upsert.bind(
-    gameNumber, item.kind, item.a, item.b, 1, 1, item.ships || 0, tick, tick, JSON.stringify((item.samples || []).slice(0, 8))
+    gameNumber, item.kind, item.a, item.b, item.count ?? 1, item.count ?? 1, item.ships || 0, tick, tick, JSON.stringify((item.samples || []).slice(0, 8))
   ));
 
   // Several captures between the same pair in one scan fold into one row update.
