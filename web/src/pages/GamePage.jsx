@@ -85,7 +85,7 @@ export default function GamePage({ gameNumber, notes }) {
   const players = useMemo(() => intel ? buildPlayerIntel(intel.summary || {}, intel.events || []) : [], [intel]);
   const activePlayer = players.find((player) => player.name === selectedPlayer) || null;
   const captures = snapshots.filter((snapshot) => snapshot.pinned);
-  const history = showAllSnapshots ? snapshots : snapshots.slice(0, 12);
+  const history = showAllSnapshots ? snapshots : snapshots.slice(0, 3);
   const latest = snapshots[0];
   useEffect(() => {
     if (!selectedPlayer || !latest || mapSnapshot?.id === latest.id) return;
@@ -258,7 +258,7 @@ export default function GamePage({ gameNumber, notes }) {
       <section className="card">
         <div className="section-head">
           <h2>Snapshot history <span className="muted">({snapshots.length} · {formatBytes(snapshots.reduce((sum, item) => sum + (item.sizeBytes || 0), 0))} stored)</span></h2>
-          {snapshots.length > 12 && (
+          {snapshots.length > 3 && (
             <button type="button" className="ghost" onClick={() => setShowAllSnapshots((value) => !value)}>
               {showAllSnapshots ? "Show fewer" : "Show all"}
             </button>
