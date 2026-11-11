@@ -1,0 +1,20 @@
+name: Estimate D1 writes per scan
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "scripts/estimate-writes.mjs"
+      - ".github/workflows/estimate-writes.yml"
+
+jobs:
+  estimate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/estimate-writes.mjs
+        env:
+          BACKEND_URL: ${{ vars.NP_BACKEND_URL }}
