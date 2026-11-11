@@ -500,7 +500,7 @@ async function scanGame(env, gameNumber) {
   }
 
   const result = await scanSavedGame(env, game, "backend-manual");
-  if (result.ok) {
+  if (result.ok && !result.unchanged) {
     await processRelations(env, gameNumber, RELATION_BATCH_REQUEST);
   }
   return result.ok ? json(result) : json({ error: result.error }, 400);
@@ -561,9 +561,11 @@ async function scanSavedGame(env, game, source, { pin = false } = {}) {
     // Hourly scans often land on the same tick; don't store duplicates unless
     // this is a capture or the first time we see the game is over.
     if (!pin && latest && latest.tick === tick && (!finished || latest.pinned)) {
-      // No new tick: only refresh "last scan" time. Successes are logged once
-      // per tick (failures always) to keep database writes down.
-      await updateGameAfterScan(env, game.gameNumber, scanningData, { finished, players: false });
+      // No new tick: nothing changed, so nothing is written. The one
+      // exception is a game whose key had been failing: mark it working again.
+      if (game.keyStatus === "needs_fresh_key" || (finished && !game.finishedAt)) {
+        await updateGameAfterScan(env, game.gameNumber, scanningData, { finished, players: false });
+      }
       return { ok: true, gameNumber: game.gameNumber, unchanged: true, snapshot: latest };
     }
 

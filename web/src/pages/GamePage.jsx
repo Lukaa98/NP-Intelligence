@@ -148,7 +148,7 @@ export default function GamePage({ gameNumber, threatKey = null, notes }) {
           </div>
           {game && <p className="muted small">{gameFacts(game)}</p>}
           <p className="muted">
-            Tick {game?.lastTick ?? "?"} · last scan {formatDateTime(game?.lastSyncAt)}
+            Tick {game?.lastTick ?? "?"} · new tick seen {formatDateTime(game?.lastSyncAt)}
             {game?.finishedAt && " · game finished"}
             {game?.archivedAt && " · deleted (history kept)"}
             {game?.exportedAt && <> · full replay <a href={`${ARCHIVE_BROWSE}/${gameNumber}`} target="_blank" rel="noreferrer">archived on GitHub</a></>}

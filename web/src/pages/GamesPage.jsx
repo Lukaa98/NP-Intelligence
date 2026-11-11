@@ -138,7 +138,7 @@ export default function GamesPage() {
                     <RenameGame game={game} onRenamed={replaceGame} />
                   </div>
                   <div className="meta">{gameFacts(game)}</div>
-                  <div className="meta">tick {game.lastTick ?? 0} · last scan {formatDateTime(game.lastSyncAt)}</div>
+                  <div className="meta">tick {game.lastTick ?? 0} · new tick seen {formatDateTime(game.lastSyncAt)}</div>
                   <div className="pills">
                     {!!threatCounts[game.gameNumber] && (
                       <span className="pill danger">🚨 {threatCounts[game.gameNumber]} incoming</span>
