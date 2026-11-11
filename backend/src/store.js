@@ -389,7 +389,7 @@ export async function processRelations(env, gameNumber, limit = 4) {
     }
   }
   const rows = await env.DB.prepare(`
-    SELECT id, tick FROM snapshots
+    SELECT id, tick, captured_at FROM snapshots
     WHERE game_number = ? AND tick > ?
     ORDER BY tick ASC, captured_at ASC
     LIMIT ?
@@ -400,7 +400,7 @@ export async function processRelations(env, gameNumber, limit = 4) {
     if (meta.tick <= lastTick) continue;
     const row = await env.DB.prepare(`SELECT data_json FROM snapshots WHERE id = ?`).bind(meta.id).first();
     const result = extractRelations(JSON.parse(row.data_json), state);
-    await env.DB.batch(relationStatements(env, gameNumber, result));
+    await env.DB.batch(relationStatements(env, gameNumber, result, meta.captured_at));
     state = result.state;
     lastTick = meta.tick;
     processed += 1;
@@ -419,7 +419,7 @@ export async function processRelations(env, gameNumber, limit = 4) {
   return { processed, remaining: remaining?.n || 0, relationTick: lastTick };
 }
 
-function relationStatements(env, gameNumber, { tick, observations, events }) {
+function relationStatements(env, gameNumber, { tick, observations, events }, at = null) {
   const upsert = env.DB.prepare(`
     INSERT INTO relations (game_number, kind, a_uid, b_uid, count, weight, ships, first_tick, last_tick, samples_json)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -449,10 +449,10 @@ function relationStatements(env, gameNumber, { tick, observations, events }) {
   }
 
   const insertEvent = env.DB.prepare(`
-    INSERT INTO relation_events (game_number, tick, kind, a_uid, b_uid, weight, detail) VALUES (?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO relation_events (game_number, tick, kind, a_uid, b_uid, weight, detail, at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `);
   for (const event of events) {
-    statements.push(insertEvent.bind(gameNumber, tick, event.kind, event.a, event.b, event.weight, event.detail));
+    statements.push(insertEvent.bind(gameNumber, tick, event.kind, event.a, event.b, event.weight, event.detail, at));
   }
   return statements;
 }
@@ -994,4 +994,30 @@ export async function activityByPlayer(env, gameNumber, latestTick) {
   }
   for (const row of last) entry(row.a_uid).lastActionTick = row.last_tick;
   return { observedTicks: firstTick === null || firstTick === undefined ? 0 : latestTick - firstTick, players: byPlayer };
+}
+
+// Every human action recorded for one player (activity + captures), with the
+// time of the scan it was seen in, plus the span of history we have. The
+// browser turns this into a day strip, AFK spells and time-of-day profile.
+export async function playerActivityHistory(env, gameNumber, uid) {
+  const events = (await env.DB.prepare(`
+    SELECT tick, at, kind, detail, weight FROM relation_events
+    WHERE game_number = ? AND a_uid = ? AND kind IN ('activity', 'capture')
+    ORDER BY tick ASC
+  `).bind(gameNumber, uid).all()).results;
+  const span = await env.DB.prepare(`
+    SELECT MIN(first_tick) AS first_tick, MAX(last_tick) AS last_tick FROM relations WHERE game_number = ?
+  `).bind(gameNumber).first();
+  const times = await env.DB.prepare(`
+    SELECT MIN(captured_at) AS first_at, MAX(captured_at) AS last_at, MIN(tick) AS first_snapshot_tick, MAX(tick) AS last_snapshot_tick
+    FROM snapshots WHERE game_number = ?
+  `).bind(gameNumber).first();
+  return {
+    events,
+    firstTick: span?.first_tick ?? null,
+    lastTick: span?.last_tick ?? null,
+    // Anchor for estimating the time of events recorded without one.
+    anchor: times?.last_at ? { tick: times.last_snapshot_tick, at: times.last_at } : null,
+    firstAt: times?.first_at ?? null
+  };
 }

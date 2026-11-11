@@ -10,6 +10,7 @@ import RenameGame from "../components/RenameGame.jsx";
 import PlayerMap from "../components/PlayerMap.jsx";
 import KnownPlayers, { historyText } from "../components/KnownPlayers.jsx";
 import Threats from "../components/Threats.jsx";
+import ActivityHistory from "../components/ActivityHistory.jsx";
 
 const WINDOWS = [
   ["latest", "Latest"],
@@ -325,7 +326,7 @@ function PlayerDetail({ player, notes, gameContext, diplomacy, mapSnapshot, hist
         {team && ` · in a likely team of ${team.members.length}`}
       </p>
       {note && <p className="note-text">📝 {note}</p>}
-      <ActivityLine activity={data?.activity?.[uid]} />
+      <ActivityLine activity={data?.activity?.[uid]} gameNumber={gameContext.gameNumber} uid={uid} />
       {!!history?.games.length && (
         <div className="summary-line history">
           <span className="summary-label">Your history with them</span>
@@ -449,7 +450,9 @@ function hoursAgo(ticks) {
 // buying infrastructure, building carriers, giving fleets new orders
 // (visible fleets only) and capturing stars. Ship growth and research are
 // automatic, so they don't count.
-function ActivityLine({ activity }) {
+function ActivityLine({ activity, gameNumber, uid }) {
+  const [showHistory, setShowHistory] = useState(false);
+  useEffect(() => setShowHistory(false), [uid]);
   if (!activity) return null;
   const [label, tone] = ACTIVITY_LABELS[activity.status] || [activity.status, ""];
   const window = activity.status === "active" ? activity.day : activity.twoDays;
@@ -471,6 +474,10 @@ function ActivityLine({ activity }) {
     <div className={`summary-line activity ${activity.status}`}>
       <span className="summary-label"><span className={`pill ${tone}`}>{label}</span></span>
       <span className="small" title="Counts only human actions: buying infrastructure, building carriers, new fleet orders (fleets in your scanning range) and captures. Ship growth and research happen on their own.">{detail}</span>
+      <button type="button" className="ghost small history-toggle" onClick={() => setShowHistory(!showHistory)}>
+        History {showHistory ? "▴" : "▾"}
+      </button>
+      {showHistory && <ActivityHistory gameNumber={gameNumber} uid={uid} />}
     </div>
   );
 }

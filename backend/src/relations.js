@@ -2,7 +2,7 @@ import { TECH_NAMES } from "./intel.js";
 
 // Bump when extraction rules change: games whose hourly history still exists
 // are re-processed from scratch with the new rules.
-export const RELATIONS_VERSION = 4;
+export const RELATIONS_VERSION = 5;
 
 // Pulls relationship evidence out of one NP4 snapshot, diffing against the
 // compact state left by the previous one. Pure: no I/O, so it can be unit

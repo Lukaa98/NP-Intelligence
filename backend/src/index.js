@@ -5,6 +5,7 @@ import { diffSnapshots, strategicIntel, summarize } from "./intel.js";
 import { fetchScan, isGameOver, NeptuneApiError } from "./npApi.js";
 import {
   activityByPlayer,
+  playerActivityHistory,
   archiveGame,
   getSetting,
   listThreats,
@@ -229,6 +230,11 @@ export default {
         const { gameNumber } = pathParams(url.pathname, "/api/games/:gameNumber/known-players");
         await backfillGamePlayers(env, 10);
         return json({ players: await knownPlayers(env, gameNumber) });
+      }
+
+      if (request.method === "GET" && matchPath(url.pathname, "/api/games/:gameNumber/players/:uid/activity")) {
+        const { gameNumber, uid } = pathParams(url.pathname, "/api/games/:gameNumber/players/:uid/activity");
+        return json(await playerActivityHistory(env, gameNumber, Number(uid)));
       }
 
       if (request.method === "GET" && matchPath(url.pathname, "/api/games/:gameNumber/diplomacy")) {
