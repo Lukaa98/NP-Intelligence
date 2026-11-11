@@ -16,7 +16,7 @@ function parseRoute() {
   const [path, query = ""] = window.location.hash.replace(/^#\/?/, "").split("?");
   const params = new URLSearchParams(query);
   const parts = path.split("/").filter(Boolean).map(decodeURIComponent);
-  if (parts[0] === "game" && parts[1]) return { name: "game", gameNumber: parts[1] };
+  if (parts[0] === "game" && parts[1]) return { name: "game", gameNumber: parts[1], threatKey: params.get("threat") };
   if (parts[0] === "snapshot" && parts[1]) return { name: "snapshot", snapshotId: parts[1], playerUid: params.get("player"), starUid: params.get("star"), fleetUid: params.get("fleet") };
   if (parts[0] === "players") return { name: "players" };
   return { name: "games" };
@@ -86,7 +86,7 @@ export default function App() {
 
       <main className={fullBleed ? "page page-full" : "page"}>
         {route.name === "games" && <GamesPage />}
-        {route.name === "game" && <GamePage key={route.gameNumber} gameNumber={route.gameNumber} notes={notes} />}
+        {route.name === "game" && <GamePage key={route.gameNumber} gameNumber={route.gameNumber} threatKey={route.threatKey} notes={notes} />}
         {route.name === "snapshot" && <MapPage key={route.snapshotId} snapshotId={route.snapshotId} playerUid={route.playerUid} starUid={route.starUid} fleetUid={route.fleetUid} notes={notes} />}
         {route.name === "players" && <PlayersPage notes={notes} reload={reloadNotes} />}
       </main>

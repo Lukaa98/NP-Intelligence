@@ -82,9 +82,8 @@ export default function AlertBell({ gameNumber = null }) {
   const openThreat = (threat) => {
     markSeen([threat]);
     setOpen(false);
-    navigate(threat.snapshotId
-      ? `/snapshot/${threat.snapshotId}?star=${threat.targetUid}&fleet=${threat.fleetUid}`
-      : `/game/${threat.gameNumber}`);
+    // Open the game with this alert's mini map expanded.
+    navigate(`/game/${threat.gameNumber}?threat=${encodeURIComponent(threat.key)}`);
   };
 
   return (

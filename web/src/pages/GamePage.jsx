@@ -19,7 +19,7 @@ const WINDOWS = [
   ["32h", "32h"]
 ];
 
-export default function GamePage({ gameNumber, notes }) {
+export default function GamePage({ gameNumber, threatKey = null, notes }) {
   const [game, setGame] = useState(null);
   const [intel, setIntel] = useState(null);
   const [snapshots, setSnapshots] = useState([]);
@@ -188,7 +188,7 @@ export default function GamePage({ gameNumber, notes }) {
 
       {status && <p className="status banner">{status}</p>}
 
-      <Threats threats={threats} currentTick={game?.lastTick ?? 0} onPickPlayer={openPlayer} />
+      <Threats threats={threats} currentTick={game?.lastTick ?? 0} onPickPlayer={openPlayer} initialOpenKey={threatKey} />
 
       <KnownPlayers players={known} title="Players you know from before" onPick={openPlayer} />
 

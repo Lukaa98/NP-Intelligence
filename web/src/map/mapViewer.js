@@ -371,6 +371,9 @@ export function mountMap(container, snapshot, options = {}) {
   const view = { scale: 1, x: 0, y: 0 };
   // Star under attack (from an alert link), ringed in red.
   let markedStarUid = null;
+  // Alert view: { starUid, fleetUid, label }. Everything else is dimmed and an
+  // arrow is drawn from the fleet to the star.
+  let threat = null;
   const selection = { star: null, fleet: null, player: null };
   let width = 0;
   let height = 0;
@@ -492,6 +495,7 @@ export function mountMap(container, snapshot, options = {}) {
   }
 
   function selectPlayer(player, focus) {
+    if (player) threat = null;
     selection.player = player;
     if (player) {
       selection.star = null;
@@ -562,6 +566,8 @@ export function mountMap(container, snapshot, options = {}) {
     const focus = selection.player;
     const groups = focusGroups(focus);
     const dim = (puid) => focus && puid !== focus.uid && !groups.allies.has(puid) && !groups.enemies.has(puid);
+    const dimStar = (star) => (threat ? star.uid !== threat.starUid : dim(star.puid));
+    const dimFleet = (fleet) => (threat ? fleet.uid !== threat.fleetUid : dim(fleet.puid));
     const r = Math.max(3, Math.min(view.scale * 0.09, 14));
 
     if (focus) {
@@ -577,7 +583,7 @@ export function mountMap(container, snapshot, options = {}) {
     ctx.lineWidth = 1;
     for (const fleet of model.fleets) {
       if (!fleet.route.length) continue;
-      ctx.globalAlpha = dim(fleet.puid) ? 0.12 : 0.55;
+      ctx.globalAlpha = dimFleet(fleet) ? 0.08 : 0.55;
       ctx.strokeStyle = fleet.owner?.color || "#888";
       ctx.beginPath();
       ctx.moveTo(...toScreen(fleet.x, fleet.y));
@@ -589,7 +595,7 @@ export function mountMap(container, snapshot, options = {}) {
     for (const star of model.stars) {
       const [sx, sy] = toScreen(star.x, star.y);
       if (sx < -40 || sy < -40 || sx > width + 40 || sy > height + 40) continue;
-      ctx.globalAlpha = dim(star.puid) ? 0.18 : 1;
+      ctx.globalAlpha = dimStar(star) ? (threat ? 0.12 : 0.18) : 1;
       if (star.owner) {
         ctx.lineWidth = Math.max(1.5, r * 0.22);
         ctx.strokeStyle = star.owner.color;
@@ -634,7 +640,8 @@ export function mountMap(container, snapshot, options = {}) {
         ctx.setLineDash([]);
       }
 
-      if (view.scale > 55) {
+      if (view.scale > 55 || (threat && star.uid === threat.starUid)) {
+        ctx.globalAlpha = dimStar(star) ? (threat ? 0.1 : 0.25) : 1;
         ctx.font = `${Math.min(13, 9 + view.scale / 60)}px Segoe UI, sans-serif`;
         ctx.textAlign = "center";
         ctx.fillStyle = "#c9cdf5";
@@ -649,7 +656,7 @@ export function mountMap(container, snapshot, options = {}) {
     for (const fleet of model.fleets) {
       const [sx, sy] = toScreen(fleet.x, fleet.y);
       if (sx < -40 || sy < -40 || sx > width + 40 || sy > height + 40) continue;
-      ctx.globalAlpha = dim(fleet.puid) ? 0.18 : 1;
+      ctx.globalAlpha = dimFleet(fleet) ? (threat ? 0.1 : 0.18) : 1;
       const offset = fleet.orbiting ? r * 1.35 : 0;
       ctx.fillStyle = fleet.owner?.color || "#aaa";
       shapePath(ctx, fleet.owner?.shape || "circle", sx + offset, sy - offset, Math.max(2.2, r * 0.42));
@@ -667,6 +674,56 @@ export function mountMap(container, snapshot, options = {}) {
       }
     }
     ctx.globalAlpha = 1;
+    if (threat) drawThreatArrow(r);
+  }
+
+  // Red arrow from the attacking fleet to the threatened star, with a label.
+  function drawThreatArrow(r) {
+    const star = model.stars.find((item) => item.uid === threat.starUid);
+    const fleet = model.fleets.find((item) => item.uid === threat.fleetUid);
+    if (!star) return;
+    const [tx, ty] = toScreen(star.x, star.y);
+    ctx.globalAlpha = 1;
+    ctx.strokeStyle = "#ff4d4d";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(tx, ty, r * 2.8, 0, Math.PI * 2);
+    ctx.stroke();
+    if (!fleet) return;
+    const [fx, fy] = toScreen(fleet.x, fleet.y);
+    const angle = Math.atan2(ty - fy, tx - fx);
+    const endX = tx - Math.cos(angle) * r * 3.2;
+    const endY = ty - Math.sin(angle) * r * 3.2;
+    ctx.setLineDash([8, 6]);
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(fx, fy);
+    ctx.lineTo(endX, endY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = "#ff4d4d";
+    ctx.beginPath();
+    ctx.moveTo(endX, endY);
+    ctx.lineTo(endX - Math.cos(angle - 0.4) * 14, endY - Math.sin(angle - 0.4) * 14);
+    ctx.lineTo(endX - Math.cos(angle + 0.4) * 14, endY - Math.sin(angle + 0.4) * 14);
+    ctx.closePath();
+    ctx.fill();
+    // Halo around the fleet.
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(fx, fy, Math.max(8, r * 1.4), 0, Math.PI * 2);
+    ctx.stroke();
+    if (threat.label) {
+      const mx = (fx + endX) / 2;
+      const my = (fy + endY) / 2;
+      ctx.font = "bold 13px Segoe UI, sans-serif";
+      const textWidth = ctx.measureText(threat.label).width;
+      ctx.fillStyle = "rgba(11, 10, 31, 0.85)";
+      ctx.fillRect(mx - textWidth / 2 - 6, my - 20, textWidth + 12, 20);
+      ctx.fillStyle = "#ffd2cc";
+      ctx.textAlign = "center";
+      ctx.fillText(threat.label, mx, my - 5);
+    }
   }
 
   // Territory outline like NP's borders: the union of a circle around each star
@@ -928,18 +985,19 @@ export function mountMap(container, snapshot, options = {}) {
     },
     // Alert view: zoom to the attacked star and the incoming fleet, select the
     // fleet so its route and details show.
-    focusThreat(starUid, fleetUid) {
+    focusThreat(starUid, fleetUid, label = "") {
       const star = model.stars.find((item) => item.uid === Number(starUid));
       const fleet = model.fleets.find((item) => item.uid === Number(fleetUid));
-      markedStarUid = star ? star.uid : null;
+      markedStarUid = null;
+      threat = star ? { starUid: star.uid, fleetUid: fleet ? fleet.uid : null, label } : null;
       selection.player = null;
       selection.star = fleet ? null : star || null;
       selection.fleet = fleet || null;
       renderList();
       renderDetail();
       renderLegend();
-      const points = [star, fleet, ...(fleet?.route || [])].filter(Boolean);
-      if (points.length) fitTo(points, 200);
+      const points = [star, fleet].filter(Boolean);
+      if (points.length) fitTo(points, 140);
       draw();
     },
     selectPlayerByUid(uid) {

@@ -287,3 +287,9 @@ code { background: #0b0a1f; padding: 1px 6px; border-radius: 4px; }
 .hour-bars { display: grid; grid-template-columns: repeat(24, 1fr); gap: 2px; height: 56px; align-items: end; }
 .hour-bar { height: 100%; display: flex; align-items: flex-end; background: #14123a; border-radius: 2px; }
 .hour-bar span { width: 100%; background: var(--accent-2); border-radius: 2px; min-height: 0; }
+.threat-head { cursor: pointer; }
+.threat-map-wrap { position: relative; margin-top: 8px; border-radius: 8px; overflow: hidden; border: 1px solid var(--line); }
+.threat-map { height: 320px; }
+.full-map-link { position: absolute; right: 48px; top: 8px; background: rgba(11, 10, 31, 0.85); }
+.relation-list li.expanded { border-left-color: var(--danger); }
+@media (max-width: 640px) { .threat-map { height: 260px; } }
