@@ -20,3 +20,4 @@ jobs:
       - run: node scripts/inspect-schema.mjs
         env:
           BACKEND_URL: ${{ vars.NP_BACKEND_URL }}
+          NP_ADMIN_TOKEN: ${{ secrets.NP_ADMIN_TOKEN }}

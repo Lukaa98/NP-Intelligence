@@ -1,7 +1,9 @@
 // Deeper look at relationship-related fields of each tracked game's newest
 // snapshot. Logs real values (the games and API are public).
 const base = (process.env.BACKEND_URL || "https://np-intelligence-backend.carsandbids-labs.workers.dev").replace(/\/+$/, "");
-const get = async (path) => (await fetch(`${base}${path}`)).json();
+// The site requires a login; scripts use the service key (NP_ADMIN_TOKEN).
+const auth = process.env.NP_ADMIN_TOKEN ? { authorization: `Bearer ${process.env.NP_ADMIN_TOKEN}` } : {};
+const get = async (path) => (await fetch(`${base}${path}`, { headers: auth })).json();
 
 const games = (await get("/api/games")).games;
 for (const game of games) {

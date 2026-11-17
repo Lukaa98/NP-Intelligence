@@ -2,9 +2,11 @@
 // counts, value distributions for small enums). No aliases, coordinates,
 // names or codes are printed, because Actions logs are public.
 const base = (process.env.BACKEND_URL || "https://np-intelligence-backend.carsandbids-labs.workers.dev").replace(/\/+$/, "");
+// The site requires a login; scripts use the service key (NP_ADMIN_TOKEN).
+const auth = process.env.NP_ADMIN_TOKEN ? { authorization: `Bearer ${process.env.NP_ADMIN_TOKEN}` } : {};
 
 const get = async (path) => {
-  const response = await fetch(`${base}${path}`);
+  const response = await fetch(`${base}${path}`, { headers: auth });
   if (!response.ok) throw new Error(`${path} -> ${response.status}`);
   return response.json();
 };

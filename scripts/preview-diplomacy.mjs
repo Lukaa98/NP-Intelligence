@@ -5,7 +5,9 @@ import { extractRelations } from "../backend/src/relations.js";
 import { buildDiplomacy } from "../backend/src/diplomacy.js";
 
 const base = (process.env.BACKEND_URL || "https://np-intelligence-backend.carsandbids-labs.workers.dev").replace(/\/+$/, "");
-const get = async (path) => (await fetch(`${base}${path}`)).json();
+// The site requires a login; scripts use the service key (NP_ADMIN_TOKEN).
+const auth = process.env.NP_ADMIN_TOKEN ? { authorization: `Bearer ${process.env.NP_ADMIN_TOKEN}` } : {};
+const get = async (path) => (await fetch(`${base}${path}`, { headers: auth })).json();
 const maxSnapshots = Number(process.env.MAX_SNAPSHOTS || 80);
 
 for (const game of (await get("/api/games")).games) {
