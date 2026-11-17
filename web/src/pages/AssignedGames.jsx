@@ -4,6 +4,8 @@ import { navigate } from "../router.js";
 import { formatDateTime, gameFacts, gameTitle } from "../format.js";
 import KnownPlayers from "../components/KnownPlayers.jsx";
 
+const npGameUrl = (number) => `https://np.ironhelmet.com/game/${encodeURIComponent(number)}`;
+
 // A tester's home page: only the games the admin assigned to them. Each one
 // either asks for the API code or, once connected, opens like any game.
 export default function AssignedGames({ assigned }) {
@@ -86,7 +88,7 @@ function ConnectGame({ number, onConnected, failing = false }) {
     <form className={failing ? "connect-form" : "game-card connect-card"} onSubmit={connect} onClick={(event) => event.stopPropagation()}>
       {!failing && (
         <div className="game-main">
-          <span className="name">Game #{number}</span>
+          <a className="name" href={npGameUrl(number)} target="_blank" rel="noreferrer">Game #{number} ↗</a>
           <div className="meta">Not connected yet. In Neptune's Pride open this game, go to Options → API, copy your API code and paste it here.</div>
         </div>
       )}
@@ -120,7 +122,7 @@ function ConnectedGame({ game, incoming, onChanged, setStatus }) {
     <article className="game-card" onClick={() => navigate(`/game/${game.gameNumber}`)}>
       <div className="game-main">
         <span className="name">{gameTitle(game)}</span>
-        <div className="meta">{gameFacts(game)}</div>
+        <div className="meta">{gameFacts(game)} · <a href={npGameUrl(game.npNumber)} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()}>open in Neptune's Pride ↗</a></div>
         <div className="meta">tick {game.lastTick ?? 0} · new tick seen {formatDateTime(game.lastSyncAt)}</div>
         <div className="pills">
           {!!incoming && <span className="pill danger">🚨 {incoming} incoming</span>}
