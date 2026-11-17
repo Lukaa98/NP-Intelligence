@@ -181,6 +181,7 @@ export default function MapPage({ snapshotId, playerUid, starUid, fleetUid, note
             className="primary play"
             onClick={() => {
               if (!playing && index >= frames.length - 1) showFrame(0);
+              if (!playing) api.track("timeline_play");
               setPlaying(!playing);
             }}
           >{playing ? "❚❚ Pause" : "▶ Play"}</button>

@@ -100,6 +100,7 @@ export default function GamePage({ gameNumber, threatKey = null, notes }) {
     const alias = diplomacy.players.get(uid)?.alias;
     if (!alias) return;
     setSelectedPlayer(alias);
+    api.track("player_panel");
     requestAnimationFrame(() => {
       document.getElementById("player-panel")?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
@@ -141,7 +142,7 @@ export default function GamePage({ gameNumber, threatKey = null, notes }) {
     <PickPlayer.Provider value={openPlayer}>
       <section className="hero card">
         <div>
-          <p className="eyebrow"><a href="#/">Games</a> / #{gameNumber}</p>
+          <p className="eyebrow"><a href="#/">Games</a> / #{game?.npNumber || gameNumber}</p>
           <div className="name-row">
             <h1>{gameTitle(game, gameNumber)}</h1>
             {game && <RenameGame game={game} onRenamed={setGame} />}
@@ -150,7 +151,8 @@ export default function GamePage({ gameNumber, threatKey = null, notes }) {
           <p className="muted">
             Tick {game?.lastTick ?? "?"} · new tick seen {formatDateTime(game?.lastSyncAt)}
             {game?.finishedAt && " · game finished"}
-            {game?.archivedAt && " · deleted (history kept)"}
+            {game?.archivedAt && (game.owner === "admin" ? " · deleted (history kept)" : " · deleted")}
+            {game && game.owner !== "admin" && (game.finishedAt || game.archivedAt) && " · erased 24 hours after it ended"}
             {game?.exportedAt && <> · full replay <a href={`${ARCHIVE_BROWSE}/${gameNumber}`} target="_blank" rel="noreferrer">archived on GitHub</a></>}
           </p>
           {game?.keyStatus === "needs_fresh_key" && <p className="error small">Last scan failed: {game.keyStatusMessage}</p>}

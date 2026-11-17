@@ -4,6 +4,8 @@ const BACKEND_KEY = "np-intel.backendUrl";
 export const ARCHIVE_BASE = (import.meta.env.VITE_ARCHIVE_BASE || "https://raw.githubusercontent.com/Lukaa98/NP-Intelligence/np-archive/archive").replace(/\/+$/, "");
 export const ARCHIVE_BROWSE = "https://github.com/Lukaa98/NP-Intelligence/tree/np-archive/archive";
 const TOKEN_KEY = "np-intel.writeToken";
+const SESSION_KEY = "np-intel.session";
+const VIEW_AS_KEY = "np-intel.viewAs";
 
 function readStorage(key) {
   try {
@@ -39,25 +41,71 @@ export function saveSettings({ backendUrl, writeToken }) {
   writeStorage(TOKEN_KEY, String(writeToken || "").trim());
 }
 
-async function request(path, init = {}) {
-  const { backendUrl, writeToken } = getSettings();
-  const headers = { ...(init.body ? { "content-type": "application/json" } : {}), ...(init.headers || {}) };
-  if (writeToken) {
-    headers.authorization = `Bearer ${writeToken}`;
+// Login ticket for this browser, and (admin only) the tester being viewed.
+export const session = {
+  get: () => readStorage(SESSION_KEY),
+  set: (ticket) => writeStorage(SESSION_KEY, ticket),
+  viewAs: () => readSession(VIEW_AS_KEY),
+  setViewAs: (id) => writeSession(VIEW_AS_KEY, id)
+};
+
+function readSession(key) {
+  try {
+    return sessionStorage.getItem(key) || "";
+  } catch {
+    return "";
   }
+}
+
+function writeSession(key, value) {
+  try {
+    if (value) sessionStorage.setItem(key, value);
+    else sessionStorage.removeItem(key);
+  } catch {
+    // Storage blocked: "view as" just won't survive a reload.
+  }
+}
+
+async function request(path, init = {}) {
+  const { backendUrl } = getSettings();
+  const headers = { ...(init.body ? { "content-type": "application/json" } : {}), ...(init.headers || {}) };
+  const ticket = session.get();
+  if (ticket) headers.authorization = `Bearer ${ticket}`;
+  const viewAs = session.viewAs();
+  if (viewAs) headers["x-view-as"] = viewAs;
 
   const response = await fetch(`${backendUrl}${path}`, { ...init, headers });
   const payload = await response.json().catch(() => ({}));
+  if (response.status === 401 && payload.login) {
+    session.set("");
+    window.dispatchEvent(new Event("np-intel:logged-out"));
+  }
   if (!response.ok) {
     throw new Error(payload.detail || payload.error || `Backend returned ${response.status}`);
   }
   return payload;
 }
 
+const post = (path, body, method = "POST") => request(path, { method, body: JSON.stringify(body || {}) });
+
 const game = (gameNumber) => `/api/games/${encodeURIComponent(gameNumber)}`;
 
 export const api = {
   health: () => request("/health"),
+  authStatus: () => request("/api/auth/status"),
+  login: (username, password) => post("/api/auth/login", { username, password }),
+  setup: (body) => post("/api/auth/setup", body),
+  me: () => request("/api/auth/me"),
+  // Usage stats for the admin; never blocks or breaks the page.
+  track: (event) => post("/api/track", { event }).catch(() => {}),
+  sendFeedback: (message, page) => post("/api/feedback", { message, page }),
+  adminUsers: () => request("/api/admin/users").then((payload) => payload.users || []),
+  createUser: (body) => post("/api/admin/users", body),
+  updateUser: (id, body) => post(`/api/admin/users/${encodeURIComponent(id)}`, body, "PUT"),
+  deleteUserGames: (id) => request(`/api/admin/users/${encodeURIComponent(id)}/games`, { method: "DELETE" }),
+  deleteUser: (id) => request(`/api/admin/users/${encodeURIComponent(id)}`, { method: "DELETE" }),
+  feedback: () => request("/api/admin/feedback").then((payload) => payload.feedback || []),
+  deleteFeedback: (id) => request(`/api/admin/feedback/${id}`, { method: "DELETE" }),
   listGames: () => request("/api/games").then((payload) => payload.games || []),
   saveGame: (body) => request("/api/games", { method: "POST", body: JSON.stringify(body) }),
   scanGame: (gameNumber) => request(`${game(gameNumber)}/scan`, { method: "POST" }),

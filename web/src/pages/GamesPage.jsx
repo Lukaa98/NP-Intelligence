@@ -5,13 +5,14 @@ import { formatDateTime, gameFacts, gameTitle } from "../format.js";
 import RenameGame from "../components/RenameGame.jsx";
 import KnownPlayers from "../components/KnownPlayers.jsx";
 
-export default function GamesPage() {
+export default function GamesPage({ user, isAdmin }) {
+  const locked = user?.lockedGame || "";
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState("");
   const [busy, setBusy] = useState("");
   const [formOpen, setFormOpen] = useState(false);
-  const [form, setForm] = useState({ gameNumber: "", code: "", name: "" });
+  const [form, setForm] = useState({ gameNumber: locked, code: "", name: "" });
   const [query, setQuery] = useState("");
   // Players from the game just added that you have met before.
   const [known, setKnown] = useState(null);
@@ -22,13 +23,13 @@ export default function GamesPage() {
     try {
       setGames(await api.listGames());
       api.threatCounts().then(setThreatCounts).catch(() => {});
-      api.usage().then(setUsage).catch(() => {});
+      if (isAdmin) api.usage().then(setUsage).catch(() => {});
     } catch (error) {
       setStatus(error.message);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [isAdmin]);
 
   useEffect(() => {
     load();
@@ -57,7 +58,7 @@ export default function GamesPage() {
     await run("save", "Saving and validating key", async () => {
       const payload = await api.saveGame({ game_number: form.gameNumber.trim(), code: form.code.trim(), name: form.name.trim() });
       setKnown(payload.knownPlayers?.length ? { gameNumber: payload.game.gameNumber, title: gameTitle(payload.game), players: payload.knownPlayers } : null);
-      setForm({ gameNumber: "", code: "", name: "" });
+      setForm({ gameNumber: locked, code: "", name: "" });
       setFormOpen(false);
       return payload.existing
         ? `${gameTitle(payload.game)} was already tracked: API code updated, latest tick ${payload.snapshot.tick}.`
@@ -78,7 +79,11 @@ export default function GamesPage() {
         <div>
           <p className="eyebrow">Neptune's Pride intel</p>
           <h1>Your games</h1>
-          <p className="muted">Tracked games are scanned every 10 minutes (a new scan is stored once per NP tick), and the 🔔 lights up when an enemy fleet is launched at one of your stars. When a game ends or you delete it, its final state, your captures and its full alliance and war record are kept, so finished games stay viewable after Neptune's Pride deletes them.</p>
+          {isAdmin ? (
+            <p className="muted">Tracked games are scanned every 10 minutes (a new scan is stored once per NP tick), and the 🔔 lights up when an enemy fleet is launched at one of your stars. When a game ends or you delete it, its final state, your captures and its full alliance and war record are kept, so finished games stay viewable after Neptune's Pride deletes them.</p>
+          ) : (
+            <p className="muted">Add your game with its API code and it is scanned every 10 minutes: who is allied or at war, who is AFK, a replayable map, and the 🔔 lights up when an enemy fleet is launched at one of your stars. {locked ? `Your test account is set up for game ${locked}. ` : ""}Your games are only visible to you and the site admin, and are erased 24 hours after the game ends. Use 💬 Feedback to say what you think.</p>
+          )}
         </div>
         <button type="button" className="primary" onClick={() => setFormOpen((open) => !open)}>
           {formOpen ? "Hide form" : "Track a game"}
@@ -91,7 +96,7 @@ export default function GamesPage() {
           <div className="form-grid">
             <label className="field">
               <span>Game number</span>
-              <input value={form.gameNumber} onChange={(event) => setForm({ ...form, gameNumber: event.target.value })} placeholder="5123456789" />
+              <input value={form.gameNumber} readOnly={Boolean(locked)} onChange={(event) => setForm({ ...form, gameNumber: event.target.value })} placeholder="5123456789" />
             </label>
             <label className="field">
               <span>API code</span>
@@ -176,7 +181,9 @@ export default function GamesPage() {
         <div className="section-head">
           <h2>Deleted games <span className="muted">({deleted.length})</span></h2>
         </div>
-        <p className="muted small">Deleted games are no longer scanned, but their snapshots, captures and maps stay available.</p>
+        <p className="muted small">{isAdmin
+          ? "Deleted games are no longer scanned, but their snapshots, captures and maps stay available."
+          : "Deleted games are no longer scanned and are erased 24 hours after you delete them."}</p>
         {!deleted.length ? <p className="muted">Nothing here yet.</p> : (
           <div className="game-list">
             {deleted.map((game) => (

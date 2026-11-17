@@ -88,7 +88,7 @@ export default function AlertBell({ gameNumber = null }) {
 
   return (
     <div className="alert-bell" ref={rootRef}>
-      <button type="button" className={`ghost bell${unseen.length ? " ringing" : ""}`} onClick={() => setOpen(!open)} title="Incoming attacks">
+      <button type="button" className={`ghost bell${unseen.length ? " ringing" : ""}`} onClick={() => { if (!open) api.track("alerts_open"); setOpen(!open); }} title="Incoming attacks">
         🔔{unseen.length > 0 && <span className="bell-count">{unseen.length}</span>}
       </button>
       {open && (

@@ -13,7 +13,7 @@ function attemptId(gameNumber) {
   return `${gameNumber}-attempt-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
-export async function upsertGame(env, gameNumber, code, name, playerUid = null) {
+export async function upsertGame(env, gameNumber, code, name, playerUid = null, owner = "admin") {
   const timestamp = nowIso();
   await env.DB.prepare(`
     INSERT INTO games (
@@ -21,13 +21,14 @@ export async function upsertGame(env, gameNumber, code, name, playerUid = null) 
       code,
       name,
       player_uid,
+      owner,
       enabled,
       key_status,
       key_status_message,
       created_at,
       updated_at
     )
-    VALUES (?, ?, ?, ?, 1, 'valid', 'Saved key worked on the last successful scan.', ?, ?)
+    VALUES (?, ?, ?, ?, ?, 1, 'valid', 'Saved key worked on the last successful scan.', ?, ?)
     ON CONFLICT(game_number) DO UPDATE SET
       code = excluded.code,
       name = excluded.name,
@@ -38,7 +39,7 @@ export async function upsertGame(env, gameNumber, code, name, playerUid = null) 
       key_status = 'valid',
       key_status_message = 'Saved key worked on the last successful scan.',
       updated_at = excluded.updated_at
-  `).bind(gameNumber, code, name, playerUid, timestamp, timestamp).run();
+  `).bind(gameNumber, code, name, playerUid, owner, timestamp, timestamp).run();
 }
 
 export async function updateGameAfterScan(env, gameNumber, scanningData, { finished = false, players = true } = {}) {
@@ -107,22 +108,23 @@ export async function backfillGamePlayers(env, limit = 3) {
 // and/or present in your other tracked games, with how they related to you
 // there (formal alliance, stars taken either way).
 export async function knownPlayers(env, gameNumber) {
-  const game = await env.DB.prepare(`SELECT player_uid FROM games WHERE game_number = ?`).bind(gameNumber).first();
+  const game = await env.DB.prepare(`SELECT player_uid, owner FROM games WHERE game_number = ?`).bind(gameNumber).first();
+  const owner = game?.owner || "admin";
   const here = (await env.DB.prepare(`SELECT alias_key, alias, uid FROM game_players WHERE game_number = ?`).bind(gameNumber).all()).results
     .filter((row) => row.uid !== game?.player_uid);
   if (!here.length) return [];
   const keys = JSON.stringify(here.map((row) => row.alias_key));
 
   const notes = (await env.DB.prepare(`
-    SELECT * FROM player_notes WHERE alias_key IN (SELECT value FROM json_each(?))
-  `).bind(keys).all()).results.map(playerNoteFromRow);
+    SELECT * FROM player_notes WHERE owner = ? AND alias_key IN (SELECT value FROM json_each(?))
+  `).bind(owner, keys).all()).results.map(playerNoteFromRow);
 
   const elsewhere = (await env.DB.prepare(`
     SELECT gp.alias_key, gp.uid, gp.game_number, g.name, g.nickname, g.player_uid AS my_uid, g.finished_at, g.archived_at, g.last_tick
     FROM game_players gp
     JOIN games g ON g.game_number = gp.game_number
-    WHERE gp.alias_key IN (SELECT value FROM json_each(?)) AND gp.game_number != ?
-  `).bind(keys, gameNumber).all()).results;
+    WHERE gp.alias_key IN (SELECT value FROM json_each(?)) AND gp.game_number != ? AND g.owner = ?
+  `).bind(keys, gameNumber, owner).all()).results;
 
   const gameNumbers = JSON.stringify([...new Set(elsewhere.map((row) => row.game_number))]);
   const relationRowsFound = elsewhere.length ? (await env.DB.prepare(`
@@ -219,12 +221,13 @@ export async function saveSnapshot(env, gameNumber, scanningData, source, { pinn
   return snapshot;
 }
 
-export async function listGames(env) {
+export async function listGames(env, owner) {
   const rows = await env.DB.prepare(`
     SELECT *
     FROM games
+    WHERE owner = ?
     ORDER BY COALESCE(last_sync_at, created_at) DESC
-  `).all();
+  `).bind(owner).all();
   return rows.results.map(gameFromRow);
 }
 
@@ -265,6 +268,7 @@ export async function purgeGame(env, gameNumber) {
   await env.DB.prepare(`DELETE FROM relation_events WHERE game_number = ?`).bind(gameNumber).run();
   await env.DB.prepare(`DELETE FROM relations WHERE game_number = ?`).bind(gameNumber).run();
   await env.DB.prepare(`DELETE FROM scan_attempts WHERE game_number = ?`).bind(gameNumber).run();
+  await env.DB.prepare(`DELETE FROM threats WHERE game_number = ?`).bind(gameNumber).run();
   await env.DB.prepare(`DELETE FROM snapshots WHERE game_number = ?`).bind(gameNumber).run();
   await env.DB.prepare(`DELETE FROM games WHERE game_number = ?`).bind(gameNumber).run();
 }
@@ -338,6 +342,7 @@ export async function pruneInactiveGames(env, staleHours) {
       AND finished_at IS NULL
       AND key_status = 'needs_fresh_key'
       AND COALESCE(last_sync_at, created_at) < ?
+      AND owner = 'admin'
       AND ${RELATIONS_CAUGHT_UP}
       AND exported_at IS NOT NULL
   `).bind(cutoff).all();
@@ -361,6 +366,22 @@ export async function pruneInactiveGames(env, staleHours) {
       )
   `).run();
   await env.DB.prepare(`DELETE FROM scan_attempts WHERE attempted_at < ?`).bind(cutoff).run();
+
+  // Testers' games are not archived: erased completely a day after they
+  // finish, are deleted, or stop scanning.
+  const dayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+  const done = await env.DB.prepare(`
+    SELECT game_number FROM games
+    WHERE owner != 'admin'
+      AND (
+        finished_at < ?
+        OR archived_at < ?
+        OR (key_status = 'needs_fresh_key' AND COALESCE(last_sync_at, created_at) < ?)
+      )
+  `).bind(dayAgo, dayAgo, cutoff).all();
+  for (const row of done.results) {
+    await purgeGame(env, row.game_number);
+  }
 }
 
 // Feeds up to `limit` not-yet-processed snapshots (oldest first) through
@@ -490,6 +511,7 @@ export async function gamesReadyForArchive(env, staleHours) {
         OR finished_at IS NOT NULL
         OR (key_status = 'needs_fresh_key' AND COALESCE(last_sync_at, created_at) < ?)
       )
+      AND owner = 'admin'
       AND ${RELATIONS_CAUGHT_UP}
   `).bind(cutoff).all();
   return rows.results.map(gameFromRow);
@@ -608,6 +630,7 @@ export async function enabledGamesWithCodes(env) {
       AND key_status != 'needs_fresh_key'
       AND archived_at IS NULL
       AND finished_at IS NULL
+      AND owner NOT IN (SELECT id FROM users WHERE disabled = 1)
   `).all();
 
   return rows.results.map((row) => {
@@ -736,6 +759,8 @@ function gameFromRow(row) {
     archiveRef: row.archive_ref || null,
     relationSnapshots: row.relation_snapshots ?? 0,
     finishedAt: row.finished_at || null,
+    owner: row.owner || "admin",
+    npNumber: npNumber(row.game_number),
     apiKeyPreview: maskKey(row.code)
   };
 }
@@ -768,21 +793,22 @@ export function aliasKey(alias) {
   return String(alias || "").trim().toLowerCase();
 }
 
-export async function listPlayerNotes(env) {
+export async function listPlayerNotes(env, owner) {
   const rows = await env.DB.prepare(`
     SELECT *
     FROM player_notes
+    WHERE owner = ?
     ORDER BY updated_at DESC
-  `).all();
+  `).bind(owner).all();
   return rows.results.map(playerNoteFromRow);
 }
 
 // Upserts a rating/note. `game` ({ gameNumber, gameName }) is appended to the
 // list of games the player was rated from, so the Players page can show where
 // you met them.
-export async function savePlayerNote(env, { alias, rating, note, game }) {
+export async function savePlayerNote(env, owner, { alias, rating, note, game }) {
   const key = aliasKey(alias);
-  const existing = await env.DB.prepare(`SELECT * FROM player_notes WHERE alias_key = ?`).bind(key).first();
+  const existing = await env.DB.prepare(`SELECT * FROM player_notes WHERE owner = ? AND alias_key = ?`).bind(owner, key).first();
   const games = existing ? JSON.parse(existing.games_json || "[]") : [];
   if (game?.gameNumber && !games.some((item) => String(item.gameNumber) === String(game.gameNumber))) {
     games.push({ gameNumber: String(game.gameNumber), gameName: String(game.gameName || `Game ${game.gameNumber}`) });
@@ -790,15 +816,16 @@ export async function savePlayerNote(env, { alias, rating, note, game }) {
 
   const timestamp = nowIso();
   await env.DB.prepare(`
-    INSERT INTO player_notes (alias_key, alias, rating, note, games_json, created_at, updated_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
-    ON CONFLICT(alias_key) DO UPDATE SET
+    INSERT INTO player_notes (owner, alias_key, alias, rating, note, games_json, created_at, updated_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(owner, alias_key) DO UPDATE SET
       alias = excluded.alias,
       rating = excluded.rating,
       note = excluded.note,
       games_json = excluded.games_json,
       updated_at = excluded.updated_at
   `).bind(
+    owner,
     key,
     String(alias).trim(),
     Math.max(-1, Math.min(1, Number(rating) || 0)),
@@ -808,11 +835,11 @@ export async function savePlayerNote(env, { alias, rating, note, game }) {
     timestamp
   ).run();
 
-  return playerNoteFromRow(await env.DB.prepare(`SELECT * FROM player_notes WHERE alias_key = ?`).bind(key).first());
+  return playerNoteFromRow(await env.DB.prepare(`SELECT * FROM player_notes WHERE owner = ? AND alias_key = ?`).bind(owner, key).first());
 }
 
-export async function deletePlayerNote(env, alias) {
-  await env.DB.prepare(`DELETE FROM player_notes WHERE alias_key = ?`).bind(aliasKey(alias)).run();
+export async function deletePlayerNote(env, owner, alias) {
+  await env.DB.prepare(`DELETE FROM player_notes WHERE owner = ? AND alias_key = ?`).bind(owner, aliasKey(alias)).run();
 }
 
 function playerNoteFromRow(row) {
@@ -928,15 +955,16 @@ export async function listThreats(env, gameNumber) {
 }
 
 // Open threats across all games (for the in-app notification bell).
-export async function openThreats(env) {
+export async function openThreats(env, owner) {
   const rows = (await env.DB.prepare(`
     SELECT t.*, g.name AS game_name, g.nickname AS game_nickname, g.last_tick AS game_tick
     FROM threats t JOIN games g ON g.game_number = t.game_number
     WHERE t.status = 'open'
       AND g.finished_at IS NULL
       AND g.archived_at IS NULL
+      AND g.owner = ?
     ORDER BY t.first_tick DESC
-  `).all()).results;
+  `).bind(owner).all()).results;
   return rows.map((row) => ({
     gameNumber: row.game_number,
     gameTitle: row.game_nickname || row.game_name,
@@ -959,8 +987,8 @@ export async function openThreats(env) {
   }));
 }
 
-export async function openThreatCounts(env) {
-  const rows = (await env.DB.prepare(`SELECT t.game_number, COUNT(*) AS n FROM threats t JOIN games g ON g.game_number = t.game_number WHERE t.status = 'open' AND g.finished_at IS NULL AND g.archived_at IS NULL GROUP BY t.game_number`).all()).results;
+export async function openThreatCounts(env, owner) {
+  const rows = (await env.DB.prepare(`SELECT t.game_number, COUNT(*) AS n FROM threats t JOIN games g ON g.game_number = t.game_number WHERE t.status = 'open' AND g.finished_at IS NULL AND g.archived_at IS NULL AND g.owner = ? GROUP BY t.game_number`).bind(owner).all()).results;
   return Object.fromEntries(rows.map((row) => [row.game_number, row.n]));
 }
 
@@ -1032,4 +1060,83 @@ export async function playerActivityHistory(env, gameNumber, uid) {
     anchor: times?.last_at ? { tick: times.last_snapshot_tick, at: times.last_at } : null,
     firstAt: times?.first_at ?? null
   };
+}
+
+// A tester's copy of a game is stored as "<game number>~<user id>"; NP only
+// knows the number.
+export function npNumber(gameKey) {
+  return String(gameKey).split("~")[0];
+}
+
+export async function gameOwner(env, gameNumber) {
+  return (await env.DB.prepare(`SELECT owner FROM games WHERE game_number = ?`).bind(gameNumber).first())?.owner ?? null;
+}
+
+export async function snapshotOwner(env, snapshotId) {
+  return (await env.DB.prepare(`
+    SELECT g.owner FROM snapshots s JOIN games g ON g.game_number = s.game_number WHERE s.id = ?
+  `).bind(snapshotId).first())?.owner ?? null;
+}
+
+// Usage stats: one counter row per user, day and event (an upsert, so a
+// busy day costs one row per event type, not one per click).
+export async function trackEvent(env, owner, event) {
+  const name = String(event || "").slice(0, 40);
+  if (!name) return;
+  await env.DB.prepare(`
+    INSERT INTO usage_events (owner, day, event, count) VALUES (?, ?, ?, 1)
+    ON CONFLICT(owner, day, event) DO UPDATE SET count = count + 1
+  `).bind(owner, nowIso().slice(0, 10), name).run();
+}
+
+export async function usageByUser(env, days = 30) {
+  const since = new Date(Date.now() - days * 86400000).toISOString().slice(0, 10);
+  return (await env.DB.prepare(`
+    SELECT owner, day, event, count FROM usage_events WHERE day >= ? ORDER BY day DESC
+  `).bind(since).all()).results;
+}
+
+export async function addFeedback(env, owner, page, message) {
+  await env.DB.prepare(`INSERT INTO feedback (owner, page, message, created_at) VALUES (?, ?, ?, ?)`)
+    .bind(owner, String(page || "").slice(0, 200), String(message).slice(0, 5000), nowIso()).run();
+}
+
+export async function listFeedback(env) {
+  return (await env.DB.prepare(`
+    SELECT f.*, u.username FROM feedback f LEFT JOIN users u ON u.id = f.owner ORDER BY f.created_at DESC LIMIT 200
+  `).all()).results.map((row) => ({ id: row.id, owner: row.owner, username: row.username || row.owner, page: row.page, message: row.message, createdAt: row.created_at }));
+}
+
+export async function deleteFeedback(env, id) {
+  await env.DB.prepare(`DELETE FROM feedback WHERE id = ?`).bind(Number(id)).run();
+}
+
+export async function listUsers(env) {
+  return (await env.DB.prepare(`SELECT * FROM users ORDER BY role = 'admin' DESC, created_at`).all()).results;
+}
+
+export async function gamesByOwner(env) {
+  return (await env.DB.prepare(`
+    SELECT game_number, owner, name, nickname, last_tick, last_sync_at, finished_at, archived_at, key_status FROM games
+  `).all()).results.map((row) => ({
+    gameNumber: row.game_number,
+    npNumber: npNumber(row.game_number),
+    owner: row.owner,
+    title: row.nickname || row.name,
+    lastTick: row.last_tick,
+    lastSyncAt: row.last_sync_at,
+    finished: Boolean(row.finished_at),
+    deleted: Boolean(row.archived_at),
+    keyStatus: row.key_status
+  }));
+}
+
+export async function purgeUserData(env, owner, { notes = false } = {}) {
+  const games = (await env.DB.prepare(`SELECT game_number FROM games WHERE owner = ?`).bind(owner).all()).results;
+  for (const row of games) await purgeGame(env, row.game_number);
+  if (notes) {
+    await env.DB.prepare(`DELETE FROM player_notes WHERE owner = ?`).bind(owner).run();
+    await env.DB.prepare(`DELETE FROM usage_events WHERE owner = ?`).bind(owner).run();
+  }
+  return games.length;
 }

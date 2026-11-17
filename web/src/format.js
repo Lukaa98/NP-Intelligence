@@ -21,7 +21,7 @@ export function gameTitle(game, gameNumber) {
 export function gameFacts(game) {
   const parts = [];
   if (game.nickname && game.name) parts.push(game.name);
-  parts.push(`#${game.gameNumber}`);
+  parts.push(`#${game.npNumber || game.gameNumber}`);
   if (game.playerCount) parts.push(`${game.playerCount} players`);
   if (game.myAlias) parts.push(`you: ${game.myAlias}`);
   return parts.join(" · ");

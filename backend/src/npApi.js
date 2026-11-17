@@ -10,7 +10,8 @@ export class NeptuneApiError extends Error {
 
 export async function fetchScan(gameNumber, code) {
   const url = new URL(NP_API_URL);
-  url.searchParams.set("game_number", String(gameNumber).trim());
+  // A tester's copy is stored as "<number>~<user>"; NP only knows the number.
+  url.searchParams.set("game_number", String(gameNumber).split("~")[0].trim());
   url.searchParams.set("code", String(code).trim());
 
   const response = await fetch(url.toString(), {

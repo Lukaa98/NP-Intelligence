@@ -1,4 +1,5 @@
 import { sendNtfy, threatNotification } from "./alerts.js";
+import { ADMIN_ID, AuthError, cleanGameNumber, cleanPassword, cleanUsername, createUser, hashPassword, login, needsSetup, userFromRequest, userFromRow } from "./auth.js";
 import { budgetState, countingEnv, DAILY_WRITE_LIMIT, HARD_LIMIT, recordUsage, SOFT_LIMIT, today, usageToday } from "./budget.js";
 import { buildDiplomacy } from "./diplomacy.js";
 import { detectThreats } from "./threats.js";
@@ -48,7 +49,17 @@ import {
   setNickname,
   unpinSnapshot,
   updateGameAfterScan,
-  upsertGame
+  upsertGame,
+  addFeedback,
+  deleteFeedback,
+  gameOwner,
+  gamesByOwner,
+  listFeedback,
+  listUsers,
+  purgeUserData,
+  snapshotOwner,
+  trackEvent,
+  usageByUser
 } from "./store.js";
 
 // A live game whose scans have failed for this long is treated as gone (NP
@@ -66,7 +77,7 @@ const RELATION_BATCH_REQUEST = 3;
 const CORS_HEADERS = {
   "access-control-allow-origin": "*",
   "access-control-allow-methods": "GET,POST,PUT,DELETE,OPTIONS",
-  "access-control-allow-headers": "content-type,authorization"
+  "access-control-allow-headers": "content-type,authorization,x-view-as"
 };
 
 export default {
@@ -124,6 +135,93 @@ async function handleFetch(request, env, ctx, budget) {
     }
 
     try {
+      if (request.method === "GET" && url.pathname === "/health") {
+        return json({
+          ok: true,
+          schedulerEnabled: true,
+          staleGameHours: STALE_GAME_HOURS,
+          loginRequired: true
+        });
+      }
+
+      if (request.method === "GET" && url.pathname === "/api/auth/status") {
+        return json({ needsSetup: await needsSetup(env), setupNeedsToken: Boolean(env.ADMIN_TOKEN) });
+      }
+
+      // First run: create the admin account. Guarded by the existing write
+      // token (ADMIN_TOKEN) so nobody else can claim the site first.
+      if (request.method === "POST" && url.pathname === "/api/auth/setup") {
+        if (!(await needsSetup(env))) {
+          return json({ error: "The admin account already exists. Log in instead." }, 409);
+        }
+        const payload = await request.json().catch(() => ({}));
+        if (env.ADMIN_TOKEN && String(payload.writeToken || "").trim() !== env.ADMIN_TOKEN) {
+          return json({ error: "Write token missing or wrong." }, 401);
+        }
+        const username = cleanUsername(payload.username);
+        const password = cleanPassword(payload.password);
+        await createUser(env, { id: ADMIN_ID, username, password, role: "admin" });
+        return json(await login(env, username, password));
+      }
+
+      if (request.method === "POST" && url.pathname === "/api/auth/login") {
+        const payload = await request.json().catch(() => ({}));
+        const result = await login(env, payload.username, payload.password);
+        if (!result.user.isAdmin) await trackEvent(env, result.user.id, "login");
+        return json(result);
+      }
+
+      const caller = await userFromRequest(env, request);
+      if (!caller) {
+        return json({ error: "Please log in.", login: true }, 401);
+      }
+      // The admin can look at the site exactly as one tester sees it.
+      let user = caller;
+      const viewAs = request.headers.get("x-view-as");
+      if (viewAs && caller.isAdmin && viewAs !== caller.id) {
+        const row = await env.DB.prepare(`SELECT * FROM users WHERE id = ?`).bind(viewAs).first();
+        if (row) user = userFromRow(row);
+      }
+      const owner = user.id;
+      const track = (event) => (caller.isAdmin ? null : trackEvent(env, caller.id, event));
+
+      // Game and snapshot routes: only the game's owner (or the admin).
+      const gamePath = url.pathname.match(/^\/api\/games\/([^/]+)/);
+      const snapshotPath = url.pathname.match(/^\/api\/snapshots\/([^/]+)/);
+      const ownerOfTarget = gamePath ? await gameOwner(env, decodeURIComponent(gamePath[1]))
+        : snapshotPath ? await snapshotOwner(env, decodeURIComponent(snapshotPath[1])) : null;
+      if (ownerOfTarget && ownerOfTarget !== owner && !caller.isAdmin) {
+        return json({ error: gamePath ? "Game not found" : "Snapshot not found" }, 404);
+      }
+
+      if (request.method === "GET" && url.pathname === "/api/auth/me") {
+        return json({ user: caller, viewingAs: user.id !== caller.id ? user : null });
+      }
+
+      if (request.method === "POST" && url.pathname === "/api/track") {
+        const payload = await request.json().catch(() => ({}));
+        if (/^[a-z0-9_:-]{1,40}$/.test(String(payload.event || ""))) await track(payload.event);
+        return json({ ok: true });
+      }
+
+      if (request.method === "POST" && url.pathname === "/api/feedback") {
+        const payload = await request.json().catch(() => ({}));
+        const message = String(payload.message || "").trim();
+        if (!message) return json({ error: "Write something first." }, 400);
+        await addFeedback(env, caller.id, payload.page, message);
+        return json({ ok: true });
+      }
+
+      const adminResponse = await handleAdmin(request, env, url, caller);
+      if (adminResponse) return adminResponse;
+
+      // Everything below that isn't about the caller's own games is admin-only.
+      const adminOnly = url.pathname === "/api/usage" || url.pathname === "/api/settings" || url.pathname === "/api/alerts/test"
+        || url.pathname === "/api/archive/pending" || matchPath(url.pathname, "/api/games/:gameNumber/exported");
+      if (adminOnly && !caller.isAdmin) {
+        return json({ error: "Admin only." }, 403);
+      }
+
       if (request.method === "GET" && url.pathname === "/api/usage") {
         const rowsWritten = await usageToday(env);
         return json({ day: today(), rowsWritten, limit: DAILY_WRITE_LIMIT, softLimit: SOFT_LIMIT, hardLimit: HARD_LIMIT, state: budgetState(rowsWritten) });
@@ -140,22 +238,6 @@ async function handleFetch(request, env, ctx, budget) {
       }
       if (request.method === "POST" && matchPath(url.pathname, "/api/games/:gameNumber/relations/process") && budget !== "ok") {
         return json({ error: BUDGET_MESSAGES[budget], budget }, 429);
-      }
-
-      if (request.method === "GET" && url.pathname === "/health") {
-        return json({
-          ok: true,
-          schedulerEnabled: true,
-          scanIntervalHours: 1,
-          staleGameHours: STALE_GAME_HOURS,
-          writeTokenRequired: Boolean(env.ADMIN_TOKEN)
-        });
-      }
-
-      // The dashboard is a public GitHub Pages site, so when ADMIN_TOKEN is set
-      // every write must carry it. Reads stay open (API codes are masked).
-      if (request.method !== "GET" && env.ADMIN_TOKEN && request.headers.get("authorization") !== `Bearer ${env.ADMIN_TOKEN}`) {
-        return json({ error: "Write token missing or wrong. Set it in the dashboard settings." }, 401);
       }
 
       if (request.method === "GET" && url.pathname === "/api/settings") {
@@ -191,7 +273,7 @@ async function handleFetch(request, env, ctx, budget) {
       }
 
       if (request.method === "GET" && url.pathname === "/api/threats") {
-        return json({ counts: await openThreatCounts(env), threats: await openThreats(env) });
+        return json({ counts: await openThreatCounts(env, owner), threats: await openThreats(env, owner) });
       }
 
       if (request.method === "GET" && matchPath(url.pathname, "/api/games/:gameNumber/threats")) {
@@ -211,7 +293,7 @@ async function handleFetch(request, env, ctx, budget) {
       }
 
       if (request.method === "GET" && url.pathname === "/api/players") {
-        return json({ players: await listPlayerNotes(env) });
+        return json({ players: await listPlayerNotes(env, owner) });
       }
 
       if (request.method === "PUT" && url.pathname === "/api/players") {
@@ -219,12 +301,12 @@ async function handleFetch(request, env, ctx, budget) {
         if (!String(payload.alias || "").trim()) {
           return json({ error: "alias is required" }, 400);
         }
-        return json({ player: await savePlayerNote(env, payload) });
+        return json({ player: await savePlayerNote(env, owner, payload) });
       }
 
       if (request.method === "DELETE" && matchPath(url.pathname, "/api/players/:alias")) {
         const { alias } = pathParams(url.pathname, "/api/players/:alias");
-        await deletePlayerNote(env, alias);
+        await deletePlayerNote(env, owner, alias);
         return json({ ok: true });
       }
 
@@ -248,15 +330,17 @@ async function handleFetch(request, env, ctx, budget) {
       }
 
       if (request.method === "POST" && url.pathname === "/api/games") {
-        return createGame(request, env);
+        await track("add_game");
+        return createGame(request, env, user);
       }
 
       if (request.method === "GET" && url.pathname === "/api/games") {
-        return json({ games: await listGames(env) });
+        return json({ games: await listGames(env, owner) });
       }
 
       if (request.method === "POST" && matchPath(url.pathname, "/api/games/:gameNumber/scan")) {
         const { gameNumber } = pathParams(url.pathname, "/api/games/:gameNumber/scan");
+        await track("scan");
         return scanGame(env, gameNumber);
       }
 
@@ -275,6 +359,7 @@ async function handleFetch(request, env, ctx, budget) {
 
       if (request.method === "POST" && matchPath(url.pathname, "/api/games/:gameNumber/capture")) {
         const { gameNumber } = pathParams(url.pathname, "/api/games/:gameNumber/capture");
+        await track("capture");
         return captureGame(env, gameNumber);
       }
 
@@ -369,19 +454,108 @@ async function handleFetch(request, env, ctx, budget) {
 
       return json({ error: "Not found" }, 404);
     } catch (error) {
+      if (error instanceof AuthError) return json({ error: error.message }, error.status);
       return json({ error: error.message || String(error) }, 500);
     }
 }
 
-async function createGame(request, env) {
+// Admin page: testers, their games and usage, and feedback.
+async function handleAdmin(request, env, url, caller) {
+  if (!url.pathname.startsWith("/api/admin/")) return null;
+  if (!caller.isAdmin) return json({ error: "Admin only." }, 403);
+
+  if (request.method === "GET" && url.pathname === "/api/admin/users") {
+    const [rows, games, usage] = await Promise.all([listUsers(env), gamesByOwner(env), usageByUser(env, 30)]);
+    return json({
+      users: rows.map((row) => {
+        const mine = usage.filter((item) => item.owner === row.id);
+        const totals = {};
+        for (const item of mine) totals[item.event] = (totals[item.event] || 0) + item.count;
+        return {
+          ...userFromRow(row),
+          games: games.filter((game) => game.owner === row.id),
+          usage: { totals, activeDays: new Set(mine.map((item) => item.day)).size, lastActiveDay: mine[0]?.day || null, byDay: mine }
+        };
+      })
+    });
+  }
+
+  if (request.method === "POST" && url.pathname === "/api/admin/users") {
+    const payload = await request.json().catch(() => ({}));
+    const username = cleanUsername(payload.username);
+    const id = username.toLowerCase();
+    if (id === ADMIN_ID) return json({ error: "That username is reserved." }, 400);
+    if (await env.DB.prepare(`SELECT 1 FROM users WHERE id = ? OR username = ?`).bind(id, username).first()) {
+      return json({ error: `User ${username} already exists.` }, 409);
+    }
+    const user = await createUser(env, { id, username, password: cleanPassword(payload.password), lockedGame: cleanGameNumber(payload.lockedGame) });
+    return json({ user });
+  }
+
+  const userPath = url.pathname.match(/^\/api\/admin\/users\/([^/]+)(\/games)?$/);
+  if (userPath) {
+    const id = decodeURIComponent(userPath[1]);
+    const row = await env.DB.prepare(`SELECT * FROM users WHERE id = ?`).bind(id).first();
+    if (!row) return json({ error: "User not found" }, 404);
+
+    if (request.method === "PUT" && !userPath[2]) {
+      const payload = await request.json().catch(() => ({}));
+      if (payload.password !== undefined) {
+        const { hash, salt } = await hashPassword(cleanPassword(payload.password));
+        await env.DB.prepare(`UPDATE users SET password_hash = ?, salt = ? WHERE id = ?`).bind(hash, salt, id).run();
+      }
+      if (payload.lockedGame !== undefined && row.role !== "admin") {
+        await env.DB.prepare(`UPDATE users SET locked_game = ? WHERE id = ?`).bind(cleanGameNumber(payload.lockedGame), id).run();
+      }
+      if (payload.disabled !== undefined && row.role !== "admin") {
+        await env.DB.prepare(`UPDATE users SET disabled = ? WHERE id = ?`).bind(payload.disabled ? 1 : 0, id).run();
+      }
+      return json({ user: userFromRow(await env.DB.prepare(`SELECT * FROM users WHERE id = ?`).bind(id).first()) });
+    }
+
+    if (request.method === "DELETE" && userPath[2]) {
+      return json({ erased: await purgeUserData(env, id) });
+    }
+
+    if (request.method === "DELETE" && !userPath[2]) {
+      if (row.role === "admin") return json({ error: "The admin account can't be deleted." }, 400);
+      const erased = await purgeUserData(env, id, { notes: true });
+      await env.DB.prepare(`DELETE FROM users WHERE id = ?`).bind(id).run();
+      return json({ erased });
+    }
+  }
+
+  if (request.method === "GET" && url.pathname === "/api/admin/feedback") {
+    return json({ feedback: await listFeedback(env) });
+  }
+
+  const feedbackPath = url.pathname.match(/^\/api\/admin\/feedback\/(\d+)$/);
+  if (request.method === "DELETE" && feedbackPath) {
+    await deleteFeedback(env, feedbackPath[1]);
+    return json({ ok: true });
+  }
+
+  return json({ error: "Not found" }, 404);
+}
+
+async function createGame(request, env, user) {
   const payload = await request.json();
-  const gameNumber = String(payload.game_number || "").trim();
+  const number = String(payload.game_number || "").trim();
   const code = String(payload.code || "").trim();
   const nickname = String(payload.name || "").trim();
 
-  if (!gameNumber || !code) {
+  if (!number || !code) {
     return json({ error: "game_number and code are required" }, 400);
   }
+  if (!/^\d{1,20}$/.test(number)) {
+    return json({ error: "Game number must be digits only." }, 400);
+  }
+  if (user.lockedGame && number !== user.lockedGame) {
+    return json({ error: `Your account is set up for game ${user.lockedGame} only.` }, 403);
+  }
+  // The admin's games keep their plain number; a tester's copy of a game
+  // gets its own key so two people can track the same game separately.
+  const gameNumber = user.id === ADMIN_ID ? number : `${number}~${user.id}`;
 
   let scanningData;
   try {
@@ -396,7 +570,7 @@ async function createGame(request, env) {
 
   const existing = await getGame(env, gameNumber);
   const name = scanningData.name || scanningData.config?.name || `Game ${gameNumber}`;
-  await upsertGame(env, gameNumber, code, name, scanningData.playerUid ?? null);
+  await upsertGame(env, gameNumber, code, name, scanningData.playerUid ?? null, user.id);
   // The form's "Name" is your own label; NP's name is refreshed by every scan.
   if (nickname) {
     await setNickname(env, gameNumber, nickname);
