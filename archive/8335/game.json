@@ -1,0 +1,4173 @@
+{
+ "game": {
+  "gameNumber": "8335",
+  "name": "Iota Azha",
+  "playerUid": 5,
+  "enabled": true,
+  "keyStatus": "needs_fresh_key",
+  "keyStatusMessage": "NP API status 200",
+  "lastTick": 237,
+  "lastSyncAt": "2026-08-23T00:00:33.813Z",
+  "lastErrorAt": "2026-08-23T06:00:38.521Z",
+  "createdAt": "2026-08-14T19:09:18.106Z",
+  "updatedAt": "2026-10-29T16:43:02.652Z",
+  "archivedAt": "2026-10-29T16:43:02.652Z",
+  "nickname": "",
+  "playerCount": null,
+  "myAlias": "",
+  "relationTick": 237,
+  "exportedAt": null,
+  "archiveRef": null,
+  "relationSnapshots": 34,
+  "finishedAt": null,
+  "owner": "admin",
+  "npNumber": "8335",
+  "apiKeyPreview": "S3I****nOo"
+ },
+ "frames": [
+  {
+   "id": "8335-40-1786734558158",
+   "tick": 40,
+   "capturedAt": "2026-08-14T19:09:18.158Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/40.json"
+  },
+  {
+   "id": "8335-45-1786752051798",
+   "tick": 45,
+   "capturedAt": "2026-08-15T00:00:51.798Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/45.json"
+  },
+  {
+   "id": "8335-51-1786773650750",
+   "tick": 51,
+   "capturedAt": "2026-08-15T06:00:50.750Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/51.json"
+  },
+  {
+   "id": "8335-57-1786795241669",
+   "tick": 57,
+   "capturedAt": "2026-08-15T12:00:41.669Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/57.json"
+  },
+  {
+   "id": "8335-63-1786816810219",
+   "tick": 63,
+   "capturedAt": "2026-08-15T18:00:10.219Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/63.json"
+  },
+  {
+   "id": "8335-69-1786838409735",
+   "tick": 69,
+   "capturedAt": "2026-08-16T00:00:09.735Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/69.json"
+  },
+  {
+   "id": "8335-75-1786860009667",
+   "tick": 75,
+   "capturedAt": "2026-08-16T06:00:09.667Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/75.json"
+  },
+  {
+   "id": "8335-81-1786881609655",
+   "tick": 81,
+   "capturedAt": "2026-08-16T12:00:09.655Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/81.json"
+  },
+  {
+   "id": "8335-87-1786903212952",
+   "tick": 87,
+   "capturedAt": "2026-08-16T18:00:12.952Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/87.json"
+  },
+  {
+   "id": "8335-93-1786924810006",
+   "tick": 93,
+   "capturedAt": "2026-08-17T00:00:10.006Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/93.json"
+  },
+  {
+   "id": "8335-99-1786946412523",
+   "tick": 99,
+   "capturedAt": "2026-08-17T06:00:12.523Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/99.json"
+  },
+  {
+   "id": "8335-105-1786968013613",
+   "tick": 105,
+   "capturedAt": "2026-08-17T12:00:13.613Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/105.json"
+  },
+  {
+   "id": "8335-111-1786989614691",
+   "tick": 111,
+   "capturedAt": "2026-08-17T18:00:14.691Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/111.json"
+  },
+  {
+   "id": "8335-117-1787011252157",
+   "tick": 117,
+   "capturedAt": "2026-08-18T00:00:52.157Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/117.json"
+  },
+  {
+   "id": "8335-123-1787032850401",
+   "tick": 123,
+   "capturedAt": "2026-08-18T06:00:50.401Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/123.json"
+  },
+  {
+   "id": "8335-129-1787054451238",
+   "tick": 129,
+   "capturedAt": "2026-08-18T12:00:51.238Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/129.json"
+  },
+  {
+   "id": "8335-135-1787076051521",
+   "tick": 135,
+   "capturedAt": "2026-08-18T18:00:51.521Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/135.json"
+  },
+  {
+   "id": "8335-141-1787097652462",
+   "tick": 141,
+   "capturedAt": "2026-08-19T00:00:52.462Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/141.json"
+  },
+  {
+   "id": "8335-147-1787119250531",
+   "tick": 147,
+   "capturedAt": "2026-08-19T06:00:50.531Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/147.json"
+  },
+  {
+   "id": "8335-153-1787140849721",
+   "tick": 153,
+   "capturedAt": "2026-08-19T12:00:49.721Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/153.json"
+  },
+  {
+   "id": "8335-159-1787162450845",
+   "tick": 159,
+   "capturedAt": "2026-08-19T18:00:50.845Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/159.json"
+  },
+  {
+   "id": "8335-165-1787184052204",
+   "tick": 165,
+   "capturedAt": "2026-08-20T00:00:52.204Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/165.json"
+  },
+  {
+   "id": "8335-171-1787205652884",
+   "tick": 171,
+   "capturedAt": "2026-08-20T06:00:52.884Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/171.json"
+  },
+  {
+   "id": "8335-177-1787227249206",
+   "tick": 177,
+   "capturedAt": "2026-08-20T12:00:49.206Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/177.json"
+  },
+  {
+   "id": "8335-183-1787248849359",
+   "tick": 183,
+   "capturedAt": "2026-08-20T18:00:49.359Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/183.json"
+  },
+  {
+   "id": "8335-189-1787270447867",
+   "tick": 189,
+   "capturedAt": "2026-08-21T00:00:47.867Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/189.json"
+  },
+  {
+   "id": "8335-195-1787292047863",
+   "tick": 195,
+   "capturedAt": "2026-08-21T06:00:47.863Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/195.json"
+  },
+  {
+   "id": "8335-201-1787313633880",
+   "tick": 201,
+   "capturedAt": "2026-08-21T12:00:33.880Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/201.json"
+  },
+  {
+   "id": "8335-207-1787335234041",
+   "tick": 207,
+   "capturedAt": "2026-08-21T18:00:34.041Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/207.json"
+  },
+  {
+   "id": "8335-213-1787356833498",
+   "tick": 213,
+   "capturedAt": "2026-08-22T00:00:33.498Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/213.json"
+  },
+  {
+   "id": "8335-219-1787378433445",
+   "tick": 219,
+   "capturedAt": "2026-08-22T06:00:33.445Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/219.json"
+  },
+  {
+   "id": "8335-225-1787400033502",
+   "tick": 225,
+   "capturedAt": "2026-08-22T12:00:33.502Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/225.json"
+  },
+  {
+   "id": "8335-231-1787421634007",
+   "tick": 231,
+   "capturedAt": "2026-08-22T18:00:34.007Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/231.json"
+  },
+  {
+   "id": "8335-237-1787443233674",
+   "tick": 237,
+   "capturedAt": "2026-08-23T00:00:33.674Z",
+   "label": "Last state before delete",
+   "pinned": true,
+   "file": "ticks/237.json"
+  }
+ ],
+ "diplomacy": {
+  "gameNumber": "8335",
+  "pendingSnapshots": 0,
+  "activity": {
+   "1": {
+    "status": "active",
+    "day": {
+     "infra": 35,
+     "carriers": 2,
+     "orders": 12,
+     "captures": 2
+    },
+    "twoDays": {
+     "infra": 40,
+     "carriers": 3,
+     "orders": 24,
+     "captures": 2
+    },
+    "lastActionTick": 237,
+    "ticksSinceAction": 0,
+    "observedTicks": 197
+   },
+   "2": {
+    "status": "active",
+    "day": {
+     "infra": 12,
+     "carriers": 3,
+     "orders": 8,
+     "captures": 3
+    },
+    "twoDays": {
+     "infra": 25,
+     "carriers": 3,
+     "orders": 13,
+     "captures": 4
+    },
+    "lastActionTick": 237,
+    "ticksSinceAction": 0,
+    "observedTicks": 197
+   },
+   "3": {
+    "status": "ai",
+    "day": {
+     "infra": 0,
+     "carriers": 0,
+     "orders": 0,
+     "captures": 0
+    },
+    "twoDays": {
+     "infra": 0,
+     "carriers": 0,
+     "orders": 0,
+     "captures": 0
+    },
+    "lastActionTick": 63,
+    "ticksSinceAction": 174,
+    "observedTicks": 197
+   },
+   "4": {
+    "status": "active",
+    "day": {
+     "infra": 11,
+     "carriers": 0,
+     "orders": 12,
+     "captures": 1
+    },
+    "twoDays": {
+     "infra": 24,
+     "carriers": 5,
+     "orders": 31,
+     "captures": 3
+    },
+    "lastActionTick": 237,
+    "ticksSinceAction": 0,
+    "observedTicks": 197
+   },
+   "5": {
+    "status": "active",
+    "day": {
+     "infra": 8,
+     "carriers": 10,
+     "orders": 10,
+     "captures": 5
+    },
+    "twoDays": {
+     "infra": 21,
+     "carriers": 14,
+     "orders": 21,
+     "captures": 7
+    },
+    "lastActionTick": 237,
+    "ticksSinceAction": 0,
+    "observedTicks": 197
+   },
+   "6": {
+    "status": "active",
+    "day": {
+     "infra": 5,
+     "carriers": 4,
+     "orders": 10,
+     "captures": 1
+    },
+    "twoDays": {
+     "infra": 11,
+     "carriers": 5,
+     "orders": 22,
+     "captures": 3
+    },
+    "lastActionTick": 237,
+    "ticksSinceAction": 0,
+    "observedTicks": 197
+   },
+   "7": {
+    "status": "active",
+    "day": {
+     "infra": 29,
+     "carriers": 1,
+     "orders": 1,
+     "captures": 3
+    },
+    "twoDays": {
+     "infra": 48,
+     "carriers": 8,
+     "orders": 2,
+     "captures": 6
+    },
+    "lastActionTick": 237,
+    "ticksSinceAction": 0,
+    "observedTicks": 197
+   },
+   "8": {
+    "status": "ai",
+    "day": {
+     "infra": 2,
+     "carriers": 11,
+     "orders": 11,
+     "captures": 1
+    },
+    "twoDays": {
+     "infra": 2,
+     "carriers": 11,
+     "orders": 12,
+     "captures": 1
+    },
+    "lastActionTick": 237,
+    "ticksSinceAction": 0,
+    "observedTicks": 197
+   }
+  },
+  "players": [
+   {
+    "uid": 1,
+    "alias": "JB65536",
+    "color": 5,
+    "shape": 0,
+    "totalStars": 29,
+    "totalStrength": 2232,
+    "conceded": 0,
+    "ai": 0
+   },
+   {
+    "uid": 2,
+    "alias": "JohnJellicoe",
+    "color": 0,
+    "shape": 1,
+    "totalStars": 18,
+    "totalStrength": 838,
+    "conceded": 0,
+    "ai": 0
+   },
+   {
+    "uid": 3,
+    "alias": "MerlinDesNeiges",
+    "color": 3,
+    "shape": 2,
+    "totalStars": 0,
+    "totalStrength": 0,
+    "conceded": 3,
+    "ai": 0
+   },
+   {
+    "uid": 4,
+    "alias": "Gerval",
+    "color": 6,
+    "shape": 3,
+    "totalStars": 30,
+    "totalStrength": 1771,
+    "conceded": 0,
+    "ai": 0
+   },
+   {
+    "uid": 5,
+    "alias": "RocketCharger",
+    "color": 2,
+    "shape": 4,
+    "totalStars": 28,
+    "totalStrength": 1446,
+    "conceded": 0,
+    "ai": 0
+   },
+   {
+    "uid": 6,
+    "alias": "tb1004913",
+    "color": 7,
+    "shape": 5,
+    "totalStars": 25,
+    "totalStrength": 1430,
+    "conceded": 0,
+    "ai": 0
+   },
+   {
+    "uid": 7,
+    "alias": "Barry Waffles",
+    "color": 1,
+    "shape": 6,
+    "totalStars": 38,
+    "totalStrength": 1496,
+    "conceded": 0,
+    "ai": 0
+   },
+   {
+    "uid": 8,
+    "alias": "Micromanager",
+    "color": 4,
+    "shape": 7,
+    "totalStars": 11,
+    "totalStrength": 345,
+    "conceded": 1,
+    "ai": 1
+   }
+  ],
+  "coverage": {
+   "snapshotsProcessed": 34,
+   "latestTick": 237
+  },
+  "viewerUid": 5,
+  "pairs": [
+   {
+    "a": 4,
+    "b": 6,
+    "status": "war",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0.19,
+    "warScore": 0.99,
+    "warActive": true,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 5,
+     "routeBA": 10,
+     "routeStars": [
+      "Nunki",
+      "Ice"
+     ],
+     "capturesAB": 4,
+     "capturesBA": 4,
+     "lastCaptureTick": 231,
+     "tradeAB": 0.25,
+     "tradeBA": 1,
+     "contact": 25
+    }
+   },
+   {
+    "a": 2,
+    "b": 7,
+    "status": "war",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0.08,
+    "warScore": 1,
+    "warActive": true,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 4,
+     "routeBA": 3,
+     "routeStars": [
+      "Terebellum",
+      "Alamak"
+     ],
+     "capturesAB": 3,
+     "capturesBA": 9,
+     "lastCaptureTick": 231,
+     "tradeAB": 0.25,
+     "tradeBA": 0.25,
+     "contact": 7
+    }
+   },
+   {
+    "a": 1,
+    "b": 5,
+    "status": "allied",
+    "allied": true,
+    "confirmed": true,
+    "allyScore": 1,
+    "warScore": 0,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 4,
+     "guestShips": 215,
+     "guestStars": [
+      "Rigel"
+     ],
+     "routeAB": 0,
+     "routeBA": 9,
+     "routeStars": [
+      "Dnoces",
+      "Rigel"
+     ],
+     "capturesAB": 0,
+     "capturesBA": 0,
+     "lastCaptureTick": -1,
+     "tradeAB": 0.25,
+     "tradeBA": 1.25,
+     "contact": 34
+    }
+   },
+   {
+    "a": 2,
+    "b": 5,
+    "status": "allied",
+    "allied": true,
+    "confirmed": true,
+    "allyScore": 1,
+    "warScore": 0,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 0,
+     "routeBA": 1,
+     "routeStars": [
+      "Regulus"
+     ],
+     "capturesAB": 0,
+     "capturesBA": 0,
+     "lastCaptureTick": -1,
+     "tradeAB": 0.5,
+     "tradeBA": 0,
+     "contact": 0
+    }
+   },
+   {
+    "a": 5,
+    "b": 6,
+    "status": "allied",
+    "allied": true,
+    "confirmed": true,
+    "allyScore": 1,
+    "warScore": 0,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 0,
+     "routeBA": 0,
+     "routeStars": [],
+     "capturesAB": 0,
+     "capturesBA": 0,
+     "lastCaptureTick": -1,
+     "tradeAB": 0,
+     "tradeBA": 0.75,
+     "contact": 0
+    }
+   },
+   {
+    "a": 5,
+    "b": 8,
+    "status": "war",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0,
+    "warScore": 1,
+    "warActive": true,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 10,
+     "routeBA": 5,
+     "routeStars": [
+      "Urn",
+      "Castor",
+      "Grassias"
+     ],
+     "capturesAB": 9,
+     "capturesBA": 1,
+     "lastCaptureTick": 237,
+     "tradeAB": 0,
+     "tradeBA": 0,
+     "contact": 34
+    }
+   },
+   {
+    "a": 3,
+    "b": 4,
+    "status": "war",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0,
+    "warScore": 0.99,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 0,
+     "routeBA": 1,
+     "routeStars": [
+      "Fax"
+     ],
+     "capturesAB": 0,
+     "capturesBA": 9,
+     "lastCaptureTick": 135,
+     "tradeAB": 0,
+     "tradeBA": 0,
+     "contact": 22
+    }
+   },
+   {
+    "a": 2,
+    "b": 4,
+    "status": "war",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0,
+    "warScore": 0.89,
+    "warActive": true,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 5,
+     "routeBA": 4,
+     "routeStars": [
+      "Mira",
+      "Fax"
+     ],
+     "capturesAB": 2,
+     "capturesBA": 1,
+     "lastCaptureTick": 237,
+     "tradeAB": 0,
+     "tradeBA": 0,
+     "contact": 15
+    }
+   },
+   {
+    "a": 1,
+    "b": 7,
+    "status": "war",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0.11,
+    "warScore": 0.75,
+    "warActive": true,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 5,
+     "routeBA": 0,
+     "routeStars": [
+      "Zosma",
+      "Kochab"
+     ],
+     "capturesAB": 2,
+     "capturesBA": 0,
+     "lastCaptureTick": 237,
+     "tradeAB": 0.25,
+     "tradeBA": 0.5,
+     "contact": 0
+    }
+   },
+   {
+    "a": 1,
+    "b": 6,
+    "status": "allied",
+    "allied": true,
+    "confirmed": false,
+    "allyScore": 0.69,
+    "warScore": 0,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 1,
+     "guestBA": 0,
+     "guestShips": 101,
+     "guestStars": [
+      "Shaula"
+     ],
+     "routeAB": 5,
+     "routeBA": 0,
+     "routeStars": [
+      "Sabik"
+     ],
+     "capturesAB": 0,
+     "capturesBA": 0,
+     "lastCaptureTick": -1,
+     "tradeAB": 1,
+     "tradeBA": 1.25,
+     "contact": 0
+    }
+   },
+   {
+    "a": 3,
+    "b": 7,
+    "status": "war",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0,
+    "warScore": 0.66,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 0,
+     "routeBA": 1,
+     "routeStars": [
+      "Acubens"
+     ],
+     "capturesAB": 0,
+     "capturesBA": 2,
+     "lastCaptureTick": 171,
+     "tradeAB": 0,
+     "tradeBA": 0,
+     "contact": 1
+    }
+   },
+   {
+    "a": 3,
+    "b": 6,
+    "status": "war",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0.19,
+    "warScore": 0.39,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 0,
+     "routeBA": 0,
+     "routeStars": [],
+     "capturesAB": 1,
+     "capturesBA": 0,
+     "lastCaptureTick": 63,
+     "tradeAB": 1.25,
+     "tradeBA": 0,
+     "contact": 8
+    }
+   },
+   {
+    "a": 1,
+    "b": 2,
+    "status": "tension",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0.11,
+    "warScore": 0.36,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 6,
+     "routeBA": 0,
+     "routeStars": [
+      "Wezen"
+     ],
+     "capturesAB": 0,
+     "capturesBA": 0,
+     "lastCaptureTick": -1,
+     "tradeAB": 0,
+     "tradeBA": 0.75,
+     "contact": 31
+    }
+   },
+   {
+    "a": 2,
+    "b": 3,
+    "status": "war",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0,
+    "warScore": 0.39,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 0,
+     "routeBA": 0,
+     "routeStars": [],
+     "capturesAB": 1,
+     "capturesBA": 0,
+     "lastCaptureTick": 87,
+     "tradeAB": 0,
+     "tradeBA": 0,
+     "contact": 8
+    }
+   },
+   {
+    "a": 4,
+    "b": 7,
+    "status": "peaceful",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0.22,
+    "warScore": 0,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 0,
+     "routeBA": 0,
+     "routeStars": [],
+     "capturesAB": 0,
+     "capturesBA": 0,
+     "lastCaptureTick": -1,
+     "tradeAB": 0.25,
+     "tradeBA": 1.25,
+     "contact": 34
+    }
+   },
+   {
+    "a": 2,
+    "b": 6,
+    "status": "peaceful",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0.2,
+    "warScore": 0,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 0,
+     "routeBA": 0,
+     "routeStars": [],
+     "capturesAB": 0,
+     "capturesBA": 0,
+     "lastCaptureTick": -1,
+     "tradeAB": 0.25,
+     "tradeBA": 0.25,
+     "contact": 21
+    }
+   },
+   {
+    "a": 2,
+    "b": 8,
+    "status": "tension",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0.04,
+    "warScore": 0.07,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 1,
+     "routeBA": 0,
+     "routeStars": [
+      "Regor"
+     ],
+     "capturesAB": 0,
+     "capturesBA": 0,
+     "lastCaptureTick": -1,
+     "tradeAB": 0.25,
+     "tradeBA": 0,
+     "contact": 0
+    }
+   }
+  ],
+  "teams": [
+   {
+    "members": [
+     1,
+     5,
+     6,
+     2
+    ],
+    "links": 4,
+    "density": 0.67,
+    "confidence": 0.92,
+    "confirmed": true,
+    "stars": 100,
+    "ships": 5946
+   }
+  ],
+  "conflicts": [
+   {
+    "side": [
+     1,
+     5,
+     6,
+     2
+    ],
+    "enemies": [
+     {
+      "members": [
+       7
+      ],
+      "took": 5,
+      "lost": 9,
+      "active": true,
+      "lastTick": 237
+     },
+     {
+      "members": [
+       4
+      ],
+      "took": 6,
+      "lost": 5,
+      "active": true,
+      "lastTick": 237
+     },
+     {
+      "members": [
+       8
+      ],
+      "took": 9,
+      "lost": 1,
+      "active": true,
+      "lastTick": 237
+     },
+     {
+      "members": [
+       3
+      ],
+      "took": 1,
+      "lost": 1,
+      "active": false,
+      "lastTick": 87
+     }
+    ],
+    "took": 21,
+    "lost": 16,
+    "active": true,
+    "lastTick": 237
+   },
+   {
+    "side": [
+     3
+    ],
+    "enemies": [
+     {
+      "members": [
+       4
+      ],
+      "took": 0,
+      "lost": 9,
+      "active": false,
+      "lastTick": 135
+     },
+     {
+      "members": [
+       7
+      ],
+      "took": 0,
+      "lost": 2,
+      "active": false,
+      "lastTick": 171
+     }
+    ],
+    "took": 0,
+    "lost": 11,
+    "active": false,
+    "lastTick": 171
+   }
+  ],
+  "middlemen": [],
+  "events": [
+   {
+    "tick": 237,
+    "kind": "capture",
+    "a": 2,
+    "b": 4,
+    "weight": 1,
+    "detail": "Mira"
+   },
+   {
+    "tick": 237,
+    "kind": "capture",
+    "a": 1,
+    "b": 7,
+    "weight": 1,
+    "detail": "Pan"
+   },
+   {
+    "tick": 237,
+    "kind": "capture",
+    "a": 5,
+    "b": 8,
+    "weight": 1,
+    "detail": "Nekkar"
+   },
+   {
+    "tick": 237,
+    "kind": "capture",
+    "a": 5,
+    "b": 8,
+    "weight": 1,
+    "detail": "Grassias"
+   },
+   {
+    "tick": 237,
+    "kind": "capture",
+    "a": 1,
+    "b": 7,
+    "weight": 1,
+    "detail": "AlKurud"
+   },
+   {
+    "tick": 237,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 6,
+    "detail": "orders"
+   },
+   {
+    "tick": 237,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 237,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 5,
+    "detail": "orders"
+   },
+   {
+    "tick": 237,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 237,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 237,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 4,
+    "detail": "orders"
+   },
+   {
+    "tick": 237,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 4,
+    "detail": "orders"
+   },
+   {
+    "tick": 237,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 2,
+    "detail": "carriers"
+   },
+   {
+    "tick": 237,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 237,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 12,
+    "detail": "infra"
+   },
+   {
+    "tick": 237,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 237,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 231,
+    "kind": "capture",
+    "a": 4,
+    "b": 6,
+    "weight": 1,
+    "detail": "Nunki"
+   },
+   {
+    "tick": 231,
+    "kind": "capture",
+    "a": 7,
+    "b": 2,
+    "weight": 1,
+    "detail": "Fomalhaut"
+   },
+   {
+    "tick": 231,
+    "kind": "capture",
+    "a": 2,
+    "b": 7,
+    "weight": 1,
+    "detail": "Haldus"
+   },
+   {
+    "tick": 231,
+    "kind": "capture",
+    "a": 2,
+    "b": 4,
+    "weight": 1,
+    "detail": "Fax"
+   },
+   {
+    "tick": 231,
+    "kind": "capture",
+    "a": 5,
+    "b": 8,
+    "weight": 1,
+    "detail": "Rasalas"
+   },
+   {
+    "tick": 231,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 4,
+    "detail": "orders"
+   },
+   {
+    "tick": 231,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 231,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 231,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 231,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 231,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 231,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 231,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 231,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 20,
+    "detail": "infra"
+   },
+   {
+    "tick": 231,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 2,
+    "detail": "carriers"
+   },
+   {
+    "tick": 231,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 9,
+    "detail": "carriers"
+   },
+   {
+    "tick": 231,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 6,
+    "detail": "infra"
+   },
+   {
+    "tick": 231,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 225,
+    "kind": "tech_trade",
+    "a": 8,
+    "b": 6,
+    "weight": 0.5,
+    "detail": "Experimentation 4→5"
+   },
+   {
+    "tick": 225,
+    "kind": "tech_trade",
+    "a": 7,
+    "b": 2,
+    "weight": 0.25,
+    "detail": "Banking 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 225,
+    "kind": "tech_trade",
+    "a": 7,
+    "b": 1,
+    "weight": 0.25,
+    "detail": "Banking 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 225,
+    "kind": "tech_trade",
+    "a": 6,
+    "b": 2,
+    "weight": 0.25,
+    "detail": "Banking 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 225,
+    "kind": "tech_trade",
+    "a": 6,
+    "b": 1,
+    "weight": 0.25,
+    "detail": "Banking 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 225,
+    "kind": "capture",
+    "a": 6,
+    "b": 4,
+    "weight": 1,
+    "detail": "Nunki"
+   },
+   {
+    "tick": 225,
+    "kind": "capture",
+    "a": 8,
+    "b": 5,
+    "weight": 1,
+    "detail": "Nekkar"
+   },
+   {
+    "tick": 225,
+    "kind": "capture",
+    "a": 7,
+    "b": 2,
+    "weight": 1,
+    "detail": "Haldus"
+   },
+   {
+    "tick": 225,
+    "kind": "capture",
+    "a": 7,
+    "b": 2,
+    "weight": 1,
+    "detail": "Terebellum"
+   },
+   {
+    "tick": 225,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 225,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 225,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 225,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 225,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 10,
+    "detail": "carriers"
+   },
+   {
+    "tick": 225,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 225,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 6,
+    "detail": "infra"
+   },
+   {
+    "tick": 225,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 5,
+    "detail": "infra"
+   },
+   {
+    "tick": 225,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 6,
+    "detail": "infra"
+   },
+   {
+    "tick": 225,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 225,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 17,
+    "detail": "infra"
+   },
+   {
+    "tick": 219,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 6,
+    "weight": 0.25,
+    "detail": "Weapons 4→5 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 219,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 5,
+    "weight": 0.25,
+    "detail": "Weapons 4→5 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 219,
+    "kind": "capture",
+    "a": 5,
+    "b": 8,
+    "weight": 1,
+    "detail": "Nekkar"
+   },
+   {
+    "tick": 219,
+    "kind": "capture",
+    "a": 5,
+    "b": 8,
+    "weight": 1,
+    "detail": "Aldhafera"
+   },
+   {
+    "tick": 219,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 219,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 4,
+    "detail": "orders"
+   },
+   {
+    "tick": 219,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 7,
+    "detail": "orders"
+   },
+   {
+    "tick": 219,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 219,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 219,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 219,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 3,
+    "detail": "infra"
+   },
+   {
+    "tick": 219,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 219,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 2,
+    "detail": "infra"
+   },
+   {
+    "tick": 219,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 5,
+    "detail": "infra"
+   },
+   {
+    "tick": 219,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 219,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 17,
+    "detail": "infra"
+   },
+   {
+    "tick": 213,
+    "kind": "capture",
+    "a": 2,
+    "b": 7,
+    "weight": 1,
+    "detail": "Avior"
+   },
+   {
+    "tick": 213,
+    "kind": "capture",
+    "a": 5,
+    "b": 8,
+    "weight": 1,
+    "detail": "Menkent"
+   },
+   {
+    "tick": 213,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 213,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 213,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 213,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 213,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 213,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 2,
+    "detail": "infra"
+   },
+   {
+    "tick": 207,
+    "kind": "tech_trade",
+    "a": 2,
+    "b": 1,
+    "weight": 0.5,
+    "detail": "Banking 3→4"
+   },
+   {
+    "tick": 207,
+    "kind": "capture",
+    "a": 6,
+    "b": 4,
+    "weight": 1,
+    "detail": "Pollux"
+   },
+   {
+    "tick": 207,
+    "kind": "capture",
+    "a": 7,
+    "b": 2,
+    "weight": 1,
+    "detail": "AlKurud"
+   },
+   {
+    "tick": 207,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 207,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 207,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 207,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 7,
+    "detail": "orders"
+   },
+   {
+    "tick": 207,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 207,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 207,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 207,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 4,
+    "detail": "carriers"
+   },
+   {
+    "tick": 207,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 13,
+    "detail": "infra"
+   },
+   {
+    "tick": 207,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 3,
+    "detail": "carriers"
+   },
+   {
+    "tick": 207,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 207,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 6,
+    "detail": "infra"
+   },
+   {
+    "tick": 207,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 13,
+    "detail": "infra"
+   },
+   {
+    "tick": 201,
+    "kind": "tech_trade",
+    "a": 6,
+    "b": 5,
+    "weight": 0.25,
+    "detail": "Manufacturing 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 201,
+    "kind": "tech_trade",
+    "a": 6,
+    "b": 1,
+    "weight": 0.25,
+    "detail": "Manufacturing 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 201,
+    "kind": "tech_trade",
+    "a": 4,
+    "b": 5,
+    "weight": 0.25,
+    "detail": "Manufacturing 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 201,
+    "kind": "tech_trade",
+    "a": 4,
+    "b": 1,
+    "weight": 0.25,
+    "detail": "Manufacturing 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 201,
+    "kind": "tech_trade",
+    "a": 2,
+    "b": 5,
+    "weight": 0.25,
+    "detail": "Manufacturing 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 201,
+    "kind": "tech_trade",
+    "a": 2,
+    "b": 1,
+    "weight": 0.25,
+    "detail": "Manufacturing 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 201,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 8,
+    "weight": 0.5,
+    "detail": "Banking 3→4"
+   },
+   {
+    "tick": 201,
+    "kind": "capture",
+    "a": 6,
+    "b": 4,
+    "weight": 1,
+    "detail": "Diphda"
+   },
+   {
+    "tick": 201,
+    "kind": "capture",
+    "a": 7,
+    "b": 2,
+    "weight": 1,
+    "detail": "Avior"
+   },
+   {
+    "tick": 201,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 7,
+    "detail": "orders"
+   },
+   {
+    "tick": 201,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 201,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 10,
+    "detail": "orders"
+   },
+   {
+    "tick": 201,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 201,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 201,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 201,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 6,
+    "detail": "infra"
+   },
+   {
+    "tick": 201,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 201,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 4,
+    "detail": "carriers"
+   },
+   {
+    "tick": 201,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 5,
+    "detail": "infra"
+   },
+   {
+    "tick": 201,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 201,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 5,
+    "detail": "infra"
+   },
+   {
+    "tick": 195,
+    "kind": "capture",
+    "a": 4,
+    "b": 6,
+    "weight": 1,
+    "detail": "Diphda"
+   },
+   {
+    "tick": 195,
+    "kind": "capture",
+    "a": 4,
+    "b": 6,
+    "weight": 1,
+    "detail": "Pollux"
+   },
+   {
+    "tick": 195,
+    "kind": "capture",
+    "a": 5,
+    "b": 8,
+    "weight": 1,
+    "detail": "Fez"
+   },
+   {
+    "tick": 195,
+    "kind": "capture",
+    "a": 7,
+    "b": 2,
+    "weight": 1,
+    "detail": "Pug"
+   },
+   {
+    "tick": 195,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 195,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 195,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 4,
+    "detail": "orders"
+   },
+   {
+    "tick": 195,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 195,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 5,
+    "detail": "orders"
+   },
+   {
+    "tick": 195,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 3,
+    "detail": "carriers"
+   },
+   {
+    "tick": 195,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 5,
+    "detail": "infra"
+   },
+   {
+    "tick": 195,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 195,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 11,
+    "detail": "infra"
+   },
+   {
+    "tick": 195,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 2,
+    "detail": "infra"
+   },
+   {
+    "tick": 189,
+    "kind": "tech_trade",
+    "a": 7,
+    "b": 4,
+    "weight": 0.5,
+    "detail": "Range 3→4"
+   },
+   {
+    "tick": 189,
+    "kind": "tech_trade",
+    "a": 6,
+    "b": 4,
+    "weight": 0.5,
+    "detail": "Range 3→4"
+   },
+   {
+    "tick": 189,
+    "kind": "tech_trade",
+    "a": 5,
+    "b": 1,
+    "weight": 0.5,
+    "detail": "Manufacturing 3→4"
+   },
+   {
+    "tick": 189,
+    "kind": "capture",
+    "a": 6,
+    "b": 4,
+    "weight": 1,
+    "detail": "Diphda"
+   },
+   {
+    "tick": 189,
+    "kind": "capture",
+    "a": 4,
+    "b": 6,
+    "weight": 1,
+    "detail": "Alphard"
+   },
+   {
+    "tick": 189,
+    "kind": "capture",
+    "a": 5,
+    "b": 8,
+    "weight": 1,
+    "detail": "Elm"
+   },
+   {
+    "tick": 189,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 189,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 189,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 5,
+    "detail": "orders"
+   },
+   {
+    "tick": 189,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 189,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 189,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 189,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 189,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 189,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 189,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 4,
+    "detail": "infra"
+   },
+   {
+    "tick": 189,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 3,
+    "detail": "carriers"
+   },
+   {
+    "tick": 189,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 9,
+    "detail": "infra"
+   },
+   {
+    "tick": 189,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 189,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 7,
+    "detail": "infra"
+   },
+   {
+    "tick": 183,
+    "kind": "capture",
+    "a": 5,
+    "b": 8,
+    "weight": 1,
+    "detail": "Vega"
+   },
+   {
+    "tick": 183,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 183,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 183,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 7,
+    "detail": "orders"
+   },
+   {
+    "tick": 183,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 183,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 183,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 183,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 183,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 2,
+    "detail": "infra"
+   },
+   {
+    "tick": 183,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 2,
+    "detail": "carriers"
+   },
+   {
+    "tick": 183,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 11,
+    "detail": "infra"
+   },
+   {
+    "tick": 183,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 2,
+    "detail": "carriers"
+   },
+   {
+    "tick": 183,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 8,
+    "detail": "infra"
+   },
+   {
+    "tick": 183,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 4,
+    "detail": "carriers"
+   },
+   {
+    "tick": 183,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 10,
+    "detail": "infra"
+   },
+   {
+    "tick": 183,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 183,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 177,
+    "kind": "tech_trade",
+    "a": 2,
+    "b": 6,
+    "weight": 0.25,
+    "detail": "Weapons 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 177,
+    "kind": "tech_trade",
+    "a": 2,
+    "b": 5,
+    "weight": 0.25,
+    "detail": "Weapons 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 177,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 177,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 177,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 177,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 177,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 3,
+    "detail": "infra"
+   },
+   {
+    "tick": 177,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 3,
+    "detail": "carriers"
+   },
+   {
+    "tick": 177,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 6,
+    "detail": "infra"
+   },
+   {
+    "tick": 171,
+    "kind": "tech_trade",
+    "a": 6,
+    "b": 5,
+    "weight": 0.5,
+    "detail": "Weapons 3→4"
+   },
+   {
+    "tick": 171,
+    "kind": "capture",
+    "a": 2,
+    "b": 7,
+    "weight": 1,
+    "detail": "Pug"
+   },
+   {
+    "tick": 171,
+    "kind": "capture",
+    "a": 7,
+    "b": 3,
+    "weight": 1,
+    "detail": "Acubens"
+   },
+   {
+    "tick": 171,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 171,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 171,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 171,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 171,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 171,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 171,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 2,
+    "detail": "carriers"
+   },
+   {
+    "tick": 171,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 3,
+    "detail": "infra"
+   },
+   {
+    "tick": 171,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 4,
+    "detail": "carriers"
+   },
+   {
+    "tick": 171,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 171,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 171,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 4,
+    "detail": "infra"
+   },
+   {
+    "tick": 165,
+    "kind": "tech_trade",
+    "a": 3,
+    "b": 5,
+    "weight": 0.5,
+    "detail": "Weapons 3→4"
+   },
+   {
+    "tick": 165,
+    "kind": "capture",
+    "a": 4,
+    "b": 2,
+    "weight": 1,
+    "detail": "Ice"
+   },
+   {
+    "tick": 165,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 165,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 165,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 165,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 165,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 8,
+    "detail": "infra"
+   },
+   {
+    "tick": 165,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 14,
+    "detail": "infra"
+   },
+   {
+    "tick": 165,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 2,
+    "detail": "carriers"
+   },
+   {
+    "tick": 165,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 6,
+    "detail": "infra"
+   },
+   {
+    "tick": 165,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 2,
+    "detail": "infra"
+   },
+   {
+    "tick": 165,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 2,
+    "detail": "carriers"
+   },
+   {
+    "tick": 165,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 6,
+    "detail": "infra"
+   },
+   {
+    "tick": 165,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 165,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 8,
+    "detail": "infra"
+   },
+   {
+    "tick": 159,
+    "kind": "capture",
+    "a": 7,
+    "b": 2,
+    "weight": 1,
+    "detail": "Pux"
+   },
+   {
+    "tick": 159,
+    "kind": "capture",
+    "a": 7,
+    "b": 2,
+    "weight": 1,
+    "detail": "Zosma"
+   },
+   {
+    "tick": 159,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 159,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 159,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 159,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 159,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 2,
+    "detail": "carriers"
+   },
+   {
+    "tick": 159,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 7,
+    "detail": "infra"
+   },
+   {
+    "tick": 159,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 5,
+    "detail": "infra"
+   },
+   {
+    "tick": 159,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 6,
+    "detail": "infra"
+   },
+   {
+    "tick": 159,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 4,
+    "detail": "infra"
+   },
+   {
+    "tick": 153,
+    "kind": "tech_trade",
+    "a": 3,
+    "b": 6,
+    "weight": 0.25,
+    "detail": "Experimentation 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 153,
+    "kind": "tech_trade",
+    "a": 3,
+    "b": 1,
+    "weight": 0.25,
+    "detail": "Experimentation 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 153,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 153,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 153,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 153,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 153,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 153,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 3,
+    "detail": "carriers"
+   },
+   {
+    "tick": 153,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 6,
+    "detail": "infra"
+   },
+   {
+    "tick": 147,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 6,
+    "weight": 0.5,
+    "detail": "Experimentation 3→4"
+   },
+   {
+    "tick": 147,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 147,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 7,
+    "detail": "infra"
+   },
+   {
+    "tick": 147,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 6,
+    "detail": "infra"
+   },
+   {
+    "tick": 147,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 10,
+    "detail": "infra"
+   },
+   {
+    "tick": 141,
+    "kind": "tech_trade",
+    "a": 6,
+    "b": 1,
+    "weight": 0.5,
+    "detail": "Banking 2→3"
+   },
+   {
+    "tick": 141,
+    "kind": "tech_trade",
+    "a": 5,
+    "b": 1,
+    "weight": 0.5,
+    "detail": "Banking 2→3"
+   },
+   {
+    "tick": 141,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 141,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 141,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 141,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 141,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 141,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 5,
+    "detail": "infra"
+   },
+   {
+    "tick": 141,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 11,
+    "detail": "infra"
+   },
+   {
+    "tick": 141,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 2,
+    "detail": "carriers"
+   },
+   {
+    "tick": 141,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 11,
+    "detail": "infra"
+   },
+   {
+    "tick": 141,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 141,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 5,
+    "detail": "infra"
+   },
+   {
+    "tick": 141,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 6,
+    "detail": "infra"
+   },
+   {
+    "tick": 135,
+    "kind": "capture",
+    "a": 4,
+    "b": 3,
+    "weight": 1,
+    "detail": "Fax"
+   },
+   {
+    "tick": 135,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 135,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 135,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 135,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 135,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 7,
+    "detail": "infra"
+   },
+   {
+    "tick": 135,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 135,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 7,
+    "detail": "infra"
+   },
+   {
+    "tick": 135,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 135,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 135,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 129,
+    "kind": "tech_trade",
+    "a": 4,
+    "b": 8,
+    "weight": 0.25,
+    "detail": "Range 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 129,
+    "kind": "tech_trade",
+    "a": 4,
+    "b": 6,
+    "weight": 0.25,
+    "detail": "Range 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 129,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 129,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 129,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 8,
+    "detail": "infra"
+   },
+   {
+    "tick": 129,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 2,
+    "detail": "carriers"
+   },
+   {
+    "tick": 129,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 129,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 5,
+    "detail": "infra"
+   },
+   {
+    "tick": 123,
+    "kind": "tech_trade",
+    "a": 6,
+    "b": 8,
+    "weight": 0.5,
+    "detail": "Range 2→3"
+   },
+   {
+    "tick": 123,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 123,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 123,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 5,
+    "detail": "infra"
+   },
+   {
+    "tick": 123,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 5,
+    "detail": "infra"
+   },
+   {
+    "tick": 123,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 5,
+    "detail": "carriers"
+   },
+   {
+    "tick": 123,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 10,
+    "detail": "infra"
+   },
+   {
+    "tick": 123,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 8,
+    "detail": "infra"
+   },
+   {
+    "tick": 117,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 117,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 117,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 117,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 7,
+    "detail": "infra"
+   },
+   {
+    "tick": 117,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 7,
+    "detail": "infra"
+   },
+   {
+    "tick": 117,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 2,
+    "detail": "carriers"
+   },
+   {
+    "tick": 117,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 4,
+    "detail": "infra"
+   },
+   {
+    "tick": 111,
+    "kind": "tech_trade",
+    "a": 7,
+    "b": 4,
+    "weight": 0.25,
+    "detail": "Weapons 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 111,
+    "kind": "tech_trade",
+    "a": 7,
+    "b": 1,
+    "weight": 0.25,
+    "detail": "Weapons 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 111,
+    "kind": "tech_trade",
+    "a": 6,
+    "b": 4,
+    "weight": 0.25,
+    "detail": "Manufacturing 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 111,
+    "kind": "tech_trade",
+    "a": 6,
+    "b": 1,
+    "weight": 0.25,
+    "detail": "Manufacturing 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 111,
+    "kind": "tech_trade",
+    "a": 5,
+    "b": 4,
+    "weight": 0.25,
+    "detail": "Manufacturing 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 111,
+    "kind": "tech_trade",
+    "a": 5,
+    "b": 1,
+    "weight": 0.25,
+    "detail": "Manufacturing 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 111,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 111,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 6,
+    "detail": "infra"
+   },
+   {
+    "tick": 111,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 2,
+    "detail": "carriers"
+   },
+   {
+    "tick": 111,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 3,
+    "detail": "infra"
+   },
+   {
+    "tick": 111,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 111,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 5,
+    "detail": "infra"
+   },
+   {
+    "tick": 111,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 2,
+    "detail": "carriers"
+   },
+   {
+    "tick": 111,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 10,
+    "detail": "infra"
+   },
+   {
+    "tick": 105,
+    "kind": "tech_trade",
+    "a": 4,
+    "b": 1,
+    "weight": 0.5,
+    "detail": "Manufacturing 2→3"
+   },
+   {
+    "tick": 105,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 4,
+    "weight": 0.5,
+    "detail": "Weapons 2→3"
+   },
+   {
+    "tick": 105,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 11,
+    "detail": "infra"
+   },
+   {
+    "tick": 105,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 2,
+    "detail": "carriers"
+   },
+   {
+    "tick": 105,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 7,
+    "detail": "infra"
+   },
+   {
+    "tick": 105,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 9,
+    "detail": "infra"
+   },
+   {
+    "tick": 99,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 99,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 2,
+    "detail": "infra"
+   },
+   {
+    "tick": 99,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 6,
+    "detail": "infra"
+   },
+   {
+    "tick": 99,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 12,
+    "detail": "infra"
+   },
+   {
+    "tick": 99,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 14,
+    "detail": "infra"
+   },
+   {
+    "tick": 93,
+    "kind": "tech_trade",
+    "a": 8,
+    "b": 6,
+    "weight": 0.25,
+    "detail": "Experimentation 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 93,
+    "kind": "tech_trade",
+    "a": 8,
+    "b": 3,
+    "weight": 0.25,
+    "detail": "Experimentation 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 93,
+    "kind": "capture",
+    "a": 4,
+    "b": 3,
+    "weight": 1,
+    "detail": "Theemin"
+   },
+   {
+    "tick": 93,
+    "kind": "capture",
+    "a": 4,
+    "b": 3,
+    "weight": 1,
+    "detail": "Bam"
+   },
+   {
+    "tick": 93,
+    "kind": "capture",
+    "a": 7,
+    "b": 3,
+    "weight": 1,
+    "detail": "Pug"
+   },
+   {
+    "tick": 93,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 93,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 7,
+    "detail": "infra"
+   },
+   {
+    "tick": 93,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 8,
+    "detail": "infra"
+   },
+   {
+    "tick": 93,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 2,
+    "detail": "infra"
+   },
+   {
+    "tick": 93,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 3,
+    "detail": "infra"
+   },
+   {
+    "tick": 87,
+    "kind": "capture",
+    "a": 4,
+    "b": 3,
+    "weight": 1,
+    "detail": "Mira"
+   },
+   {
+    "tick": 87,
+    "kind": "capture",
+    "a": 4,
+    "b": 3,
+    "weight": 1,
+    "detail": "Tarazet"
+   },
+   {
+    "tick": 87,
+    "kind": "capture",
+    "a": 2,
+    "b": 3,
+    "weight": 1,
+    "detail": "Avior"
+   },
+   {
+    "tick": 87,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 87,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 87,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 11,
+    "detail": "infra"
+   },
+   {
+    "tick": 87,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 6,
+    "detail": "infra"
+   },
+   {
+    "tick": 87,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 4,
+    "detail": "infra"
+   },
+   {
+    "tick": 87,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 7,
+    "detail": "infra"
+   },
+   {
+    "tick": 81,
+    "kind": "tech_trade",
+    "a": 8,
+    "b": 7,
+    "weight": 0.25,
+    "detail": "Range 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 81,
+    "kind": "tech_trade",
+    "a": 8,
+    "b": 4,
+    "weight": 0.25,
+    "detail": "Range 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 81,
+    "kind": "tech_trade",
+    "a": 6,
+    "b": 7,
+    "weight": 0.25,
+    "detail": "Range 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 81,
+    "kind": "tech_trade",
+    "a": 6,
+    "b": 4,
+    "weight": 0.25,
+    "detail": "Range 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 81,
+    "kind": "tech_trade",
+    "a": 3,
+    "b": 6,
+    "weight": 0.5,
+    "detail": "Experimentation 2→3"
+   },
+   {
+    "tick": 81,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 7,
+    "weight": 0.25,
+    "detail": "Range 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 81,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 4,
+    "weight": 0.25,
+    "detail": "Range 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 81,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 6,
+    "detail": "infra"
+   },
+   {
+    "tick": 81,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 2,
+    "detail": "infra"
+   },
+   {
+    "tick": 75,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 75,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 75,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 75,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 7,
+    "detail": "infra"
+   },
+   {
+    "tick": 69,
+    "kind": "tech_trade",
+    "a": 7,
+    "b": 4,
+    "weight": 0.5,
+    "detail": "Range 1→2"
+   },
+   {
+    "tick": 69,
+    "kind": "capture",
+    "a": 7,
+    "b": 2,
+    "weight": 1,
+    "detail": "Pan"
+   },
+   {
+    "tick": 69,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 69,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 69,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 4,
+    "detail": "infra"
+   },
+   {
+    "tick": 69,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 4,
+    "detail": "infra"
+   },
+   {
+    "tick": 69,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 69,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 5,
+    "detail": "infra"
+   },
+   {
+    "tick": 69,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 9,
+    "detail": "infra"
+   },
+   {
+    "tick": 69,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 12,
+    "detail": "infra"
+   },
+   {
+    "tick": 63,
+    "kind": "capture",
+    "a": 3,
+    "b": 6,
+    "weight": 1,
+    "detail": "Tarazet"
+   },
+   {
+    "tick": 63,
+    "kind": "capture",
+    "a": 4,
+    "b": 3,
+    "weight": 1,
+    "detail": "Askella"
+   },
+   {
+    "tick": 63,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 63,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 63,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 7,
+    "detail": "infra"
+   },
+   {
+    "tick": 63,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 4,
+    "detail": "infra"
+   },
+   {
+    "tick": 63,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 4,
+    "detail": "infra"
+   },
+   {
+    "tick": 63,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 57,
+    "kind": "tech_trade",
+    "a": 4,
+    "b": 8,
+    "weight": 0.25,
+    "detail": "Weapons 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 57,
+    "kind": "tech_trade",
+    "a": 4,
+    "b": 7,
+    "weight": 0.25,
+    "detail": "Weapons 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 57,
+    "kind": "tech_trade",
+    "a": 2,
+    "b": 8,
+    "weight": 0.25,
+    "detail": "Weapons 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 57,
+    "kind": "tech_trade",
+    "a": 2,
+    "b": 7,
+    "weight": 0.25,
+    "detail": "Weapons 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 57,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 6,
+    "weight": 0.25,
+    "detail": "Experimentation 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 57,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 3,
+    "weight": 0.25,
+    "detail": "Experimentation 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 57,
+    "kind": "capture",
+    "a": 4,
+    "b": 3,
+    "weight": 1,
+    "detail": "TienKuan"
+   },
+   {
+    "tick": 57,
+    "kind": "capture",
+    "a": 4,
+    "b": 3,
+    "weight": 1,
+    "detail": "Capella"
+   },
+   {
+    "tick": 57,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 57,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 57,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 5,
+    "detail": "infra"
+   },
+   {
+    "tick": 57,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 3,
+    "detail": "infra"
+   },
+   {
+    "tick": 57,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 7,
+    "detail": "infra"
+   },
+   {
+    "tick": 57,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 9,
+    "detail": "infra"
+   },
+   {
+    "tick": 57,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 5,
+    "detail": "infra"
+   },
+   {
+    "tick": 51,
+    "kind": "tech_trade",
+    "a": 7,
+    "b": 8,
+    "weight": 0.5,
+    "detail": "Weapons 1→2"
+   },
+   {
+    "tick": 51,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 51,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 51,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 45,
+    "kind": "tech_trade",
+    "a": 3,
+    "b": 6,
+    "weight": 0.5,
+    "detail": "Experimentation 1→2"
+   },
+   {
+    "tick": 45,
+    "kind": "capture",
+    "a": 4,
+    "b": 3,
+    "weight": 1,
+    "detail": "Situla"
+   },
+   {
+    "tick": 45,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 45,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 8,
+    "detail": "infra"
+   },
+   {
+    "tick": 45,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 4,
+    "detail": "infra"
+   },
+   {
+    "tick": 45,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 6,
+    "detail": "infra"
+   },
+   {
+    "tick": 45,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 45,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 5,
+    "detail": "infra"
+   },
+   {
+    "tick": 45,
+    "kind": "activity",
+    "a": 3,
+    "b": 3,
+    "weight": 12,
+    "detail": "infra"
+   },
+   {
+    "tick": 45,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 6,
+    "detail": "infra"
+   },
+   {
+    "tick": 45,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 2,
+    "detail": "infra"
+   }
+  ]
+ },
+ "exportedAt": "2026-11-17T06:00:15.485Z"
+}

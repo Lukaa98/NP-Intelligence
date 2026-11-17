@@ -1,0 +1,382 @@
+{
+ "game": {
+  "gameNumber": "8824",
+  "name": "Zeta Ashlesha",
+  "playerUid": 5,
+  "enabled": true,
+  "keyStatus": "valid",
+  "keyStatusMessage": "Saved key worked on the last successful scan.",
+  "lastTick": 494,
+  "lastSyncAt": "2026-11-02T16:14:56.414Z",
+  "lastErrorAt": null,
+  "createdAt": "2026-11-02T16:14:56.271Z",
+  "updatedAt": "2026-11-02T16:16:45.489Z",
+  "archivedAt": "2026-11-02T16:16:45.489Z",
+  "nickname": "",
+  "playerCount": 8,
+  "myAlias": "RocketCharger",
+  "relationTick": 494,
+  "exportedAt": null,
+  "archiveRef": null,
+  "relationSnapshots": 1,
+  "finishedAt": null,
+  "owner": "admin",
+  "npNumber": "8824",
+  "apiKeyPreview": "One****zLn"
+ },
+ "frames": [
+  {
+   "id": "8824-494-1793636096357",
+   "tick": 494,
+   "capturedAt": "2026-11-02T16:14:56.357Z",
+   "label": "Last state before delete",
+   "pinned": true,
+   "file": "ticks/494.json"
+  }
+ ],
+ "diplomacy": {
+  "gameNumber": "8824",
+  "pendingSnapshots": 0,
+  "activity": {
+   "1": {
+    "status": "ai",
+    "day": {
+     "infra": 0,
+     "carriers": 0,
+     "orders": 0,
+     "captures": 0
+    },
+    "twoDays": {
+     "infra": 0,
+     "carriers": 0,
+     "orders": 0,
+     "captures": 0
+    },
+    "lastActionTick": null,
+    "ticksSinceAction": null,
+    "observedTicks": 0
+   },
+   "2": {
+    "status": "ai",
+    "day": {
+     "infra": 0,
+     "carriers": 0,
+     "orders": 0,
+     "captures": 0
+    },
+    "twoDays": {
+     "infra": 0,
+     "carriers": 0,
+     "orders": 0,
+     "captures": 0
+    },
+    "lastActionTick": null,
+    "ticksSinceAction": null,
+    "observedTicks": 0
+   },
+   "3": {
+    "status": "unknown",
+    "day": {
+     "infra": 0,
+     "carriers": 0,
+     "orders": 0,
+     "captures": 0
+    },
+    "twoDays": {
+     "infra": 0,
+     "carriers": 0,
+     "orders": 0,
+     "captures": 0
+    },
+    "lastActionTick": null,
+    "ticksSinceAction": null,
+    "observedTicks": 0
+   },
+   "4": {
+    "status": "unknown",
+    "day": {
+     "infra": 0,
+     "carriers": 0,
+     "orders": 0,
+     "captures": 0
+    },
+    "twoDays": {
+     "infra": 0,
+     "carriers": 0,
+     "orders": 0,
+     "captures": 0
+    },
+    "lastActionTick": null,
+    "ticksSinceAction": null,
+    "observedTicks": 0
+   },
+   "5": {
+    "status": "unknown",
+    "day": {
+     "infra": 0,
+     "carriers": 0,
+     "orders": 0,
+     "captures": 0
+    },
+    "twoDays": {
+     "infra": 0,
+     "carriers": 0,
+     "orders": 0,
+     "captures": 0
+    },
+    "lastActionTick": null,
+    "ticksSinceAction": null,
+    "observedTicks": 0
+   },
+   "6": {
+    "status": "ai",
+    "day": {
+     "infra": 0,
+     "carriers": 0,
+     "orders": 0,
+     "captures": 0
+    },
+    "twoDays": {
+     "infra": 0,
+     "carriers": 0,
+     "orders": 0,
+     "captures": 0
+    },
+    "lastActionTick": null,
+    "ticksSinceAction": null,
+    "observedTicks": 0
+   },
+   "7": {
+    "status": "ai",
+    "day": {
+     "infra": 0,
+     "carriers": 0,
+     "orders": 0,
+     "captures": 0
+    },
+    "twoDays": {
+     "infra": 0,
+     "carriers": 0,
+     "orders": 0,
+     "captures": 0
+    },
+    "lastActionTick": null,
+    "ticksSinceAction": null,
+    "observedTicks": 0
+   },
+   "8": {
+    "status": "ai",
+    "day": {
+     "infra": 0,
+     "carriers": 0,
+     "orders": 0,
+     "captures": 0
+    },
+    "twoDays": {
+     "infra": 0,
+     "carriers": 0,
+     "orders": 0,
+     "captures": 0
+    },
+    "lastActionTick": null,
+    "ticksSinceAction": null,
+    "observedTicks": 0
+   }
+  },
+  "players": [
+   {
+    "uid": 1,
+    "alias": "Barry Waffles",
+    "color": 5,
+    "shape": 0,
+    "totalStars": 0,
+    "totalStrength": 0,
+    "conceded": 1,
+    "ai": 1
+   },
+   {
+    "uid": 2,
+    "alias": "Yenbek",
+    "color": 6,
+    "shape": 1,
+    "totalStars": 1,
+    "totalStrength": 68,
+    "conceded": 2,
+    "ai": 1
+   },
+   {
+    "uid": 3,
+    "alias": "Suna Syndicate",
+    "color": 3,
+    "shape": 2,
+    "totalStars": 31,
+    "totalStrength": 6149,
+    "conceded": 0,
+    "ai": 0
+   },
+   {
+    "uid": 4,
+    "alias": "Exqzr",
+    "color": 0,
+    "shape": 3,
+    "totalStars": 66,
+    "totalStrength": 23614,
+    "conceded": 0,
+    "ai": 0
+   },
+   {
+    "uid": 5,
+    "alias": "RocketCharger",
+    "color": 1,
+    "shape": 4,
+    "totalStars": 93,
+    "totalStrength": 22851,
+    "conceded": 0,
+    "ai": 0
+   },
+   {
+    "uid": 6,
+    "alias": "Uranus Eater",
+    "color": 2,
+    "shape": 5,
+    "totalStars": 0,
+    "totalStrength": 0,
+    "conceded": 1,
+    "ai": 1
+   },
+   {
+    "uid": 7,
+    "alias": "ImperatorSamael",
+    "color": 7,
+    "shape": 6,
+    "totalStars": 0,
+    "totalStrength": 0,
+    "conceded": 1,
+    "ai": 1
+   },
+   {
+    "uid": 8,
+    "alias": "elmucu",
+    "color": 4,
+    "shape": 7,
+    "totalStars": 0,
+    "totalStrength": 0,
+    "conceded": 2,
+    "ai": 1
+   }
+  ],
+  "coverage": {
+   "snapshotsProcessed": 1,
+   "latestTick": 494
+  },
+  "viewerUid": 5,
+  "pairs": [
+   {
+    "a": 3,
+    "b": 5,
+    "status": "allied",
+    "allied": true,
+    "confirmed": true,
+    "allyScore": 1,
+    "warScore": 0,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 1,
+     "guestBA": 0,
+     "guestShips": 412,
+     "guestStars": [
+      "Alnitak",
+      "Chow"
+     ],
+     "routeAB": 1,
+     "routeBA": 1,
+     "routeStars": [
+      "Suhail",
+      "Tab",
+      "Cor",
+      "Mix"
+     ],
+     "capturesAB": 0,
+     "capturesBA": 0,
+     "lastCaptureTick": -1,
+     "tradeAB": 0,
+     "tradeBA": 0,
+     "contact": 1
+    }
+   },
+   {
+    "a": 4,
+    "b": 5,
+    "status": "allied",
+    "allied": true,
+    "confirmed": true,
+    "allyScore": 1,
+    "warScore": 0,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 1,
+     "guestBA": 0,
+     "guestShips": 400,
+     "guestStars": [
+      "Nusakan"
+     ],
+     "routeAB": 0,
+     "routeBA": 0,
+     "routeStars": [],
+     "capturesAB": 0,
+     "capturesBA": 0,
+     "lastCaptureTick": -1,
+     "tradeAB": 0,
+     "tradeBA": 0,
+     "contact": 1
+    }
+   },
+   {
+    "a": 2,
+    "b": 5,
+    "status": "tension",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0,
+    "warScore": 0.07,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 0,
+     "routeBA": 1,
+     "routeStars": [
+      "Saw"
+     ],
+     "capturesAB": 0,
+     "capturesBA": 0,
+     "lastCaptureTick": -1,
+     "tradeAB": 0,
+     "tradeBA": 0,
+     "contact": 0
+    }
+   }
+  ],
+  "teams": [
+   {
+    "members": [
+     5,
+     4,
+     3
+    ],
+    "links": 2,
+    "density": 0.67,
+    "confidence": 1,
+    "confirmed": true,
+    "stars": 190,
+    "ships": 52614
+   }
+  ],
+  "conflicts": [],
+  "middlemen": [],
+  "events": []
+ },
+ "exportedAt": "2026-11-17T06:02:39.919Z"
+}

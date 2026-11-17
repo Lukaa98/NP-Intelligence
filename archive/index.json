@@ -23,6 +23,38 @@
    "firstTick": 242,
    "lastTick": 647,
    "archivedAt": "2026-10-30T02:51:03.139Z"
+  },
+  {
+   "gameNumber": "8115",
+   "name": "Alpha Aldhibah",
+   "frames": 126,
+   "firstTick": 71,
+   "lastTick": 811,
+   "archivedAt": "2026-11-17T06:02:39.919Z"
+  },
+  {
+   "gameNumber": "8335",
+   "name": "Iota Azha",
+   "frames": 34,
+   "firstTick": 40,
+   "lastTick": 237,
+   "archivedAt": "2026-11-17T06:02:39.919Z"
+  },
+  {
+   "gameNumber": "8686",
+   "name": "Chi Sheratan 64 player",
+   "frames": 427,
+   "firstTick": 222,
+   "lastTick": 648,
+   "archivedAt": "2026-11-17T06:02:39.919Z"
+  },
+  {
+   "gameNumber": "8824",
+   "name": "Zeta Ashlesha",
+   "frames": 1,
+   "firstTick": 494,
+   "lastTick": 494,
+   "archivedAt": "2026-11-17T06:02:39.919Z"
   }
  ]
 }
