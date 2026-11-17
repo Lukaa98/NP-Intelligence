@@ -67,6 +67,8 @@ const PAGE_EVENTS = { games: "page:games", game: "page:game", snapshot: "page:ma
 function Shell({ me, viewingAs }) {
   const [route, setRoute] = useState(parseRoute);
   const user = viewingAs || me;
+  // Testers (and the admin viewing as one) get a trimmed menu.
+  const asTester = !me.isAdmin || Boolean(viewingAs);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [playerNotes, setPlayerNotes] = useState([]);
   const [notesError, setNotesError] = useState("");
@@ -132,10 +134,10 @@ function Shell({ me, viewingAs }) {
         </a>
         <nav>
           <a className={route.name === "games" || route.name === "game" ? "active" : ""} href="#/">Games</a>
-          <a className={route.name === "players" ? "active" : ""} href="#/players">Players</a>
+          {!asTester && <a className={route.name === "players" ? "active" : ""} href="#/players">Players</a>}
           {me.isAdmin && !viewingAs && <a className={route.name === "admin" ? "active" : ""} href="#/admin">Admin</a>}
           {!me.isAdmin && <FeedbackButton />}
-          {me.isAdmin && <button type="button" className="ghost" onClick={() => setSettingsOpen(true)}>Settings</button>}
+          {!asTester && <button type="button" className="ghost" onClick={() => setSettingsOpen(true)}>Settings</button>}
           <button type="button" className="ghost" onClick={logOut} title={`Logged in as ${me.username}`}>Log out</button>
         </nav>
       </header>
