@@ -24,6 +24,17 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
+      # The site needs the login backend, which only deploys once the
+      # NP_ADMIN_TOKEN secret exists; until then keep the live site as is.
+      - name: Wait for the NP_ADMIN_TOKEN secret
+        env:
+          NP_ADMIN_TOKEN: ${{ secrets.NP_ADMIN_TOKEN }}
+        run: |
+          if [ ${#NP_ADMIN_TOKEN} -lt 20 ]; then
+            echo "::error::Add the NP_ADMIN_TOKEN repository secret first; the live site was left unchanged."
+            exit 1
+          fi
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
