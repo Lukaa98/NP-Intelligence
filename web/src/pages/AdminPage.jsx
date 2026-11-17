@@ -20,7 +20,7 @@ const EVENT_LABELS = {
 export default function AdminPage({ me }) {
   const [users, setUsers] = useState([]);
   const [feedback, setFeedback] = useState([]);
-  const [form, setForm] = useState({ username: "", password: "", lockedGame: "" });
+  const [form, setForm] = useState({ username: "", password: "", games: "" });
   const [status, setStatus] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -54,9 +54,9 @@ export default function AdminPage({ me }) {
   function createUser(event) {
     event.preventDefault();
     run("Creating user", async () => {
-      const { user } = await api.createUser({ username: form.username.trim(), password: form.password, lockedGame: form.lockedGame.trim() });
-      setForm({ username: "", password: "", lockedGame: "" });
-      return `Created ${user.username}${user.lockedGame ? `, locked to game ${user.lockedGame}` : ""}. Send them the site link with their username and password.`;
+      const { user } = await api.createUser({ username: form.username.trim(), password: form.password, assignedGames: form.games });
+      setForm({ username: "", password: "", games: "" });
+      return `Created ${user.username}${user.assignedGames.length ? ` with game ${user.assignedGames.join(", ")}` : ""}. Send them the site link with their username and password.`;
     });
   }
 
@@ -72,7 +72,7 @@ export default function AdminPage({ me }) {
         <div>
           <p className="eyebrow">Admin</p>
           <h1>Testers</h1>
-          <p className="muted">Create a login, optionally lock it to one game, and see how it's being used. Testers only see their own games. Their games are never copied to GitHub and are erased 24 hours after the game ends or they delete it.</p>
+          <p className="muted">Create a login, assign the game(s) they may use, and see how it's being used. A tester with assigned games only sees those games and only needs to paste their API code; without any they can add any game. Their games are never copied to GitHub and are erased 24 hours after the game ends or they delete it.</p>
         </div>
       </section>
 
@@ -88,8 +88,8 @@ export default function AdminPage({ me }) {
             <input value={form.password} onChange={(event) => setForm({ ...form, password: event.target.value })} placeholder="bobpass" />
           </label>
           <label className="field">
-            <span>Only this game (optional)</span>
-            <input inputMode="numeric" value={form.lockedGame} onChange={(event) => setForm({ ...form, lockedGame: event.target.value })} placeholder="9079" />
+            <span>Assigned game(s), comma-separated</span>
+            <input value={form.games} onChange={(event) => setForm({ ...form, games: event.target.value })} placeholder="9079" />
           </label>
         </div>
         <div className="actions">
@@ -136,10 +136,21 @@ function UserCard({ user, isMe, busy, run, onViewAs }) {
     run("Changing password", () => api.updateUser(user.id, { password }).then(() => `${user.username}'s password changed. Their old login stops working.`));
   }
 
-  function changeGame() {
-    const value = window.prompt(`Lock ${user.username} to which game number? Leave empty to allow any game.`, user.lockedGame || "");
-    if (value === null) return;
-    run("Updating game lock", () => api.updateUser(user.id, { lockedGame: value.trim() }).then(() => (value.trim() ? `${user.username} can only add game ${value.trim()}.` : `${user.username} can add any game.`)));
+  const [newGame, setNewGame] = useState("");
+
+  function addGame(event) {
+    event.preventDefault();
+    const number = newGame.trim();
+    if (!number) return;
+    run("Assigning game", () => api.updateUser(user.id, { assignedGames: [...user.assignedGames, number] })
+      .then(() => { setNewGame(""); return `Game ${number} assigned to ${user.username}.`; }));
+  }
+
+  function removeGame(number) {
+    const connected = user.games.some((game) => game.npNumber === number);
+    if (!window.confirm(`Take game ${number} away from ${user.username}?${connected ? " Their copy of it is erased." : ""}`)) return;
+    run("Removing game", () => api.updateUser(user.id, { assignedGames: user.assignedGames.filter((game) => game !== number) })
+      .then(() => `Game ${number} removed from ${user.username}.`));
   }
 
   return (
@@ -148,8 +159,7 @@ function UserCard({ user, isMe, busy, run, onViewAs }) {
         <div className="name-row">
           <span className="name">{user.username}</span>
           <span className="pill">{isAdmin ? "admin" : "tester"}</span>
-          {user.disabled && <span className="pill danger">switched off</span>}
-          {user.lockedGame && <span className="pill">game {user.lockedGame} only</span>}
+          {user.disabled && <span className="pill danger">login blocked</span>}
         </div>
         <div className="meta">created {formatDateTime(user.createdAt)} · last login {formatDateTime(user.lastLoginAt)}</div>
         <div className="meta">
@@ -159,6 +169,22 @@ function UserCard({ user, isMe, busy, run, onViewAs }) {
             </span>
           )) : "no games"}
         </div>
+        {!isAdmin && (
+          <form className="assign-row" onSubmit={addGame}>
+            <span className="meta">Assigned games:</span>
+            {user.assignedGames.length ? user.assignedGames.map((number) => {
+              const game = user.games.find((item) => item.npNumber === number);
+              return (
+                <span key={number} className="assign-chip" title={game ? "Connected" : "Not connected yet"}>
+                  {number}{game ? " ✓" : ""}
+                  <button type="button" className="ghost" disabled={busy} onClick={() => removeGame(number)} aria-label={`Remove game ${number}`}>✕</button>
+                </span>
+              );
+            }) : <span className="meta">none (can add any game)</span>}
+            <input inputMode="numeric" value={newGame} onChange={(event) => setNewGame(event.target.value)} placeholder="game #" aria-label="Game number to assign" />
+            <button type="submit" className="ghost small" disabled={busy || !newGame.trim()}>+ Add</button>
+          </form>
+        )}
         {!isAdmin && (
           <div className="meta">
             {user.usage?.activeDays
@@ -172,9 +198,8 @@ function UserCard({ user, isMe, busy, run, onViewAs }) {
         <button type="button" className="ghost" disabled={busy} onClick={changePassword}>Password</button>
         {!isAdmin && (
           <>
-            <button type="button" className="ghost" disabled={busy} onClick={changeGame}>Game lock</button>
-            <button type="button" className="ghost" disabled={busy} onClick={() => run(user.disabled ? "Switching on" : "Switching off", () => api.updateUser(user.id, { disabled: !user.disabled }).then(() => (user.disabled ? `${user.username} can log in again.` : `${user.username} is logged out and can't log in; their games stop scanning.`)))}>
-              {user.disabled ? "Switch on" : "Switch off"}
+            <button type="button" className="ghost" disabled={busy} title="Logs them out and stops their scans; nothing is deleted" onClick={() => run(user.disabled ? "Unblocking" : "Blocking login", () => api.updateUser(user.id, { disabled: !user.disabled }).then(() => (user.disabled ? `${user.username} can log in again.` : `${user.username} is logged out and can't log in; their games stop scanning. Nothing was deleted.`)))}>
+              {user.disabled ? "Unblock" : "Block login"}
             </button>
             <button type="button" className="ghost danger-text" disabled={busy || !user.games.length} onClick={() => {
               if (!window.confirm(`Erase all of ${user.username}'s games now?`)) return;

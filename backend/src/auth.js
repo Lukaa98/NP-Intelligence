@@ -68,7 +68,8 @@ export function userFromRow(row) {
     username: row.username,
     role: row.role,
     isAdmin: row.role === "admin",
-    lockedGame: row.locked_game || null,
+    // Games a tester may track; empty means any game.
+    assignedGames: parseGameList(row.locked_game),
     disabled: Boolean(row.disabled),
     createdAt: row.created_at,
     lastLoginAt: row.last_login_at || null
@@ -95,14 +96,21 @@ export function cleanPassword(value) {
   return password;
 }
 
-export function cleanGameNumber(value) {
-  const game = String(value ?? "").trim();
-  if (!game) return null;
-  if (!/^\d{1,20}$/.test(game)) throw new AuthError("Game number must be digits only.", 400);
-  return game;
+export function parseGameList(value) {
+  return [...new Set(String(value ?? "").split(/[\s,]+/).filter(Boolean))];
 }
 
-export async function createUser(env, { id, username, password, role = "tester", lockedGame = null }) {
+// Accepts an array or "9079, 9084"; stored as a comma-separated list.
+export function cleanGameList(value) {
+  const games = Array.isArray(value) ? value.map((game) => String(game).trim()).filter(Boolean) : parseGameList(value);
+  for (const game of games) {
+    if (!/^\d{1,20}$/.test(game)) throw new AuthError(`Game number must be digits only: ${game}`, 400);
+  }
+  return [...new Set(games)];
+}
+
+export async function createUser(env, { id, username, password, role = "tester", assignedGames = [] }) {
+  const lockedGame = assignedGames.length ? assignedGames.join(",") : null;
   const { hash, salt } = await hashPassword(password);
   await env.DB.prepare(`
     INSERT INTO users (id, username, password_hash, salt, role, locked_game, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -127,7 +135,7 @@ export async function userFromRequest(env, request) {
   if (!token) return null;
   if (env.ADMIN_TOKEN && sameText(token, env.ADMIN_TOKEN)) {
     const admin = await env.DB.prepare(`SELECT * FROM users WHERE role = 'admin' LIMIT 1`).first();
-    return admin ? userFromRow(admin) : { id: ADMIN_ID, username: "admin", role: "admin", isAdmin: true, lockedGame: null, disabled: false, service: true };
+    return admin ? userFromRow(admin) : { id: ADMIN_ID, username: "admin", role: "admin", isAdmin: true, assignedGames: [], disabled: false, service: true };
   }
 
   const [body, signature] = token.split(".");

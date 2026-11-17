@@ -4,9 +4,18 @@ import { navigate } from "../router.js";
 import { formatDateTime, gameFacts, gameTitle } from "../format.js";
 import RenameGame from "../components/RenameGame.jsx";
 import KnownPlayers from "../components/KnownPlayers.jsx";
+import AssignedGames from "./AssignedGames.jsx";
 
+// Testers with assigned games get a page with just those games.
 export default function GamesPage({ user, isAdmin }) {
-  const locked = user?.lockedGame || "";
+  if (!isAdmin && user?.assignedGames?.length) {
+    return <AssignedGames assigned={user.assignedGames} />;
+  }
+  return <TrackedGames isAdmin={isAdmin} />;
+}
+
+function TrackedGames({ isAdmin }) {
+  const locked = "";
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState("");
@@ -82,7 +91,7 @@ export default function GamesPage({ user, isAdmin }) {
           {isAdmin ? (
             <p className="muted">Tracked games are scanned every 10 minutes (a new scan is stored once per NP tick), and the 🔔 lights up when an enemy fleet is launched at one of your stars. When a game ends or you delete it, its final state, your captures and its full alliance and war record are kept, so finished games stay viewable after Neptune's Pride deletes them.</p>
           ) : (
-            <p className="muted">Add your game with its API code and it is scanned every 10 minutes: who is allied or at war, who is AFK, a replayable map, and the 🔔 lights up when an enemy fleet is launched at one of your stars. {locked ? `Your test account is set up for game ${locked}. ` : ""}Your games are only visible to you and the site admin, and are erased 24 hours after the game ends. Use 💬 Feedback to say what you think.</p>
+            <p className="muted">Add your game with its API code and it is scanned every 10 minutes: who is allied or at war, who is AFK, a replayable map, and the 🔔 lights up when an enemy fleet is launched at one of your stars. Your games are only visible to you and the site admin, and are erased 24 hours after the game ends. Use 💬 Feedback to say what you think.</p>
           )}
         </div>
         <button type="button" className="primary" onClick={() => setFormOpen((open) => !open)}>
@@ -96,7 +105,7 @@ export default function GamesPage({ user, isAdmin }) {
           <div className="form-grid">
             <label className="field">
               <span>Game number</span>
-              <input value={form.gameNumber} readOnly={Boolean(locked)} onChange={(event) => setForm({ ...form, gameNumber: event.target.value })} placeholder="5123456789" />
+              <input value={form.gameNumber} onChange={(event) => setForm({ ...form, gameNumber: event.target.value })} placeholder="5123456789" />
             </label>
             <label className="field">
               <span>API code</span>

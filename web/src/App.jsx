@@ -122,7 +122,7 @@ function Shell({ me, viewingAs }) {
     <div className={`app${fullBleed ? " full-bleed" : ""}`}>
       {viewingAs && (
         <div className="view-as-banner">
-          Viewing as <strong>{viewingAs.username}</strong>{viewingAs.lockedGame ? ` (game ${viewingAs.lockedGame} only)` : ""}: you see exactly what they see.
+          Viewing as <strong>{viewingAs.username}</strong>{viewingAs.assignedGames?.length ? ` (game ${viewingAs.assignedGames.join(", ")})` : ""}: you see exactly what they see.
           <button type="button" className="ghost small" onClick={stopViewing}>Back to my view</button>
         </div>
       )}

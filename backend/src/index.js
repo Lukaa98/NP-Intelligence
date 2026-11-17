@@ -1,5 +1,5 @@
 import { sendNtfy, threatNotification } from "./alerts.js";
-import { ADMIN_ID, AuthError, cleanGameNumber, cleanPassword, cleanUsername, createUser, hashPassword, login, needsSetup, userFromRequest, userFromRow } from "./auth.js";
+import { ADMIN_ID, AuthError, cleanGameList, cleanPassword, cleanUsername, createUser, hashPassword, login, needsSetup, parseGameList, userFromRequest, userFromRow } from "./auth.js";
 import { budgetState, countingEnv, DAILY_WRITE_LIMIT, HARD_LIMIT, recordUsage, SOFT_LIMIT, today, usageToday } from "./budget.js";
 import { buildDiplomacy } from "./diplomacy.js";
 import { detectThreats } from "./threats.js";
@@ -488,7 +488,7 @@ async function handleAdmin(request, env, url, caller) {
     if (await env.DB.prepare(`SELECT 1 FROM users WHERE id = ? OR username = ?`).bind(id, username).first()) {
       return json({ error: `User ${username} already exists.` }, 409);
     }
-    const user = await createUser(env, { id, username, password: cleanPassword(payload.password), lockedGame: cleanGameNumber(payload.lockedGame) });
+    const user = await createUser(env, { id, username, password: cleanPassword(payload.password), assignedGames: cleanGameList(payload.assignedGames) });
     return json({ user });
   }
 
@@ -504,8 +504,12 @@ async function handleAdmin(request, env, url, caller) {
         const { hash, salt } = await hashPassword(cleanPassword(payload.password));
         await env.DB.prepare(`UPDATE users SET password_hash = ?, salt = ? WHERE id = ?`).bind(hash, salt, id).run();
       }
-      if (payload.lockedGame !== undefined && row.role !== "admin") {
-        await env.DB.prepare(`UPDATE users SET locked_game = ? WHERE id = ?`).bind(cleanGameNumber(payload.lockedGame), id).run();
+      // Assigned games: a game taken away also erases the tester's copy of it.
+      if (payload.assignedGames !== undefined && row.role !== "admin") {
+        const games = cleanGameList(payload.assignedGames);
+        const removed = parseGameList(row.locked_game).filter((game) => !games.includes(game));
+        await env.DB.prepare(`UPDATE users SET locked_game = ? WHERE id = ?`).bind(games.join(",") || null, id).run();
+        for (const game of removed) await purgeGame(env, `${game}~${id}`);
       }
       if (payload.disabled !== undefined && row.role !== "admin") {
         await env.DB.prepare(`UPDATE users SET disabled = ? WHERE id = ?`).bind(payload.disabled ? 1 : 0, id).run();
@@ -550,8 +554,8 @@ async function createGame(request, env, user) {
   if (!/^\d{1,20}$/.test(number)) {
     return json({ error: "Game number must be digits only." }, 400);
   }
-  if (user.lockedGame && number !== user.lockedGame) {
-    return json({ error: `Your account is set up for game ${user.lockedGame} only.` }, 403);
+  if (user.assignedGames?.length && !user.assignedGames.includes(number)) {
+    return json({ error: `Your account is set up for game ${user.assignedGames.join(", ")} only.` }, 403);
   }
   // The admin's games keep their plain number; a tester's copy of a game
   // gets its own key so two people can track the same game separately.
