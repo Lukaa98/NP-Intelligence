@@ -58,6 +58,7 @@ import {
   listUsers,
   purgeUserData,
   snapshotOwner,
+  storageStats,
   trackEvent,
   usageByUser
 } from "./store.js";
@@ -224,7 +225,11 @@ async function handleFetch(request, env, ctx, budget) {
 
       if (request.method === "GET" && url.pathname === "/api/usage") {
         const rowsWritten = await usageToday(env);
-        return json({ day: today(), rowsWritten, limit: DAILY_WRITE_LIMIT, softLimit: SOFT_LIMIT, hardLimit: HARD_LIMIT, state: budgetState(rowsWritten) });
+        return json({
+          day: today(), rowsWritten, limit: DAILY_WRITE_LIMIT, softLimit: SOFT_LIMIT, hardLimit: HARD_LIMIT, state: budgetState(rowsWritten),
+          // Cloudflare free plan: 500 MB per database, 5 GB per account.
+          storage: { ...(await storageStats(env)), databaseLimit: 500 * 1024 * 1024, accountLimit: 5 * 1024 * 1024 * 1024 }
+        });
       }
 
       // Writes that make new data stop once the day's budget is nearly used up.

@@ -319,3 +319,4 @@ code { background: #0b0a1f; padding: 1px 6px; border-radius: 4px; }
 .assign-chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 4px 2px 10px; border: 1px solid var(--line); border-radius: 999px; font-size: 0.85rem; }
 .assign-chip button { padding: 0 6px; min-height: 0; line-height: 1.4; }
 .assign-row input { width: 110px; }
+.usage-storage { margin-top: 10px; }

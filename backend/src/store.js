@@ -186,6 +186,7 @@ export async function saveSnapshot(env, gameNumber, scanningData, source, { pinn
     label,
     data: scanningData
   };
+  const json = JSON.stringify(scanningData);
 
   await env.DB.prepare(`
     INSERT INTO snapshots (
@@ -199,10 +200,11 @@ export async function saveSnapshot(env, gameNumber, scanningData, source, { pinn
       player_uid,
       game_name,
       data_json,
+      size_bytes,
       pinned,
       label
     )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `).bind(
     snapshot.id,
     snapshot.gameNumber,
@@ -213,7 +215,8 @@ export async function saveSnapshot(env, gameNumber, scanningData, source, { pinn
     snapshot.productionRate,
     snapshot.playerUid,
     snapshot.gameName,
-    JSON.stringify(scanningData),
+    json,
+    new TextEncoder().encode(json).length,
     pinned ? 1 : 0,
     label
   ).run();
@@ -223,7 +226,9 @@ export async function saveSnapshot(env, gameNumber, scanningData, source, { pinn
 
 export async function listGames(env, owner) {
   const rows = await env.DB.prepare(`
-    SELECT *
+    SELECT *,
+      (SELECT COALESCE(SUM(size_bytes), 0) FROM snapshots s WHERE s.game_number = games.game_number) AS storage_bytes,
+      (SELECT COUNT(*) FROM snapshots s WHERE s.game_number = games.game_number) AS snapshot_count
     FROM games
     WHERE owner = ?
     ORDER BY COALESCE(last_sync_at, created_at) DESC
@@ -288,7 +293,7 @@ export async function listSnapshots(env, gameNumber, limit = 50) {
 export async function listSnapshotMeta(env, gameNumber, { pinnedOnly = false, limit = 100 } = {}) {
   const rows = await env.DB.prepare(`
     SELECT id, game_number, tick, source, captured_at, production_counter, production_rate, player_uid, game_name, pinned, label,
-      LENGTH(data_json) AS size_bytes
+      COALESCE(size_bytes, LENGTH(data_json)) AS size_bytes
     FROM snapshots
     WHERE game_number = ? ${pinnedOnly ? "AND pinned = 1" : ""}
     ORDER BY captured_at DESC
@@ -761,6 +766,8 @@ function gameFromRow(row) {
     finishedAt: row.finished_at || null,
     owner: row.owner || "admin",
     npNumber: npNumber(row.game_number),
+    storageBytes: row.storage_bytes ?? null,
+    snapshotCount: row.snapshot_count ?? null,
     apiKeyPreview: maskKey(row.code)
   };
 }
@@ -1139,4 +1146,23 @@ export async function purgeUserData(env, owner, { notes = false } = {}) {
     await env.DB.prepare(`DELETE FROM usage_events WHERE owner = ?`).bind(owner).run();
   }
   return games.length;
+}
+
+// Database size and what the stored scans take, for the usage panel.
+// D1 reports the whole database's size with every query result.
+export async function storageStats(env) {
+  const result = await env.DB.prepare(`
+    SELECT COUNT(*) AS scans, COALESCE(SUM(size_bytes), 0) AS scan_bytes,
+      COALESCE(SUM(CASE WHEN pinned = 1 THEN size_bytes ELSE 0 END), 0) AS pinned_bytes
+    FROM snapshots
+  `).all();
+  const row = result.results[0] || {};
+  const history = (await env.DB.prepare(`SELECT day, rows_written FROM usage_daily ORDER BY day DESC LIMIT 7`).all()).results;
+  return {
+    databaseBytes: Number(result.meta?.size_after ?? 0) || null,
+    scans: row.scans || 0,
+    scanBytes: row.scan_bytes || 0,
+    pinnedBytes: row.pinned_bytes || 0,
+    writesByDay: history.map((item) => ({ day: item.day, rowsWritten: item.rows_written }))
+  };
 }

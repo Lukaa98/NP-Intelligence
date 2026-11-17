@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { api } from "../api.js";
 import { navigate } from "../router.js";
-import { formatDateTime, gameFacts, gameTitle } from "../format.js";
+import { formatBytes, formatDateTime, gameFacts, gameTitle } from "../format.js";
 import RenameGame from "../components/RenameGame.jsx";
 import KnownPlayers from "../components/KnownPlayers.jsx";
 import AssignedGames from "./AssignedGames.jsx";
@@ -153,6 +153,7 @@ function TrackedGames({ isAdmin }) {
                   </div>
                   <div className="meta">{gameFacts(game)}</div>
                   <div className="meta">tick {game.lastTick ?? 0} · new tick seen {formatDateTime(game.lastSyncAt)}</div>
+                  <StorageLine game={game} />
                   <div className="pills">
                     {!!threatCounts[game.gameNumber] && (
                       <span className="pill danger">🚨 {threatCounts[game.gameNumber]} incoming</span>
@@ -203,6 +204,7 @@ function TrackedGames({ isAdmin }) {
                     <RenameGame game={game} onRenamed={replaceGame} />
                   </div>
                   <div className="meta">{gameFacts(game)} · final tick {game.lastTick ?? 0} · deleted {formatDateTime(game.archivedAt)}</div>
+                  <StorageLine game={game} />
                 </div>
                 <div className="game-actions" onClick={(event) => event.stopPropagation()}>
                   <button type="button" className="secondary" onClick={() => navigate(`/game/${game.gameNumber}`)}>History</button>
@@ -228,9 +230,22 @@ function TrackedGames({ isAdmin }) {
   );
 }
 
-// Database writes today vs Cloudflare's free D1 limit (100k rows a day).
+// What a game's stored scans take in the Cloudflare database.
+function StorageLine({ game }) {
+  if (game.storageBytes === null || game.storageBytes === undefined) return null;
+  return (
+    <div className="meta" title="Space this game's stored scans take in the Cloudflare database">
+      💾 {formatBytes(game.storageBytes)} in Cloudflare · {game.snapshotCount} scan{game.snapshotCount === 1 ? "" : "s"}
+      {game.exportedAt ? " · full history on GitHub" : ""}
+    </div>
+  );
+}
+
+// Database writes today vs Cloudflare's free D1 limit (100k rows a day),
+// and how much of the free storage the database uses.
 function UsageBar({ usage }) {
   const share = Math.min(1, usage.rowsWritten / usage.limit);
+  const storage = usage.storage;
   const note = usage.state === "paused_all"
     ? "Scans are paused until 00:00 UTC to stay on the free plan."
     : usage.state === "paused_optional"
@@ -243,6 +258,28 @@ function UsageBar({ usage }) {
       </div>
       <div className={`usage-bar ${usage.state}`}><span style={{ width: `${share * 100}%` }} /></div>
       <p className="muted small">{note}</p>
+      {storage?.writesByDay?.length > 1 && (
+        <p className="muted small">Last days: {storage.writesByDay.map((item) => `${item.day.slice(5)} ${item.rowsWritten.toLocaleString()}`).join(" · ")}</p>
+      )}
+      {storage && <StorageBar storage={storage} />}
     </section>
+  );
+}
+
+function StorageBar({ storage }) {
+  const size = storage.databaseBytes ?? storage.scanBytes;
+  const share = Math.min(1, size / storage.databaseLimit);
+  const state = share >= 0.9 ? "paused_all" : share >= 0.7 ? "paused_optional" : "ok";
+  return (
+    <>
+      <div className="section-head usage-storage">
+        <span className="small">Database size: <strong>{formatBytes(size)}</strong> / {formatBytes(storage.databaseLimit)} (free plan limit per database; {formatBytes(storage.accountLimit)} per account)</span>
+      </div>
+      <div className={`usage-bar ${state}`}><span style={{ width: `${share * 100}%` }} /></div>
+      <p className="muted small">
+        {storage.scans.toLocaleString()} stored scans take {formatBytes(storage.scanBytes)}, of which {formatBytes(storage.pinnedBytes)} are pinned maps kept for good.
+        Hourly history of finished games moves to GitHub and is then removed here, so this shrinks again.
+      </p>
+    </>
   );
 }
