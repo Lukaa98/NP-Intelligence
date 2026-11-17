@@ -5,7 +5,6 @@ import GamePage from "./pages/GamePage.jsx";
 import MapPage from "./pages/MapPage.jsx";
 import PlayersPage from "./pages/PlayersPage.jsx";
 import SettingsDialog from "./components/SettingsDialog.jsx";
-import AlertBell from "./components/AlertBell.jsx";
 import FeedbackButton from "./components/FeedbackButton.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import AdminPage from "./pages/AdminPage.jsx";
@@ -135,7 +134,6 @@ function Shell({ me, viewingAs }) {
           <a className={route.name === "games" || route.name === "game" ? "active" : ""} href="#/">Games</a>
           <a className={route.name === "players" ? "active" : ""} href="#/players">Players</a>
           {me.isAdmin && !viewingAs && <a className={route.name === "admin" ? "active" : ""} href="#/admin">Admin</a>}
-          <AlertBell gameNumber={route.gameNumber || (route.snapshotId ? route.snapshotId.split("-")[0] : null)} />
           {!me.isAdmin && <FeedbackButton />}
           {me.isAdmin && <button type="button" className="ghost" onClick={() => setSettingsOpen(true)}>Settings</button>}
           <button type="button" className="ghost" onClick={logOut} title={`Logged in as ${me.username}`}>Log out</button>

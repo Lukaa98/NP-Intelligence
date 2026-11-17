@@ -12,8 +12,7 @@ const EVENT_LABELS = {
   "page:map": "map",
   "page:players": "players page",
   player_panel: "player panels",
-  timeline_play: "timeline plays",
-  alerts_open: "alert bell"
+  timeline_play: "timeline plays"
 };
 
 // Testers: create, lock to a game, switch off, view as. Plus usage and feedback.
