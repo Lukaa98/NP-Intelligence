@@ -13,6 +13,9 @@ for (const account of accounts.result) {
   const names = Object.fromEntries((dbs.result || []).map((db) => [db.uuid, db.name]));
   console.log(`\nAccount: ${account.name}`);
   console.log(`Databases: ${Object.values(names).join(", ") || "(none listed)"}`);
+  for (const db of dbs.result || []) {
+    console.log(`  ${db.name}: ${(Number(db.file_size || 0) / 1048576).toFixed(1)} MB on disk, ${db.num_tables ?? "?"} tables`);
+  }
 
   const since = new Date(Date.now() - 6 * 86400000).toISOString().slice(0, 10);
   const query = `query ($account: String!, $since: Date!) {
