@@ -933,6 +933,8 @@ export async function openThreats(env) {
     SELECT t.*, g.name AS game_name, g.nickname AS game_nickname, g.last_tick AS game_tick
     FROM threats t JOIN games g ON g.game_number = t.game_number
     WHERE t.status = 'open'
+      AND g.finished_at IS NULL
+      AND g.archived_at IS NULL
     ORDER BY t.first_tick DESC
   `).all()).results;
   return rows.map((row) => ({
@@ -958,7 +960,7 @@ export async function openThreats(env) {
 }
 
 export async function openThreatCounts(env) {
-  const rows = (await env.DB.prepare(`SELECT game_number, COUNT(*) AS n FROM threats WHERE status = 'open' GROUP BY game_number`).all()).results;
+  const rows = (await env.DB.prepare(`SELECT t.game_number, COUNT(*) AS n FROM threats t JOIN games g ON g.game_number = t.game_number WHERE t.status = 'open' AND g.finished_at IS NULL AND g.archived_at IS NULL GROUP BY t.game_number`).all()).results;
   return Object.fromEntries(rows.map((row) => [row.game_number, row.n]));
 }
 
