@@ -1,0 +1,8955 @@
+{
+ "game": {
+  "gameNumber": "9084",
+  "name": "Iota Albireo",
+  "playerUid": 1,
+  "enabled": true,
+  "keyStatus": "needs_fresh_key",
+  "keyStatusMessage": "NP API status 200",
+  "lastTick": 322,
+  "lastSyncAt": "2026-11-17T06:30:18.644Z",
+  "lastErrorAt": "2026-11-17T07:00:18.518Z",
+  "createdAt": "2026-11-03T17:19:32.990Z",
+  "updatedAt": "2026-11-17T07:00:18.518Z",
+  "archivedAt": null,
+  "nickname": "Iota Albireo 8 player",
+  "playerCount": 8,
+  "myAlias": "RocketCharger",
+  "relationTick": 322,
+  "exportedAt": null,
+  "archiveRef": null,
+  "relationSnapshots": 279,
+  "finishedAt": null,
+  "owner": "admin",
+  "npNumber": "9084",
+  "storageBytes": null,
+  "snapshotCount": null,
+  "apiKeyPreview": "XXo****RNN"
+ },
+ "frames": [
+  {
+   "id": "9084-0-1793726373078",
+   "tick": 0,
+   "capturedAt": "2026-11-03T17:19:33.078Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/0.json"
+  },
+  {
+   "id": "9084-1-1793741418486",
+   "tick": 1,
+   "capturedAt": "2026-11-03T21:30:18.486Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/1.json"
+  },
+  {
+   "id": "9084-2-1793745017473",
+   "tick": 2,
+   "capturedAt": "2026-11-03T22:30:17.473Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/2.json"
+  },
+  {
+   "id": "9084-3-1793748618026",
+   "tick": 3,
+   "capturedAt": "2026-11-03T23:30:18.026Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/3.json"
+  },
+  {
+   "id": "9084-4-1793752217899",
+   "tick": 4,
+   "capturedAt": "2026-11-04T00:30:17.899Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/4.json"
+  },
+  {
+   "id": "9084-5-1793756418460",
+   "tick": 5,
+   "capturedAt": "2026-11-04T01:40:18.460Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/5.json"
+  },
+  {
+   "id": "9084-6-1793759417608",
+   "tick": 6,
+   "capturedAt": "2026-11-04T02:30:17.608Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/6.json"
+  },
+  {
+   "id": "9084-7-1793763018314",
+   "tick": 7,
+   "capturedAt": "2026-11-04T03:30:18.314Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/7.json"
+  },
+  {
+   "id": "9084-8-1793766618046",
+   "tick": 8,
+   "capturedAt": "2026-11-04T04:30:18.046Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/8.json"
+  },
+  {
+   "id": "9084-9-1793770218119",
+   "tick": 9,
+   "capturedAt": "2026-11-04T05:30:18.119Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/9.json"
+  },
+  {
+   "id": "9084-10-1793773819424",
+   "tick": 10,
+   "capturedAt": "2026-11-04T06:30:19.424Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/10.json"
+  },
+  {
+   "id": "9084-11-1793778018425",
+   "tick": 11,
+   "capturedAt": "2026-11-04T07:40:18.425Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/11.json"
+  },
+  {
+   "id": "9084-12-1793781017603",
+   "tick": 12,
+   "capturedAt": "2026-11-04T08:30:17.603Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/12.json"
+  },
+  {
+   "id": "9084-13-1793784617481",
+   "tick": 13,
+   "capturedAt": "2026-11-04T09:30:17.481Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/13.json"
+  },
+  {
+   "id": "9084-14-1793788217838",
+   "tick": 14,
+   "capturedAt": "2026-11-04T10:30:17.838Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/14.json"
+  },
+  {
+   "id": "9084-15-1793793017621",
+   "tick": 15,
+   "capturedAt": "2026-11-04T11:50:17.621Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/15.json"
+  },
+  {
+   "id": "9084-16-1793796019491",
+   "tick": 16,
+   "capturedAt": "2026-11-04T12:40:19.491Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/16.json"
+  },
+  {
+   "id": "9084-17-1793799617905",
+   "tick": 17,
+   "capturedAt": "2026-11-04T13:40:17.905Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/17.json"
+  },
+  {
+   "id": "9084-18-1793803818754",
+   "tick": 18,
+   "capturedAt": "2026-11-04T14:50:18.754Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/18.json"
+  },
+  {
+   "id": "9084-19-1793806219501",
+   "tick": 19,
+   "capturedAt": "2026-11-04T15:30:19.501Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/19.json"
+  },
+  {
+   "id": "9084-20-1793809817806",
+   "tick": 20,
+   "capturedAt": "2026-11-04T16:30:17.806Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/20.json"
+  },
+  {
+   "id": "9084-21-1793814018375",
+   "tick": 21,
+   "capturedAt": "2026-11-04T17:40:18.375Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/21.json"
+  },
+  {
+   "id": "9084-22-1793817018805",
+   "tick": 22,
+   "capturedAt": "2026-11-04T18:30:18.805Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/22.json"
+  },
+  {
+   "id": "9084-23-1793823017647",
+   "tick": 23,
+   "capturedAt": "2026-11-04T20:10:17.647Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/23.json"
+  },
+  {
+   "id": "9084-24-1793824219866",
+   "tick": 24,
+   "capturedAt": "2026-11-04T20:30:19.866Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/24.json"
+  },
+  {
+   "id": "9084-25-1793828418046",
+   "tick": 25,
+   "capturedAt": "2026-11-04T21:40:18.046Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/25.json"
+  },
+  {
+   "id": "9084-26-1793831417785",
+   "tick": 26,
+   "capturedAt": "2026-11-04T22:30:17.785Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/26.json"
+  },
+  {
+   "id": "9084-27-1793836218247",
+   "tick": 27,
+   "capturedAt": "2026-11-04T23:50:18.247Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/27.json"
+  },
+  {
+   "id": "9084-30-1793845817705",
+   "tick": 30,
+   "capturedAt": "2026-11-05T02:30:17.705Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/30.json"
+  },
+  {
+   "id": "9084-31-1793849417772",
+   "tick": 31,
+   "capturedAt": "2026-11-05T03:30:17.772Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/31.json"
+  },
+  {
+   "id": "9084-32-1793856017908",
+   "tick": 32,
+   "capturedAt": "2026-11-05T05:20:17.908Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/32.json"
+  },
+  {
+   "id": "9084-33-1793859018096",
+   "tick": 33,
+   "capturedAt": "2026-11-05T06:10:18.096Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/33.json"
+  },
+  {
+   "id": "9084-34-1793860817842",
+   "tick": 34,
+   "capturedAt": "2026-11-05T06:40:17.842Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/34.json"
+  },
+  {
+   "id": "9084-35-1793864418411",
+   "tick": 35,
+   "capturedAt": "2026-11-05T07:40:18.411Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/35.json"
+  },
+  {
+   "id": "9084-36-1793867417805",
+   "tick": 36,
+   "capturedAt": "2026-11-05T08:30:17.805Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/36.json"
+  },
+  {
+   "id": "9084-37-1793871617489",
+   "tick": 37,
+   "capturedAt": "2026-11-05T09:40:17.489Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/37.json"
+  },
+  {
+   "id": "9084-38-1793874617742",
+   "tick": 38,
+   "capturedAt": "2026-11-05T10:30:17.742Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/38.json"
+  },
+  {
+   "id": "9084-39-1793878218639",
+   "tick": 39,
+   "capturedAt": "2026-11-05T11:30:18.639Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/39.json"
+  },
+  {
+   "id": "9084-40-1793881818473",
+   "tick": 40,
+   "capturedAt": "2026-11-05T12:30:18.473Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/40.json"
+  },
+  {
+   "id": "9084-41-1793885418337",
+   "tick": 41,
+   "capturedAt": "2026-11-05T13:30:18.337Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/41.json"
+  },
+  {
+   "id": "9084-42-1793892018108",
+   "tick": 42,
+   "capturedAt": "2026-11-05T15:20:18.108Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/42.json"
+  },
+  {
+   "id": "9084-43-1793892618533",
+   "tick": 43,
+   "capturedAt": "2026-11-05T15:30:18.533Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/43.json"
+  },
+  {
+   "id": "9084-44-1793897418143",
+   "tick": 44,
+   "capturedAt": "2026-11-05T16:50:18.143Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/44.json"
+  },
+  {
+   "id": "9084-45-1793899817854",
+   "tick": 45,
+   "capturedAt": "2026-11-05T17:30:17.854Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/45.json"
+  },
+  {
+   "id": "9084-46-1793904018371",
+   "tick": 46,
+   "capturedAt": "2026-11-05T18:40:18.371Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/46.json"
+  },
+  {
+   "id": "9084-47-1793908218490",
+   "tick": 47,
+   "capturedAt": "2026-11-05T19:50:18.490Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/47.json"
+  },
+  {
+   "id": "9084-48-1793910618454",
+   "tick": 48,
+   "capturedAt": "2026-11-05T20:30:18.454Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/48.json"
+  },
+  {
+   "id": "9084-49-1793914219174",
+   "tick": 49,
+   "capturedAt": "2026-11-05T21:30:19.174Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/49.json"
+  },
+  {
+   "id": "9084-50-1793919618346",
+   "tick": 50,
+   "capturedAt": "2026-11-05T23:00:18.346Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/50.json"
+  },
+  {
+   "id": "9084-51-1793923218685",
+   "tick": 51,
+   "capturedAt": "2026-11-06T00:00:18.685Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/51.json"
+  },
+  {
+   "id": "9084-53-1793931018588",
+   "tick": 53,
+   "capturedAt": "2026-11-06T02:10:18.588Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/53.json"
+  },
+  {
+   "id": "9084-54-1793932219060",
+   "tick": 54,
+   "capturedAt": "2026-11-06T02:30:19.060Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/54.json"
+  },
+  {
+   "id": "9084-55-1793935817641",
+   "tick": 55,
+   "capturedAt": "2026-11-06T03:30:17.641Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/55.json"
+  },
+  {
+   "id": "9084-56-1793939419026",
+   "tick": 56,
+   "capturedAt": "2026-11-06T04:30:19.026Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/56.json"
+  },
+  {
+   "id": "9084-57-1793943018397",
+   "tick": 57,
+   "capturedAt": "2026-11-06T05:30:18.397Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/57.json"
+  },
+  {
+   "id": "9084-58-1793946618382",
+   "tick": 58,
+   "capturedAt": "2026-11-06T06:30:18.382Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/58.json"
+  },
+  {
+   "id": "9084-59-1793950218264",
+   "tick": 59,
+   "capturedAt": "2026-11-06T07:30:18.264Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/59.json"
+  },
+  {
+   "id": "9084-60-1793953819450",
+   "tick": 60,
+   "capturedAt": "2026-11-06T08:30:19.450Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/60.json"
+  },
+  {
+   "id": "9084-61-1793958617740",
+   "tick": 61,
+   "capturedAt": "2026-11-06T09:50:17.740Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/61.json"
+  },
+  {
+   "id": "9084-62-1793961020558",
+   "tick": 62,
+   "capturedAt": "2026-11-06T10:30:20.558Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/62.json"
+  },
+  {
+   "id": "9084-64-1793970618484",
+   "tick": 64,
+   "capturedAt": "2026-11-06T13:10:18.484Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/64.json"
+  },
+  {
+   "id": "9084-65-1793974218566",
+   "tick": 65,
+   "capturedAt": "2026-11-06T14:10:18.566Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/65.json"
+  },
+  {
+   "id": "9084-66-1793975419058",
+   "tick": 66,
+   "capturedAt": "2026-11-06T14:30:19.058Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/66.json"
+  },
+  {
+   "id": "9084-67-1793980218131",
+   "tick": 67,
+   "capturedAt": "2026-11-06T15:50:18.131Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/67.json"
+  },
+  {
+   "id": "9084-68-1793983218350",
+   "tick": 68,
+   "capturedAt": "2026-11-06T16:40:18.350Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/68.json"
+  },
+  {
+   "id": "9084-69-1793986218306",
+   "tick": 69,
+   "capturedAt": "2026-11-06T17:30:18.306Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/69.json"
+  },
+  {
+   "id": "9084-70-1793989819930",
+   "tick": 70,
+   "capturedAt": "2026-11-06T18:30:19.930Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/70.json"
+  },
+  {
+   "id": "9084-71-1793993419040",
+   "tick": 71,
+   "capturedAt": "2026-11-06T19:30:19.040Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/71.json"
+  },
+  {
+   "id": "9084-72-1793998217911",
+   "tick": 72,
+   "capturedAt": "2026-11-06T20:50:17.911Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/72.json"
+  },
+  {
+   "id": "9084-73-1794000618169",
+   "tick": 73,
+   "capturedAt": "2026-11-06T21:30:18.169Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/73.json"
+  },
+  {
+   "id": "9084-74-1794004218254",
+   "tick": 74,
+   "capturedAt": "2026-11-06T22:30:18.254Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/74.json"
+  },
+  {
+   "id": "9084-75-1794009618330",
+   "tick": 75,
+   "capturedAt": "2026-11-07T00:00:18.330Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/75.json"
+  },
+  {
+   "id": "9084-76-1794011418241",
+   "tick": 76,
+   "capturedAt": "2026-11-07T00:30:18.241Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/76.json"
+  },
+  {
+   "id": "9084-79-1794022818012",
+   "tick": 79,
+   "capturedAt": "2026-11-07T03:40:18.012Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/79.json"
+  },
+  {
+   "id": "9084-80-1794028817829",
+   "tick": 80,
+   "capturedAt": "2026-11-07T05:20:17.829Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/80.json"
+  },
+  {
+   "id": "9084-81-1794029417880",
+   "tick": 81,
+   "capturedAt": "2026-11-07T05:30:17.880Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/81.json"
+  },
+  {
+   "id": "9084-82-1794033017814",
+   "tick": 82,
+   "capturedAt": "2026-11-07T06:30:17.814Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/82.json"
+  },
+  {
+   "id": "9084-83-1794036619232",
+   "tick": 83,
+   "capturedAt": "2026-11-07T07:30:19.232Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/83.json"
+  },
+  {
+   "id": "9084-84-1794040218362",
+   "tick": 84,
+   "capturedAt": "2026-11-07T08:30:18.362Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/84.json"
+  },
+  {
+   "id": "9084-85-1794043818042",
+   "tick": 85,
+   "capturedAt": "2026-11-07T09:30:18.042Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/85.json"
+  },
+  {
+   "id": "9084-86-1794049831063",
+   "tick": 86,
+   "capturedAt": "2026-11-07T11:10:31.063Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/86.json"
+  },
+  {
+   "id": "9084-87-1794051617812",
+   "tick": 87,
+   "capturedAt": "2026-11-07T11:40:17.812Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/87.json"
+  },
+  {
+   "id": "9084-89-1794059418294",
+   "tick": 89,
+   "capturedAt": "2026-11-07T13:50:18.294Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/89.json"
+  },
+  {
+   "id": "9084-90-1794063618641",
+   "tick": 90,
+   "capturedAt": "2026-11-07T15:00:18.641Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/90.json"
+  },
+  {
+   "id": "9084-91-1794067818960",
+   "tick": 91,
+   "capturedAt": "2026-11-07T16:10:18.960Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/91.json"
+  },
+  {
+   "id": "9084-92-1794069017575",
+   "tick": 92,
+   "capturedAt": "2026-11-07T16:30:17.575Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/92.json"
+  },
+  {
+   "id": "9084-93-1794073218259",
+   "tick": 93,
+   "capturedAt": "2026-11-07T17:40:18.259Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/93.json"
+  },
+  {
+   "id": "9084-94-1794078619885",
+   "tick": 94,
+   "capturedAt": "2026-11-07T19:10:19.885Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/94.json"
+  },
+  {
+   "id": "9084-95-1794080418780",
+   "tick": 95,
+   "capturedAt": "2026-11-07T19:40:18.780Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/95.json"
+  },
+  {
+   "id": "9084-96-1794083417907",
+   "tick": 96,
+   "capturedAt": "2026-11-07T20:30:17.907Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/96.json"
+  },
+  {
+   "id": "9084-97-1794087018445",
+   "tick": 97,
+   "capturedAt": "2026-11-07T21:30:18.445Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/97.json"
+  },
+  {
+   "id": "9084-98-1794090618778",
+   "tick": 98,
+   "capturedAt": "2026-11-07T22:30:18.778Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/98.json"
+  },
+  {
+   "id": "9084-99-1794094218068",
+   "tick": 99,
+   "capturedAt": "2026-11-07T23:30:18.068Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/99.json"
+  },
+  {
+   "id": "9084-100-1794097818391",
+   "tick": 100,
+   "capturedAt": "2026-11-08T00:30:18.391Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/100.json"
+  },
+  {
+   "id": "9084-101-1794101417967",
+   "tick": 101,
+   "capturedAt": "2026-11-08T01:30:17.967Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/101.json"
+  },
+  {
+   "id": "9084-102-1794106818508",
+   "tick": 102,
+   "capturedAt": "2026-11-08T03:00:18.508Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/102.json"
+  },
+  {
+   "id": "9084-103-1794108617897",
+   "tick": 103,
+   "capturedAt": "2026-11-08T03:30:17.897Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/103.json"
+  },
+  {
+   "id": "9084-104-1794112217641",
+   "tick": 104,
+   "capturedAt": "2026-11-08T04:30:17.641Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/104.json"
+  },
+  {
+   "id": "9084-105-1794115819652",
+   "tick": 105,
+   "capturedAt": "2026-11-08T05:30:19.652Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/105.json"
+  },
+  {
+   "id": "9084-106-1794119417506",
+   "tick": 106,
+   "capturedAt": "2026-11-08T06:30:17.506Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/106.json"
+  },
+  {
+   "id": "9084-107-1794123018370",
+   "tick": 107,
+   "capturedAt": "2026-11-08T07:30:18.370Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/107.json"
+  },
+  {
+   "id": "9084-108-1794126618148",
+   "tick": 108,
+   "capturedAt": "2026-11-08T08:30:18.148Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/108.json"
+  },
+  {
+   "id": "9084-109-1794132618270",
+   "tick": 109,
+   "capturedAt": "2026-11-08T10:10:18.270Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/109.json"
+  },
+  {
+   "id": "9084-110-1794135017817",
+   "tick": 110,
+   "capturedAt": "2026-11-08T10:50:17.817Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/110.json"
+  },
+  {
+   "id": "9084-111-1794138017820",
+   "tick": 111,
+   "capturedAt": "2026-11-08T11:40:17.820Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/111.json"
+  },
+  {
+   "id": "9084-112-1794142218403",
+   "tick": 112,
+   "capturedAt": "2026-11-08T12:50:18.403Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/112.json"
+  },
+  {
+   "id": "9084-113-1794144617467",
+   "tick": 113,
+   "capturedAt": "2026-11-08T13:30:17.467Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/113.json"
+  },
+  {
+   "id": "9084-114-1794148818503",
+   "tick": 114,
+   "capturedAt": "2026-11-08T14:40:18.503Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/114.json"
+  },
+  {
+   "id": "9084-115-1794151817578",
+   "tick": 115,
+   "capturedAt": "2026-11-08T15:30:17.578Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/115.json"
+  },
+  {
+   "id": "9084-116-1794156018055",
+   "tick": 116,
+   "capturedAt": "2026-11-08T16:40:18.055Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/116.json"
+  },
+  {
+   "id": "9084-117-1794159017459",
+   "tick": 117,
+   "capturedAt": "2026-11-08T17:30:17.459Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/117.json"
+  },
+  {
+   "id": "9084-118-1794162618309",
+   "tick": 118,
+   "capturedAt": "2026-11-08T18:30:18.309Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/118.json"
+  },
+  {
+   "id": "9084-119-1794166218080",
+   "tick": 119,
+   "capturedAt": "2026-11-08T19:30:18.080Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/119.json"
+  },
+  {
+   "id": "9084-120-1794169817950",
+   "tick": 120,
+   "capturedAt": "2026-11-08T20:30:17.950Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/120.json"
+  },
+  {
+   "id": "9084-121-1794173418051",
+   "tick": 121,
+   "capturedAt": "2026-11-08T21:30:18.051Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/121.json"
+  },
+  {
+   "id": "9084-122-1794177018284",
+   "tick": 122,
+   "capturedAt": "2026-11-08T22:30:18.284Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/122.json"
+  },
+  {
+   "id": "9084-123-1794180617841",
+   "tick": 123,
+   "capturedAt": "2026-11-08T23:30:17.841Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/123.json"
+  },
+  {
+   "id": "9084-124-1794184217345",
+   "tick": 124,
+   "capturedAt": "2026-11-09T00:30:17.345Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/124.json"
+  },
+  {
+   "id": "9084-125-1794187818003",
+   "tick": 125,
+   "capturedAt": "2026-11-09T01:30:18.003Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/125.json"
+  },
+  {
+   "id": "9084-126-1794191417924",
+   "tick": 126,
+   "capturedAt": "2026-11-09T02:30:17.924Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/126.json"
+  },
+  {
+   "id": "9084-127-1794195017356",
+   "tick": 127,
+   "capturedAt": "2026-11-09T03:30:17.356Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/127.json"
+  },
+  {
+   "id": "9084-128-1794198618113",
+   "tick": 128,
+   "capturedAt": "2026-11-09T04:30:18.113Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/128.json"
+  },
+  {
+   "id": "9084-129-1794202218146",
+   "tick": 129,
+   "capturedAt": "2026-11-09T05:30:18.146Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/129.json"
+  },
+  {
+   "id": "9084-130-1794205817819",
+   "tick": 130,
+   "capturedAt": "2026-11-09T06:30:17.819Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/130.json"
+  },
+  {
+   "id": "9084-131-1794209417965",
+   "tick": 131,
+   "capturedAt": "2026-11-09T07:30:17.965Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/131.json"
+  },
+  {
+   "id": "9084-132-1794216017929",
+   "tick": 132,
+   "capturedAt": "2026-11-09T09:20:17.929Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/132.json"
+  },
+  {
+   "id": "9084-133-1794219018350",
+   "tick": 133,
+   "capturedAt": "2026-11-09T10:10:18.350Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/133.json"
+  },
+  {
+   "id": "9084-134-1794223217998",
+   "tick": 134,
+   "capturedAt": "2026-11-09T11:20:17.998Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/134.json"
+  },
+  {
+   "id": "9084-136-1794230418378",
+   "tick": 136,
+   "capturedAt": "2026-11-09T13:20:18.378Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/136.json"
+  },
+  {
+   "id": "9084-137-1794234018261",
+   "tick": 137,
+   "capturedAt": "2026-11-09T14:20:18.261Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/137.json"
+  },
+  {
+   "id": "9084-138-1794237019213",
+   "tick": 138,
+   "capturedAt": "2026-11-09T15:10:19.213Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/138.json"
+  },
+  {
+   "id": "9084-139-1794238817948",
+   "tick": 139,
+   "capturedAt": "2026-11-09T15:40:17.948Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/139.json"
+  },
+  {
+   "id": "9084-140-1794241818000",
+   "tick": 140,
+   "capturedAt": "2026-11-09T16:30:18.000Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/140.json"
+  },
+  {
+   "id": "9084-141-1794246019455",
+   "tick": 141,
+   "capturedAt": "2026-11-09T17:40:19.455Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/141.json"
+  },
+  {
+   "id": "9084-142-1794249018185",
+   "tick": 142,
+   "capturedAt": "2026-11-09T18:30:18.185Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/142.json"
+  },
+  {
+   "id": "9084-143-1794252618775",
+   "tick": 143,
+   "capturedAt": "2026-11-09T19:30:18.775Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/143.json"
+  },
+  {
+   "id": "9084-144-1794256218565",
+   "tick": 144,
+   "capturedAt": "2026-11-09T20:30:18.565Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/144.json"
+  },
+  {
+   "id": "9084-145-1794259817961",
+   "tick": 145,
+   "capturedAt": "2026-11-09T21:30:17.961Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/145.json"
+  },
+  {
+   "id": "9084-146-1794263417571",
+   "tick": 146,
+   "capturedAt": "2026-11-09T22:30:17.571Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/146.json"
+  },
+  {
+   "id": "9084-147-1794267017758",
+   "tick": 147,
+   "capturedAt": "2026-11-09T23:30:17.758Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/147.json"
+  },
+  {
+   "id": "9084-148-1794270618796",
+   "tick": 148,
+   "capturedAt": "2026-11-10T00:30:18.796Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/148.json"
+  },
+  {
+   "id": "9084-149-1794274217780",
+   "tick": 149,
+   "capturedAt": "2026-11-10T01:30:17.780Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/149.json"
+  },
+  {
+   "id": "9084-150-1794277818049",
+   "tick": 150,
+   "capturedAt": "2026-11-10T02:30:18.049Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/150.json"
+  },
+  {
+   "id": "9084-151-1794281417822",
+   "tick": 151,
+   "capturedAt": "2026-11-10T03:30:17.822Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/151.json"
+  },
+  {
+   "id": "9084-152-1794285018108",
+   "tick": 152,
+   "capturedAt": "2026-11-10T04:30:18.108Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/152.json"
+  },
+  {
+   "id": "9084-153-1794288618889",
+   "tick": 153,
+   "capturedAt": "2026-11-10T05:30:18.889Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/153.json"
+  },
+  {
+   "id": "9084-154-1794292217669",
+   "tick": 154,
+   "capturedAt": "2026-11-10T06:30:17.669Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/154.json"
+  },
+  {
+   "id": "9084-155-1794295817408",
+   "tick": 155,
+   "capturedAt": "2026-11-10T07:30:17.408Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/155.json"
+  },
+  {
+   "id": "9084-156-1794302418193",
+   "tick": 156,
+   "capturedAt": "2026-11-10T09:20:18.193Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/156.json"
+  },
+  {
+   "id": "9084-159-1794311418206",
+   "tick": 159,
+   "capturedAt": "2026-11-10T11:50:18.206Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/159.json"
+  },
+  {
+   "id": "9084-162-1794323417641",
+   "tick": 162,
+   "capturedAt": "2026-11-10T15:10:17.641Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/162.json"
+  },
+  {
+   "id": "9084-163-1794324617882",
+   "tick": 163,
+   "capturedAt": "2026-11-10T15:30:17.882Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/163.json"
+  },
+  {
+   "id": "9084-164-1794328818789",
+   "tick": 164,
+   "capturedAt": "2026-11-10T16:40:18.789Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/164.json"
+  },
+  {
+   "id": "9084-165-1794333018234",
+   "tick": 165,
+   "capturedAt": "2026-11-10T17:50:18.234Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/165.json"
+  },
+  {
+   "id": "9084-166-1794335418311",
+   "tick": 166,
+   "capturedAt": "2026-11-10T18:30:18.311Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/166.json"
+  },
+  {
+   "id": "9084-167-1794339019089",
+   "tick": 167,
+   "capturedAt": "2026-11-10T19:30:19.089Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/167.json"
+  },
+  {
+   "id": "9084-168-1794342618289",
+   "tick": 168,
+   "capturedAt": "2026-11-10T20:30:18.289Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/168.json"
+  },
+  {
+   "id": "9084-169-1794346818574",
+   "tick": 169,
+   "capturedAt": "2026-11-10T21:40:18.574Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/169.json"
+  },
+  {
+   "id": "9084-170-1794352219936",
+   "tick": 170,
+   "capturedAt": "2026-11-10T23:10:19.936Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/170.json"
+  },
+  {
+   "id": "9084-171-1794356418994",
+   "tick": 171,
+   "capturedAt": "2026-11-11T00:20:18.994Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/171.json"
+  },
+  {
+   "id": "9084-172-1794357017765",
+   "tick": 172,
+   "capturedAt": "2026-11-11T00:30:17.765Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/172.json"
+  },
+  {
+   "id": "9084-174-1794364217982",
+   "tick": 174,
+   "capturedAt": "2026-11-11T02:30:17.982Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/174.json"
+  },
+  {
+   "id": "9084-175-1794367818115",
+   "tick": 175,
+   "capturedAt": "2026-11-11T03:30:18.115Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/175.json"
+  },
+  {
+   "id": "9084-176-1794371422821",
+   "tick": 176,
+   "capturedAt": "2026-11-11T04:30:22.821Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/176.json"
+  },
+  {
+   "id": "9084-177-1794375018101",
+   "tick": 177,
+   "capturedAt": "2026-11-11T05:30:18.101Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/177.json"
+  },
+  {
+   "id": "9084-178-1794378619334",
+   "tick": 178,
+   "capturedAt": "2026-11-11T06:30:19.334Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/178.json"
+  },
+  {
+   "id": "9084-181-1794390618468",
+   "tick": 181,
+   "capturedAt": "2026-11-11T09:50:18.468Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/181.json"
+  },
+  {
+   "id": "9084-184-1794401418759",
+   "tick": 184,
+   "capturedAt": "2026-11-11T12:50:18.759Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/184.json"
+  },
+  {
+   "id": "9084-185-1794406818681",
+   "tick": 185,
+   "capturedAt": "2026-11-11T14:20:18.681Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/185.json"
+  },
+  {
+   "id": "9084-186-1794408018523",
+   "tick": 186,
+   "capturedAt": "2026-11-11T14:40:18.523Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/186.json"
+  },
+  {
+   "id": "9084-187-1794411018404",
+   "tick": 187,
+   "capturedAt": "2026-11-11T15:30:18.404Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/187.json"
+  },
+  {
+   "id": "9084-188-1794415218110",
+   "tick": 188,
+   "capturedAt": "2026-11-11T16:40:18.110Z",
+   "label": "Manual capture",
+   "pinned": false,
+   "file": "ticks/188.json"
+  },
+  {
+   "id": "9084-189-1794418218390",
+   "tick": 189,
+   "capturedAt": "2026-11-11T17:30:18.390Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/189.json"
+  },
+  {
+   "id": "9084-190-1794421818662",
+   "tick": 190,
+   "capturedAt": "2026-11-11T18:30:18.662Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/190.json"
+  },
+  {
+   "id": "9084-191-1794427817996",
+   "tick": 191,
+   "capturedAt": "2026-11-11T20:10:17.996Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/191.json"
+  },
+  {
+   "id": "9084-192-1794429019738",
+   "tick": 192,
+   "capturedAt": "2026-11-11T20:30:19.738Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/192.json"
+  },
+  {
+   "id": "9084-193-1794432618212",
+   "tick": 193,
+   "capturedAt": "2026-11-11T21:30:18.212Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/193.json"
+  },
+  {
+   "id": "9084-196-1794446418394",
+   "tick": 196,
+   "capturedAt": "2026-11-12T01:20:18.394Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/196.json"
+  },
+  {
+   "id": "9084-197-1794450017982",
+   "tick": 197,
+   "capturedAt": "2026-11-12T02:20:17.982Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/197.json"
+  },
+  {
+   "id": "9084-198-1794450619283",
+   "tick": 198,
+   "capturedAt": "2026-11-12T02:30:19.283Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/198.json"
+  },
+  {
+   "id": "9084-199-1794454218350",
+   "tick": 199,
+   "capturedAt": "2026-11-12T03:30:18.350Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/199.json"
+  },
+  {
+   "id": "9084-200-1794457818155",
+   "tick": 200,
+   "capturedAt": "2026-11-12T04:30:18.155Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/200.json"
+  },
+  {
+   "id": "9084-201-1794461419254",
+   "tick": 201,
+   "capturedAt": "2026-11-12T05:30:19.254Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/201.json"
+  },
+  {
+   "id": "9084-202-1794465018013",
+   "tick": 202,
+   "capturedAt": "2026-11-12T06:30:18.013Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/202.json"
+  },
+  {
+   "id": "9084-203-1794468618610",
+   "tick": 203,
+   "capturedAt": "2026-11-12T07:30:18.610Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/203.json"
+  },
+  {
+   "id": "9084-210-1794495018554",
+   "tick": 210,
+   "capturedAt": "2026-11-12T14:50:18.554Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/210.json"
+  },
+  {
+   "id": "9084-211-1794497417805",
+   "tick": 211,
+   "capturedAt": "2026-11-12T15:30:17.805Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/211.json"
+  },
+  {
+   "id": "9084-212-1794501018683",
+   "tick": 212,
+   "capturedAt": "2026-11-12T16:30:18.683Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/212.json"
+  },
+  {
+   "id": "9084-213-1794505218092",
+   "tick": 213,
+   "capturedAt": "2026-11-12T17:40:18.092Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/213.json"
+  },
+  {
+   "id": "9084-214-1794508218656",
+   "tick": 214,
+   "capturedAt": "2026-11-12T18:30:18.656Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/214.json"
+  },
+  {
+   "id": "9084-215-1794511818118",
+   "tick": 215,
+   "capturedAt": "2026-11-12T19:30:18.118Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/215.json"
+  },
+  {
+   "id": "9084-216-1794515417987",
+   "tick": 216,
+   "capturedAt": "2026-11-12T20:30:17.987Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/216.json"
+  },
+  {
+   "id": "9084-217-1794520217942",
+   "tick": 217,
+   "capturedAt": "2026-11-12T21:50:17.942Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/217.json"
+  },
+  {
+   "id": "9084-218-1794525618206",
+   "tick": 218,
+   "capturedAt": "2026-11-12T23:20:18.206Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/218.json"
+  },
+  {
+   "id": "9084-219-1794526219223",
+   "tick": 219,
+   "capturedAt": "2026-11-12T23:30:19.223Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/219.json"
+  },
+  {
+   "id": "9084-220-1794529818608",
+   "tick": 220,
+   "capturedAt": "2026-11-13T00:30:18.608Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/220.json"
+  },
+  {
+   "id": "9084-221-1794534018272",
+   "tick": 221,
+   "capturedAt": "2026-11-13T01:40:18.272Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/221.json"
+  },
+  {
+   "id": "9084-222-1794537018063",
+   "tick": 222,
+   "capturedAt": "2026-11-13T02:30:18.063Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/222.json"
+  },
+  {
+   "id": "9084-223-1794540617520",
+   "tick": 223,
+   "capturedAt": "2026-11-13T03:30:17.520Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/223.json"
+  },
+  {
+   "id": "9084-224-1794544218138",
+   "tick": 224,
+   "capturedAt": "2026-11-13T04:30:18.138Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/224.json"
+  },
+  {
+   "id": "9084-225-1794547819100",
+   "tick": 225,
+   "capturedAt": "2026-11-13T05:30:19.100Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/225.json"
+  },
+  {
+   "id": "9084-226-1794551418060",
+   "tick": 226,
+   "capturedAt": "2026-11-13T06:30:18.060Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/226.json"
+  },
+  {
+   "id": "9084-227-1794555017708",
+   "tick": 227,
+   "capturedAt": "2026-11-13T07:30:17.708Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/227.json"
+  },
+  {
+   "id": "9084-228-1794559818253",
+   "tick": 228,
+   "capturedAt": "2026-11-13T08:50:18.253Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/228.json"
+  },
+  {
+   "id": "9084-231-1794572419330",
+   "tick": 231,
+   "capturedAt": "2026-11-13T12:20:19.330Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/231.json"
+  },
+  {
+   "id": "9084-233-1794579019577",
+   "tick": 233,
+   "capturedAt": "2026-11-13T14:10:19.577Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/233.json"
+  },
+  {
+   "id": "9084-234-1794582019411",
+   "tick": 234,
+   "capturedAt": "2026-11-13T15:00:19.411Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/234.json"
+  },
+  {
+   "id": "9084-236-1794588018984",
+   "tick": 236,
+   "capturedAt": "2026-11-13T16:40:18.984Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/236.json"
+  },
+  {
+   "id": "9084-237-1794591618495",
+   "tick": 237,
+   "capturedAt": "2026-11-13T17:40:18.495Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/237.json"
+  },
+  {
+   "id": "9084-238-1794594618346",
+   "tick": 238,
+   "capturedAt": "2026-11-13T18:30:18.346Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/238.json"
+  },
+  {
+   "id": "9084-239-1794598218463",
+   "tick": 239,
+   "capturedAt": "2026-11-13T19:30:18.463Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/239.json"
+  },
+  {
+   "id": "9084-240-1794601818269",
+   "tick": 240,
+   "capturedAt": "2026-11-13T20:30:18.269Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/240.json"
+  },
+  {
+   "id": "9084-241-1794605418829",
+   "tick": 241,
+   "capturedAt": "2026-11-13T21:30:18.829Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/241.json"
+  },
+  {
+   "id": "9084-242-1794609017766",
+   "tick": 242,
+   "capturedAt": "2026-11-13T22:30:17.766Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/242.json"
+  },
+  {
+   "id": "9084-243-1794612617618",
+   "tick": 243,
+   "capturedAt": "2026-11-13T23:30:17.618Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/243.json"
+  },
+  {
+   "id": "9084-244-1794616218586",
+   "tick": 244,
+   "capturedAt": "2026-11-14T00:30:18.586Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/244.json"
+  },
+  {
+   "id": "9084-245-1794619818646",
+   "tick": 245,
+   "capturedAt": "2026-11-14T01:30:18.646Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/245.json"
+  },
+  {
+   "id": "9084-246-1794623418496",
+   "tick": 246,
+   "capturedAt": "2026-11-14T02:30:18.496Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/246.json"
+  },
+  {
+   "id": "9084-247-1794627017708",
+   "tick": 247,
+   "capturedAt": "2026-11-14T03:30:17.708Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/247.json"
+  },
+  {
+   "id": "9084-248-1794630618349",
+   "tick": 248,
+   "capturedAt": "2026-11-14T04:30:18.349Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/248.json"
+  },
+  {
+   "id": "9084-249-1794634219489",
+   "tick": 249,
+   "capturedAt": "2026-11-14T05:30:19.489Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/249.json"
+  },
+  {
+   "id": "9084-250-1794637818210",
+   "tick": 250,
+   "capturedAt": "2026-11-14T06:30:18.210Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/250.json"
+  },
+  {
+   "id": "9084-253-1794651017716",
+   "tick": 253,
+   "capturedAt": "2026-11-14T10:10:17.716Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/253.json"
+  },
+  {
+   "id": "9084-254-1794654019079",
+   "tick": 254,
+   "capturedAt": "2026-11-14T11:00:19.079Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/254.json"
+  },
+  {
+   "id": "9084-257-1794664217639",
+   "tick": 257,
+   "capturedAt": "2026-11-14T13:50:17.639Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/257.json"
+  },
+  {
+   "id": "9084-259-1794670818016",
+   "tick": 259,
+   "capturedAt": "2026-11-14T15:40:18.016Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/259.json"
+  },
+  {
+   "id": "9084-260-1794675618292",
+   "tick": 260,
+   "capturedAt": "2026-11-14T17:00:18.292Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/260.json"
+  },
+  {
+   "id": "9084-261-1794677418595",
+   "tick": 261,
+   "capturedAt": "2026-11-14T17:30:18.595Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/261.json"
+  },
+  {
+   "id": "9084-262-1794681017695",
+   "tick": 262,
+   "capturedAt": "2026-11-14T18:30:17.695Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/262.json"
+  },
+  {
+   "id": "9084-263-1794684618631",
+   "tick": 263,
+   "capturedAt": "2026-11-14T19:30:18.631Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/263.json"
+  },
+  {
+   "id": "9084-264-1794688217663",
+   "tick": 264,
+   "capturedAt": "2026-11-14T20:30:17.663Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/264.json"
+  },
+  {
+   "id": "9084-265-1794691818205",
+   "tick": 265,
+   "capturedAt": "2026-11-14T21:30:18.205Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/265.json"
+  },
+  {
+   "id": "9084-266-1794695417753",
+   "tick": 266,
+   "capturedAt": "2026-11-14T22:30:17.753Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/266.json"
+  },
+  {
+   "id": "9084-267-1794699018007",
+   "tick": 267,
+   "capturedAt": "2026-11-14T23:30:18.007Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/267.json"
+  },
+  {
+   "id": "9084-268-1794702618570",
+   "tick": 268,
+   "capturedAt": "2026-11-15T00:30:18.570Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/268.json"
+  },
+  {
+   "id": "9084-269-1794706218669",
+   "tick": 269,
+   "capturedAt": "2026-11-15T01:30:18.669Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/269.json"
+  },
+  {
+   "id": "9084-270-1794709819045",
+   "tick": 270,
+   "capturedAt": "2026-11-15T02:30:19.045Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/270.json"
+  },
+  {
+   "id": "9084-271-1794715818752",
+   "tick": 271,
+   "capturedAt": "2026-11-15T04:10:18.752Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/271.json"
+  },
+  {
+   "id": "9084-272-1794717018724",
+   "tick": 272,
+   "capturedAt": "2026-11-15T04:30:18.724Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/272.json"
+  },
+  {
+   "id": "9084-273-1794723617728",
+   "tick": 273,
+   "capturedAt": "2026-11-15T06:20:17.728Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/273.json"
+  },
+  {
+   "id": "9084-274-1794724817816",
+   "tick": 274,
+   "capturedAt": "2026-11-15T06:40:17.816Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/274.json"
+  },
+  {
+   "id": "9084-275-1794728417457",
+   "tick": 275,
+   "capturedAt": "2026-11-15T07:40:17.457Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/275.json"
+  },
+  {
+   "id": "9084-276-1794731418464",
+   "tick": 276,
+   "capturedAt": "2026-11-15T08:30:18.464Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/276.json"
+  },
+  {
+   "id": "9084-279-1794745218408",
+   "tick": 279,
+   "capturedAt": "2026-11-15T12:20:18.408Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/279.json"
+  },
+  {
+   "id": "9084-281-1794750019273",
+   "tick": 281,
+   "capturedAt": "2026-11-15T13:40:19.273Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/281.json"
+  },
+  {
+   "id": "9084-282-1794756019046",
+   "tick": 282,
+   "capturedAt": "2026-11-15T15:20:19.046Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/282.json"
+  },
+  {
+   "id": "9084-284-1794760218045",
+   "tick": 284,
+   "capturedAt": "2026-11-15T16:30:18.045Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/284.json"
+  },
+  {
+   "id": "9084-286-1794767419999",
+   "tick": 286,
+   "capturedAt": "2026-11-15T18:30:19.999Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/286.json"
+  },
+  {
+   "id": "9084-287-1794771018406",
+   "tick": 287,
+   "capturedAt": "2026-11-15T19:30:18.406Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/287.json"
+  },
+  {
+   "id": "9084-288-1794774619184",
+   "tick": 288,
+   "capturedAt": "2026-11-15T20:30:19.184Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/288.json"
+  },
+  {
+   "id": "9084-289-1794778218384",
+   "tick": 289,
+   "capturedAt": "2026-11-15T21:30:18.384Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/289.json"
+  },
+  {
+   "id": "9084-290-1794781818993",
+   "tick": 290,
+   "capturedAt": "2026-11-15T22:30:18.993Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/290.json"
+  },
+  {
+   "id": "9084-291-1794785417677",
+   "tick": 291,
+   "capturedAt": "2026-11-15T23:30:17.677Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/291.json"
+  },
+  {
+   "id": "9084-292-1794789019085",
+   "tick": 292,
+   "capturedAt": "2026-11-16T00:30:19.085Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/292.json"
+  },
+  {
+   "id": "9084-293-1794792619167",
+   "tick": 293,
+   "capturedAt": "2026-11-16T01:30:19.167Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/293.json"
+  },
+  {
+   "id": "9084-294-1794796219414",
+   "tick": 294,
+   "capturedAt": "2026-11-16T02:30:19.414Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/294.json"
+  },
+  {
+   "id": "9084-295-1794801018415",
+   "tick": 295,
+   "capturedAt": "2026-11-16T03:50:18.415Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/295.json"
+  },
+  {
+   "id": "9084-296-1794805220650",
+   "tick": 296,
+   "capturedAt": "2026-11-16T05:00:20.650Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/296.json"
+  },
+  {
+   "id": "9084-297-1794807018344",
+   "tick": 297,
+   "capturedAt": "2026-11-16T05:30:18.344Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/297.json"
+  },
+  {
+   "id": "9084-298-1794810618650",
+   "tick": 298,
+   "capturedAt": "2026-11-16T06:30:18.650Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/298.json"
+  },
+  {
+   "id": "9084-299-1794814218001",
+   "tick": 299,
+   "capturedAt": "2026-11-16T07:30:18.001Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/299.json"
+  },
+  {
+   "id": "9084-300-1794817818685",
+   "tick": 300,
+   "capturedAt": "2026-11-16T08:30:18.685Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/300.json"
+  },
+  {
+   "id": "9084-306-1794840619018",
+   "tick": 306,
+   "capturedAt": "2026-11-16T14:50:19.018Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/306.json"
+  },
+  {
+   "id": "9084-307-1794843617855",
+   "tick": 307,
+   "capturedAt": "2026-11-16T15:40:17.855Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/307.json"
+  },
+  {
+   "id": "9084-308-1794847818206",
+   "tick": 308,
+   "capturedAt": "2026-11-16T16:50:18.206Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/308.json"
+  },
+  {
+   "id": "9084-309-1794850818545",
+   "tick": 309,
+   "capturedAt": "2026-11-16T17:40:18.545Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/309.json"
+  },
+  {
+   "id": "9084-310-1794853818390",
+   "tick": 310,
+   "capturedAt": "2026-11-16T18:30:18.390Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/310.json"
+  },
+  {
+   "id": "9084-311-1794857418977",
+   "tick": 311,
+   "capturedAt": "2026-11-16T19:30:18.977Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/311.json"
+  },
+  {
+   "id": "9084-312-1794861019036",
+   "tick": 312,
+   "capturedAt": "2026-11-16T20:30:19.036Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/312.json"
+  },
+  {
+   "id": "9084-313-1794864617970",
+   "tick": 313,
+   "capturedAt": "2026-11-16T21:30:17.970Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/313.json"
+  },
+  {
+   "id": "9084-314-1794868218680",
+   "tick": 314,
+   "capturedAt": "2026-11-16T22:30:18.680Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/314.json"
+  },
+  {
+   "id": "9084-315-1794871818240",
+   "tick": 315,
+   "capturedAt": "2026-11-16T23:30:18.240Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/315.json"
+  },
+  {
+   "id": "9084-316-1794878418418",
+   "tick": 316,
+   "capturedAt": "2026-11-17T01:20:18.418Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/316.json"
+  },
+  {
+   "id": "9084-317-1794879018239",
+   "tick": 317,
+   "capturedAt": "2026-11-17T01:30:18.239Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/317.json"
+  },
+  {
+   "id": "9084-318-1794882618515",
+   "tick": 318,
+   "capturedAt": "2026-11-17T02:30:18.515Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/318.json"
+  },
+  {
+   "id": "9084-319-1794886217857",
+   "tick": 319,
+   "capturedAt": "2026-11-17T03:30:17.857Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/319.json"
+  },
+  {
+   "id": "9084-320-1794889818467",
+   "tick": 320,
+   "capturedAt": "2026-11-17T04:30:18.467Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/320.json"
+  },
+  {
+   "id": "9084-321-1794893419078",
+   "tick": 321,
+   "capturedAt": "2026-11-17T05:30:19.078Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/321.json"
+  },
+  {
+   "id": "9084-322-1794897018549",
+   "tick": 322,
+   "capturedAt": "2026-11-17T06:30:18.549Z",
+   "label": "",
+   "pinned": false,
+   "file": "ticks/322.json"
+  }
+ ],
+ "diplomacy": {
+  "gameNumber": "9084",
+  "pendingSnapshots": 0,
+  "activity": {
+   "1": {
+    "status": "active",
+    "day": {
+     "infra": 43,
+     "carriers": 18,
+     "orders": 6,
+     "captures": 5
+    },
+    "twoDays": {
+     "infra": 84,
+     "carriers": 20,
+     "orders": 8,
+     "captures": 6
+    },
+    "lastActionTick": 321,
+    "ticksSinceAction": 1,
+    "observedTicks": 322
+   },
+   "2": {
+    "status": "active",
+    "day": {
+     "infra": 92,
+     "carriers": 14,
+     "orders": 152,
+     "captures": 7
+    },
+    "twoDays": {
+     "infra": 107,
+     "carriers": 23,
+     "orders": 305,
+     "captures": 13
+    },
+    "lastActionTick": 322,
+    "ticksSinceAction": 0,
+    "observedTicks": 322
+   },
+   "3": {
+    "status": "ai",
+    "day": {
+     "infra": 0,
+     "carriers": 0,
+     "orders": 0,
+     "captures": 0
+    },
+    "twoDays": {
+     "infra": 0,
+     "carriers": 0,
+     "orders": 0,
+     "captures": 0
+    },
+    "lastActionTick": 220,
+    "ticksSinceAction": 102,
+    "observedTicks": 322
+   },
+   "4": {
+    "status": "ai",
+    "day": {
+     "infra": 0,
+     "carriers": 0,
+     "orders": 0,
+     "captures": 0
+    },
+    "twoDays": {
+     "infra": 0,
+     "carriers": 0,
+     "orders": 0,
+     "captures": 0
+    },
+    "lastActionTick": 140,
+    "ticksSinceAction": 182,
+    "observedTicks": 322
+   },
+   "5": {
+    "status": "ai",
+    "day": {
+     "infra": 9,
+     "carriers": 0,
+     "orders": 2,
+     "captures": 0
+    },
+    "twoDays": {
+     "infra": 25,
+     "carriers": 1,
+     "orders": 13,
+     "captures": 1
+    },
+    "lastActionTick": 321,
+    "ticksSinceAction": 1,
+    "observedTicks": 322
+   },
+   "6": {
+    "status": "ai",
+    "day": {
+     "infra": 1,
+     "carriers": 0,
+     "orders": 0,
+     "captures": 0
+    },
+    "twoDays": {
+     "infra": 1,
+     "carriers": 0,
+     "orders": 8,
+     "captures": 0
+    },
+    "lastActionTick": 300,
+    "ticksSinceAction": 22,
+    "observedTicks": 322
+   },
+   "7": {
+    "status": "active",
+    "day": {
+     "infra": 47,
+     "carriers": 3,
+     "orders": 23,
+     "captures": 1
+    },
+    "twoDays": {
+     "infra": 65,
+     "carriers": 9,
+     "orders": 41,
+     "captures": 5
+    },
+    "lastActionTick": 316,
+    "ticksSinceAction": 6,
+    "observedTicks": 322
+   },
+   "8": {
+    "status": "ai",
+    "day": {
+     "infra": 0,
+     "carriers": 0,
+     "orders": 0,
+     "captures": 0
+    },
+    "twoDays": {
+     "infra": 0,
+     "carriers": 0,
+     "orders": 0,
+     "captures": 0
+    },
+    "lastActionTick": 247,
+    "ticksSinceAction": 75,
+    "observedTicks": 322
+   }
+  },
+  "players": [
+   {
+    "uid": 1,
+    "alias": "RocketCharger",
+    "color": 7,
+    "shape": 0,
+    "totalStars": 56,
+    "totalStrength": 5073,
+    "conceded": 0,
+    "ai": 0
+   },
+   {
+    "uid": 2,
+    "alias": "snerx",
+    "color": 0,
+    "shape": 1,
+    "totalStars": 87,
+    "totalStrength": 6010,
+    "conceded": 0,
+    "ai": 0
+   },
+   {
+    "uid": 3,
+    "alias": "Sbstyn",
+    "color": 2,
+    "shape": 2,
+    "totalStars": 0,
+    "totalStrength": 0,
+    "conceded": 1,
+    "ai": 1
+   },
+   {
+    "uid": 4,
+    "alias": "Nouz",
+    "color": 3,
+    "shape": 3,
+    "totalStars": 0,
+    "totalStrength": 0,
+    "conceded": 2,
+    "ai": 1
+   },
+   {
+    "uid": 5,
+    "alias": "Camo",
+    "color": 5,
+    "shape": 4,
+    "totalStars": 3,
+    "totalStrength": 212,
+    "conceded": 1,
+    "ai": 1
+   },
+   {
+    "uid": 6,
+    "alias": "Pati",
+    "color": 1,
+    "shape": 5,
+    "totalStars": 0,
+    "totalStrength": 0,
+    "conceded": 1,
+    "ai": 1
+   },
+   {
+    "uid": 7,
+    "alias": "karppo",
+    "color": 6,
+    "shape": 6,
+    "totalStars": 42,
+    "totalStrength": 3345,
+    "conceded": 0,
+    "ai": 0
+   },
+   {
+    "uid": 8,
+    "alias": "Dickblack",
+    "color": 4,
+    "shape": 7,
+    "totalStars": 0,
+    "totalStrength": 0,
+    "conceded": 3,
+    "ai": 0
+   }
+  ],
+  "coverage": {
+   "snapshotsProcessed": 279,
+   "latestTick": 322
+  },
+  "viewerUid": 1,
+  "pairs": [
+   {
+    "a": 2,
+    "b": 7,
+    "status": "former_allies",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0.22,
+    "warScore": 0.95,
+    "warActive": true,
+    "evidence": {
+     "guestAB": 3,
+     "guestBA": 0,
+     "guestShips": 120,
+     "guestStars": [
+      "Elm"
+     ],
+     "routeAB": 18,
+     "routeBA": 3,
+     "routeStars": [
+      "Gor",
+      "SNERX DOT COM"
+     ],
+     "capturesAB": 3,
+     "capturesBA": 0,
+     "lastCaptureTick": 319,
+     "tradeAB": 3.5,
+     "tradeBA": 3.75,
+     "contact": 280
+    }
+   },
+   {
+    "a": 2,
+    "b": 6,
+    "status": "war",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0.15,
+    "warScore": 1,
+    "warActive": true,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 81,
+     "routeBA": 57,
+     "routeStars": [
+      "Capella",
+      "Nihal"
+     ],
+     "capturesAB": 26,
+     "capturesBA": 3,
+     "lastCaptureTick": 311,
+     "tradeAB": 0,
+     "tradeBA": 1,
+     "contact": 249
+    }
+   },
+   {
+    "a": 5,
+    "b": 7,
+    "status": "war",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0.11,
+    "warScore": 1,
+    "warActive": true,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 30,
+     "routeBA": 66,
+     "routeStars": [
+      "Atria",
+      "Syrma"
+     ],
+     "capturesAB": 3,
+     "capturesBA": 19,
+     "lastCaptureTick": 306,
+     "tradeAB": 0.5,
+     "tradeBA": 0.25,
+     "contact": 275
+    }
+   },
+   {
+    "a": 1,
+    "b": 5,
+    "status": "war",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0.08,
+    "warScore": 1,
+    "warActive": true,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 33,
+     "routeBA": 15,
+     "routeStars": [
+      "Azha",
+      "Hadar"
+     ],
+     "capturesAB": 6,
+     "capturesBA": 0,
+     "lastCaptureTick": 313,
+     "tradeAB": 0.5,
+     "tradeBA": 0,
+     "contact": 66
+    }
+   },
+   {
+    "a": 1,
+    "b": 2,
+    "status": "possible_allies",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0.3,
+    "warScore": 0.76,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 1,
+     "guestBA": 0,
+     "guestShips": 1,
+     "guestStars": [
+      "Alrami"
+     ],
+     "routeAB": 16,
+     "routeBA": 3,
+     "routeStars": [
+      "Alrami",
+      "Garnet",
+      "Haldus",
+      "Ankaa",
+      "Minchir"
+     ],
+     "capturesAB": 0,
+     "capturesBA": 0,
+     "lastCaptureTick": -1,
+     "tradeAB": 2,
+     "tradeBA": 0.5,
+     "contact": 0
+    }
+   },
+   {
+    "a": 1,
+    "b": 3,
+    "status": "war",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0.08,
+    "warScore": 0.98,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 31,
+     "routeBA": 3,
+     "routeStars": [
+      "Ankaa"
+     ],
+     "capturesAB": 3,
+     "capturesBA": 0,
+     "lastCaptureTick": 171,
+     "tradeAB": 0,
+     "tradeBA": 0.5,
+     "contact": 63
+    }
+   },
+   {
+    "a": 1,
+    "b": 8,
+    "status": "war",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0.04,
+    "warScore": 1,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 70,
+     "routeBA": 29,
+     "routeStars": [
+      "Shy",
+      "Asellus",
+      "Alula"
+     ],
+     "capturesAB": 15,
+     "capturesBA": 1,
+     "lastCaptureTick": 257,
+     "tradeAB": 0.25,
+     "tradeBA": 0,
+     "contact": 232
+    }
+   },
+   {
+    "a": 3,
+    "b": 7,
+    "status": "war",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0.04,
+    "warScore": 1,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 15,
+     "routeBA": 15,
+     "routeStars": [
+      "Pug",
+      "Askella"
+     ],
+     "capturesAB": 8,
+     "capturesBA": 13,
+     "lastCaptureTick": 224,
+     "tradeAB": 0.25,
+     "tradeBA": 0,
+     "contact": 148
+    }
+   },
+   {
+    "a": 2,
+    "b": 3,
+    "status": "war",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0.04,
+    "warScore": 0.99,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 0,
+     "routeBA": 0,
+     "routeStars": [],
+     "capturesAB": 9,
+     "capturesBA": 0,
+     "lastCaptureTick": 129,
+     "tradeAB": 0,
+     "tradeBA": 0.25,
+     "contact": 140
+    }
+   },
+   {
+    "a": 5,
+    "b": 8,
+    "status": "war",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0.11,
+    "warScore": 0.9,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 18,
+     "routeBA": 6,
+     "routeStars": [
+      "AlKap",
+      "Edasich"
+     ],
+     "capturesAB": 1,
+     "capturesBA": 0,
+     "lastCaptureTick": 279,
+     "tradeAB": 0.5,
+     "tradeBA": 0.25,
+     "contact": 217
+    }
+   },
+   {
+    "a": 6,
+    "b": 7,
+    "status": "war",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0.11,
+    "warScore": 0.84,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 12,
+     "routeBA": 6,
+     "routeStars": [
+      "Ice"
+     ],
+     "capturesAB": 0,
+     "capturesBA": 1,
+     "lastCaptureTick": 273,
+     "tradeAB": 0.5,
+     "tradeBA": 0.25,
+     "contact": 12
+    }
+   },
+   {
+    "a": 2,
+    "b": 4,
+    "status": "war",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0,
+    "warScore": 0.92,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 0,
+     "routeBA": 0,
+     "routeStars": [],
+     "capturesAB": 5,
+     "capturesBA": 0,
+     "lastCaptureTick": 144,
+     "tradeAB": 0,
+     "tradeBA": 0,
+     "contact": 106
+    }
+   },
+   {
+    "a": 4,
+    "b": 6,
+    "status": "war",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0,
+    "warScore": 0.78,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 0,
+     "routeBA": 0,
+     "routeStars": [],
+     "capturesAB": 1,
+     "capturesBA": 2,
+     "lastCaptureTick": 53,
+     "tradeAB": 0,
+     "tradeBA": 0,
+     "contact": 38
+    }
+   },
+   {
+    "a": 1,
+    "b": 7,
+    "status": "possible_allies",
+    "allied": false,
+    "confirmed": false,
+    "allyScore": 0.3,
+    "warScore": 0.36,
+    "warActive": false,
+    "evidence": {
+     "guestAB": 0,
+     "guestBA": 0,
+     "guestShips": 0,
+     "guestStars": [],
+     "routeAB": 6,
+     "routeBA": 0,
+     "routeStars": [
+      "Gor"
+     ],
+     "capturesAB": 0,
+     "capturesBA": 0,
+     "lastCaptureTick": -1,
+     "tradeAB": 2,
+     "tradeBA": 1,
+     "contact": 84
+    }
+   }
+  ],
+  "teams": [],
+  "conflicts": [
+   {
+    "side": [
+     2
+    ],
+    "enemies": [
+     {
+      "members": [
+       6
+      ],
+      "took": 26,
+      "lost": 3,
+      "active": true,
+      "lastTick": 311
+     },
+     {
+      "members": [
+       3
+      ],
+      "took": 9,
+      "lost": 0,
+      "active": false,
+      "lastTick": 129
+     },
+     {
+      "members": [
+       4
+      ],
+      "took": 5,
+      "lost": 0,
+      "active": false,
+      "lastTick": 144
+     }
+    ],
+    "took": 40,
+    "lost": 3,
+    "active": true,
+    "lastTick": 311
+   },
+   {
+    "side": [
+     5
+    ],
+    "enemies": [
+     {
+      "members": [
+       7
+      ],
+      "took": 3,
+      "lost": 19,
+      "active": true,
+      "lastTick": 306
+     },
+     {
+      "members": [
+       1
+      ],
+      "took": 0,
+      "lost": 6,
+      "active": true,
+      "lastTick": 313
+     },
+     {
+      "members": [
+       8
+      ],
+      "took": 1,
+      "lost": 0,
+      "active": false,
+      "lastTick": 279
+     }
+    ],
+    "took": 4,
+    "lost": 25,
+    "active": true,
+    "lastTick": 313
+   },
+   {
+    "side": [
+     3
+    ],
+    "enemies": [
+     {
+      "members": [
+       7
+      ],
+      "took": 8,
+      "lost": 13,
+      "active": false,
+      "lastTick": 224
+     },
+     {
+      "members": [
+       1
+      ],
+      "took": 0,
+      "lost": 3,
+      "active": false,
+      "lastTick": 171
+     }
+    ],
+    "took": 8,
+    "lost": 16,
+    "active": false,
+    "lastTick": 224
+   },
+   {
+    "side": [
+     1
+    ],
+    "enemies": [
+     {
+      "members": [
+       8
+      ],
+      "took": 15,
+      "lost": 1,
+      "active": false,
+      "lastTick": 257
+     }
+    ],
+    "took": 15,
+    "lost": 1,
+    "active": false,
+    "lastTick": 257
+   },
+   {
+    "side": [
+     6
+    ],
+    "enemies": [
+     {
+      "members": [
+       4
+      ],
+      "took": 2,
+      "lost": 1,
+      "active": false,
+      "lastTick": 53
+     },
+     {
+      "members": [
+       7
+      ],
+      "took": 0,
+      "lost": 1,
+      "active": false,
+      "lastTick": 273
+     }
+    ],
+    "took": 2,
+    "lost": 2,
+    "active": false,
+    "lastTick": 273
+   }
+  ],
+  "middlemen": [],
+  "events": [
+   {
+    "tick": 322,
+    "kind": "tech_trade",
+    "a": 5,
+    "b": 2,
+    "weight": 1,
+    "detail": "Weapons 4→7"
+   },
+   {
+    "tick": 322,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 7,
+    "weight": 0.25,
+    "detail": "Weapons 4→5 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 322,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 2,
+    "weight": 0.25,
+    "detail": "Weapons 4→5 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 322,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 30,
+    "detail": "infra"
+   },
+   {
+    "tick": 321,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 321,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 321,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 7,
+    "detail": "carriers"
+   },
+   {
+    "tick": 321,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 14,
+    "detail": "infra"
+   },
+   {
+    "tick": 320,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 320,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 4,
+    "detail": "infra"
+   },
+   {
+    "tick": 320,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 319,
+    "kind": "capture",
+    "a": 2,
+    "b": 7,
+    "weight": 1,
+    "detail": "Fez"
+   },
+   {
+    "tick": 319,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 319,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 5,
+    "detail": "carriers"
+   },
+   {
+    "tick": 319,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 6,
+    "detail": "infra"
+   },
+   {
+    "tick": 319,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 318,
+    "kind": "tech_trade",
+    "a": 7,
+    "b": 1,
+    "weight": 0.5,
+    "detail": "Banking 5→6"
+   },
+   {
+    "tick": 318,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 9,
+    "detail": "orders"
+   },
+   {
+    "tick": 318,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 318,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 318,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 7,
+    "detail": "infra"
+   },
+   {
+    "tick": 318,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 4,
+    "detail": "carriers"
+   },
+   {
+    "tick": 318,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 15,
+    "detail": "infra"
+   },
+   {
+    "tick": 317,
+    "kind": "capture",
+    "a": 2,
+    "b": 7,
+    "weight": 1,
+    "detail": "Lesath"
+   },
+   {
+    "tick": 317,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 7,
+    "detail": "orders"
+   },
+   {
+    "tick": 316,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 316,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 9,
+    "detail": "orders"
+   },
+   {
+    "tick": 316,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "carriers"
+   },
+   {
+    "tick": 315,
+    "kind": "capture",
+    "a": 2,
+    "b": 7,
+    "weight": 1,
+    "detail": "Elm"
+   },
+   {
+    "tick": 315,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 12,
+    "detail": "orders"
+   },
+   {
+    "tick": 315,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 314,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 314,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 6,
+    "detail": "orders"
+   },
+   {
+    "tick": 314,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "carriers"
+   },
+   {
+    "tick": 313,
+    "kind": "capture",
+    "a": 1,
+    "b": 5,
+    "weight": 1,
+    "detail": "AlKap"
+   },
+   {
+    "tick": 313,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 11,
+    "detail": "orders"
+   },
+   {
+    "tick": 313,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 312,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 312,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 6,
+    "detail": "orders"
+   },
+   {
+    "tick": 312,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "infra"
+   },
+   {
+    "tick": 311,
+    "kind": "capture",
+    "a": 2,
+    "b": 6,
+    "weight": 1,
+    "detail": "Capella"
+   },
+   {
+    "tick": 311,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 6,
+    "detail": "orders"
+   },
+   {
+    "tick": 310,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 310,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 13,
+    "detail": "orders"
+   },
+   {
+    "tick": 310,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 309,
+    "kind": "tech_trade",
+    "a": 2,
+    "b": 7,
+    "weight": 1,
+    "detail": "Manufacturing 5→7"
+   },
+   {
+    "tick": 309,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 9,
+    "detail": "orders"
+   },
+   {
+    "tick": 309,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 9,
+    "detail": "orders"
+   },
+   {
+    "tick": 309,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 2,
+    "detail": "carriers"
+   },
+   {
+    "tick": 309,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 47,
+    "detail": "infra"
+   },
+   {
+    "tick": 308,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 10,
+    "detail": "orders"
+   },
+   {
+    "tick": 307,
+    "kind": "capture",
+    "a": 1,
+    "b": 5,
+    "weight": 1,
+    "detail": "Hadar"
+   },
+   {
+    "tick": 307,
+    "kind": "capture",
+    "a": 1,
+    "b": 5,
+    "weight": 1,
+    "detail": "Aldhanab"
+   },
+   {
+    "tick": 307,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 6,
+    "detail": "orders"
+   },
+   {
+    "tick": 307,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 6,
+    "detail": "carriers"
+   },
+   {
+    "tick": 307,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 14,
+    "detail": "infra"
+   },
+   {
+    "tick": 306,
+    "kind": "capture",
+    "a": 7,
+    "b": 5,
+    "weight": 1,
+    "detail": "Atria"
+   },
+   {
+    "tick": 306,
+    "kind": "capture",
+    "a": 1,
+    "b": 5,
+    "weight": 1,
+    "detail": "Chow"
+   },
+   {
+    "tick": 306,
+    "kind": "capture",
+    "a": 1,
+    "b": 5,
+    "weight": 1,
+    "detail": "Navi"
+   },
+   {
+    "tick": 306,
+    "kind": "capture",
+    "a": 2,
+    "b": 6,
+    "weight": 1,
+    "detail": "Sadachbia"
+   },
+   {
+    "tick": 306,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 7,
+    "detail": "orders"
+   },
+   {
+    "tick": 306,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 306,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 32,
+    "detail": "orders"
+   },
+   {
+    "tick": 306,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 306,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 46,
+    "detail": "infra"
+   },
+   {
+    "tick": 300,
+    "kind": "capture",
+    "a": 2,
+    "b": 6,
+    "weight": 1,
+    "detail": "Wei"
+   },
+   {
+    "tick": 300,
+    "kind": "capture",
+    "a": 2,
+    "b": 6,
+    "weight": 1,
+    "detail": "Arrakis"
+   },
+   {
+    "tick": 300,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 300,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 9,
+    "detail": "orders"
+   },
+   {
+    "tick": 300,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 300,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 300,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 4,
+    "detail": "infra"
+   },
+   {
+    "tick": 299,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 299,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 4,
+    "detail": "orders"
+   },
+   {
+    "tick": 298,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 9,
+    "detail": "orders"
+   },
+   {
+    "tick": 298,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 14,
+    "detail": "infra"
+   },
+   {
+    "tick": 297,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 297,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 11,
+    "detail": "orders"
+   },
+   {
+    "tick": 296,
+    "kind": "capture",
+    "a": 2,
+    "b": 6,
+    "weight": 1,
+    "detail": "Tag"
+   },
+   {
+    "tick": 296,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 296,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 296,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 295,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 295,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 295,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 7,
+    "detail": "orders"
+   },
+   {
+    "tick": 294,
+    "kind": "capture",
+    "a": 7,
+    "b": 5,
+    "weight": 1,
+    "detail": "Mix"
+   },
+   {
+    "tick": 294,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 294,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 294,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 6,
+    "detail": "orders"
+   },
+   {
+    "tick": 294,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 2,
+    "detail": "infra"
+   },
+   {
+    "tick": 293,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 11,
+    "detail": "orders"
+   },
+   {
+    "tick": 293,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 293,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 292,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 6,
+    "detail": "orders"
+   },
+   {
+    "tick": 292,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 292,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 17,
+    "detail": "infra"
+   },
+   {
+    "tick": 291,
+    "kind": "capture",
+    "a": 7,
+    "b": 5,
+    "weight": 1,
+    "detail": "Edasich"
+   },
+   {
+    "tick": 291,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 7,
+    "detail": "orders"
+   },
+   {
+    "tick": 291,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 290,
+    "kind": "capture",
+    "a": 7,
+    "b": 5,
+    "weight": 1,
+    "detail": "Alzir"
+   },
+   {
+    "tick": 290,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 6,
+    "detail": "orders"
+   },
+   {
+    "tick": 289,
+    "kind": "tech_trade",
+    "a": 7,
+    "b": 2,
+    "weight": 0.5,
+    "detail": "Range 4→5"
+   },
+   {
+    "tick": 289,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 7,
+    "weight": 0.25,
+    "detail": "Range 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 289,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 2,
+    "weight": 0.25,
+    "detail": "Range 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 289,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 7,
+    "weight": 0.25,
+    "detail": "Experimentation 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 289,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 2,
+    "weight": 0.25,
+    "detail": "Experimentation 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 289,
+    "kind": "capture",
+    "a": 1,
+    "b": 5,
+    "weight": 1,
+    "detail": "Nash"
+   },
+   {
+    "tick": 289,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 289,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 289,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 289,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 7,
+    "detail": "orders"
+   },
+   {
+    "tick": 288,
+    "kind": "capture",
+    "a": 7,
+    "b": 5,
+    "weight": 1,
+    "detail": "Aldib"
+   },
+   {
+    "tick": 288,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 288,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 288,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 9,
+    "detail": "orders"
+   },
+   {
+    "tick": 287,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 287,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 5,
+    "detail": "orders"
+   },
+   {
+    "tick": 287,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 6,
+    "detail": "carriers"
+   },
+   {
+    "tick": 287,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 286,
+    "kind": "capture",
+    "a": 2,
+    "b": 6,
+    "weight": 1,
+    "detail": "Alnitak"
+   },
+   {
+    "tick": 286,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 286,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 286,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 18,
+    "detail": "orders"
+   },
+   {
+    "tick": 286,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 5,
+    "detail": "carriers"
+   },
+   {
+    "tick": 286,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 12,
+    "detail": "infra"
+   },
+   {
+    "tick": 284,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 284,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 10,
+    "detail": "orders"
+   },
+   {
+    "tick": 284,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 282,
+    "kind": "capture",
+    "a": 2,
+    "b": 6,
+    "weight": 1,
+    "detail": "Decrux"
+   },
+   {
+    "tick": 282,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 282,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 4,
+    "detail": "orders"
+   },
+   {
+    "tick": 281,
+    "kind": "capture",
+    "a": 2,
+    "b": 6,
+    "weight": 1,
+    "detail": "Meissa"
+   },
+   {
+    "tick": 281,
+    "kind": "capture",
+    "a": 2,
+    "b": 6,
+    "weight": 1,
+    "detail": "Nihal"
+   },
+   {
+    "tick": 281,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 281,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 281,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 281,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 8,
+    "detail": "orders"
+   },
+   {
+    "tick": 281,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 16,
+    "detail": "infra"
+   },
+   {
+    "tick": 281,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 281,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 16,
+    "detail": "infra"
+   },
+   {
+    "tick": 279,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 7,
+    "weight": 0.25,
+    "detail": "Banking 4→5 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 279,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 2,
+    "weight": 0.25,
+    "detail": "Banking 4→5 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 279,
+    "kind": "capture",
+    "a": 5,
+    "b": 8,
+    "weight": 1,
+    "detail": "AlKap"
+   },
+   {
+    "tick": 279,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 279,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 279,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 279,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 18,
+    "detail": "orders"
+   },
+   {
+    "tick": 279,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 3,
+    "detail": "infra"
+   },
+   {
+    "tick": 276,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 276,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 7,
+    "detail": "orders"
+   },
+   {
+    "tick": 276,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 275,
+    "kind": "capture",
+    "a": 2,
+    "b": 6,
+    "weight": 1,
+    "detail": "Adhafera"
+   },
+   {
+    "tick": 275,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 275,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 275,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 10,
+    "detail": "infra"
+   },
+   {
+    "tick": 274,
+    "kind": "capture",
+    "a": 7,
+    "b": 5,
+    "weight": 1,
+    "detail": "Kaf"
+   },
+   {
+    "tick": 274,
+    "kind": "capture",
+    "a": 6,
+    "b": 2,
+    "weight": 1,
+    "detail": "Decrux"
+   },
+   {
+    "tick": 274,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 274,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 274,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 4,
+    "detail": "orders"
+   },
+   {
+    "tick": 274,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 5,
+    "detail": "infra"
+   },
+   {
+    "tick": 274,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 273,
+    "kind": "capture",
+    "a": 7,
+    "b": 6,
+    "weight": 1,
+    "detail": "Ice"
+   },
+   {
+    "tick": 273,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 273,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 8,
+    "detail": "orders"
+   },
+   {
+    "tick": 273,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 272,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 272,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 5,
+    "detail": "orders"
+   },
+   {
+    "tick": 272,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 272,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 271,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 271,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 270,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 8,
+    "detail": "orders"
+   },
+   {
+    "tick": 270,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 269,
+    "kind": "capture",
+    "a": 7,
+    "b": 5,
+    "weight": 1,
+    "detail": "Antares"
+   },
+   {
+    "tick": 269,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 269,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 269,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 269,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 4,
+    "detail": "orders"
+   },
+   {
+    "tick": 269,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 268,
+    "kind": "capture",
+    "a": 7,
+    "b": 5,
+    "weight": 1,
+    "detail": "Keg"
+   },
+   {
+    "tick": 268,
+    "kind": "capture",
+    "a": 7,
+    "b": 5,
+    "weight": 1,
+    "detail": "Corvid"
+   },
+   {
+    "tick": 268,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 268,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 10,
+    "detail": "orders"
+   },
+   {
+    "tick": 268,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 3,
+    "detail": "infra"
+   },
+   {
+    "tick": 267,
+    "kind": "capture",
+    "a": 6,
+    "b": 2,
+    "weight": 1,
+    "detail": "Meissa"
+   },
+   {
+    "tick": 267,
+    "kind": "capture",
+    "a": 2,
+    "b": 6,
+    "weight": 1,
+    "detail": "Fomalhaut"
+   },
+   {
+    "tick": 267,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 267,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 267,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 4,
+    "detail": "orders"
+   },
+   {
+    "tick": 267,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "carriers"
+   },
+   {
+    "tick": 267,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 9,
+    "detail": "infra"
+   },
+   {
+    "tick": 266,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Kaf"
+   },
+   {
+    "tick": 266,
+    "kind": "capture",
+    "a": 7,
+    "b": 5,
+    "weight": 1,
+    "detail": "Auva"
+   },
+   {
+    "tick": 266,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 4,
+    "detail": "orders"
+   },
+   {
+    "tick": 266,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 266,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 265,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 265,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 264,
+    "kind": "capture",
+    "a": 2,
+    "b": 6,
+    "weight": 1,
+    "detail": "Decrux"
+   },
+   {
+    "tick": 264,
+    "kind": "capture",
+    "a": 2,
+    "b": 6,
+    "weight": 1,
+    "detail": "Koi"
+   },
+   {
+    "tick": 264,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 264,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 5,
+    "detail": "orders"
+   },
+   {
+    "tick": 263,
+    "kind": "tech_trade",
+    "a": 7,
+    "b": 2,
+    "weight": 0.5,
+    "detail": "Banking 4→5"
+   },
+   {
+    "tick": 263,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 5,
+    "detail": "orders"
+   },
+   {
+    "tick": 263,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 262,
+    "kind": "tech_trade",
+    "a": 2,
+    "b": 8,
+    "weight": 0.5,
+    "detail": "Experimentation 2→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 262,
+    "kind": "tech_trade",
+    "a": 2,
+    "b": 7,
+    "weight": 0.5,
+    "detail": "Experimentation 2→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 262,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 262,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 262,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 262,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 4,
+    "detail": "orders"
+   },
+   {
+    "tick": 262,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 262,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 11,
+    "detail": "infra"
+   },
+   {
+    "tick": 262,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 262,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 262,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 11,
+    "detail": "infra"
+   },
+   {
+    "tick": 261,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 261,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 6,
+    "detail": "orders"
+   },
+   {
+    "tick": 261,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 2,
+    "detail": "infra"
+   },
+   {
+    "tick": 261,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 5,
+    "detail": "infra"
+   },
+   {
+    "tick": 261,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 5,
+    "detail": "carriers"
+   },
+   {
+    "tick": 261,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 19,
+    "detail": "infra"
+   },
+   {
+    "tick": 260,
+    "kind": "tech_trade",
+    "a": 7,
+    "b": 8,
+    "weight": 0.5,
+    "detail": "Experimentation 3→4"
+   },
+   {
+    "tick": 260,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 7,
+    "weight": 0.25,
+    "detail": "Range 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 260,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 2,
+    "weight": 0.25,
+    "detail": "Range 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 260,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 260,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 6,
+    "detail": "orders"
+   },
+   {
+    "tick": 260,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 10,
+    "detail": "infra"
+   },
+   {
+    "tick": 260,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 5,
+    "detail": "infra"
+   },
+   {
+    "tick": 260,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 260,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 8,
+    "detail": "infra"
+   },
+   {
+    "tick": 260,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 19,
+    "detail": "infra"
+   },
+   {
+    "tick": 259,
+    "kind": "capture",
+    "a": 2,
+    "b": 6,
+    "weight": 1,
+    "detail": "Rukh"
+   },
+   {
+    "tick": 259,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 259,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 259,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 5,
+    "detail": "orders"
+   },
+   {
+    "tick": 257,
+    "kind": "capture",
+    "a": 2,
+    "b": 6,
+    "weight": 1,
+    "detail": "Meissa"
+   },
+   {
+    "tick": 257,
+    "kind": "capture",
+    "a": 1,
+    "b": 8,
+    "weight": 1,
+    "detail": "Asellus"
+   },
+   {
+    "tick": 257,
+    "kind": "capture",
+    "a": 6,
+    "b": 2,
+    "weight": 1,
+    "detail": "Fomalhaut"
+   },
+   {
+    "tick": 257,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 4,
+    "detail": "orders"
+   },
+   {
+    "tick": 257,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 257,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 11,
+    "detail": "orders"
+   },
+   {
+    "tick": 254,
+    "kind": "capture",
+    "a": 2,
+    "b": 6,
+    "weight": 1,
+    "detail": "Minelava"
+   },
+   {
+    "tick": 254,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 7,
+    "detail": "orders"
+   },
+   {
+    "tick": 254,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 4,
+    "detail": "orders"
+   },
+   {
+    "tick": 253,
+    "kind": "tech_trade",
+    "a": 2,
+    "b": 7,
+    "weight": 0.5,
+    "detail": "Manufacturing 4→5"
+   },
+   {
+    "tick": 253,
+    "kind": "capture",
+    "a": 1,
+    "b": 8,
+    "weight": 1,
+    "detail": "Shy"
+   },
+   {
+    "tick": 253,
+    "kind": "capture",
+    "a": 2,
+    "b": 6,
+    "weight": 1,
+    "detail": "Fomalhaut"
+   },
+   {
+    "tick": 253,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 253,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 13,
+    "detail": "orders"
+   },
+   {
+    "tick": 250,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 250,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 6,
+    "detail": "orders"
+   },
+   {
+    "tick": 250,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 249,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Antares"
+   },
+   {
+    "tick": 249,
+    "kind": "capture",
+    "a": 7,
+    "b": 5,
+    "weight": 1,
+    "detail": "Kaf"
+   },
+   {
+    "tick": 249,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 249,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 249,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 2,
+    "detail": "infra"
+   },
+   {
+    "tick": 249,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "carriers"
+   },
+   {
+    "tick": 249,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 248,
+    "kind": "capture",
+    "a": 1,
+    "b": 8,
+    "weight": 1,
+    "detail": "Heze"
+   },
+   {
+    "tick": 248,
+    "kind": "capture",
+    "a": 7,
+    "b": 5,
+    "weight": 1,
+    "detail": "Sky"
+   },
+   {
+    "tick": 248,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 4,
+    "detail": "orders"
+   },
+   {
+    "tick": 248,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 7,
+    "detail": "infra"
+   },
+   {
+    "tick": 248,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 248,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 4,
+    "detail": "infra"
+   },
+   {
+    "tick": 247,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 7,
+    "weight": 0.25,
+    "detail": "Weapons 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 247,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 2,
+    "weight": 0.25,
+    "detail": "Weapons 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 247,
+    "kind": "capture",
+    "a": 2,
+    "b": 6,
+    "weight": 1,
+    "detail": "Asp"
+   },
+   {
+    "tick": 247,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 247,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 4,
+    "detail": "orders"
+   },
+   {
+    "tick": 247,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 3,
+    "detail": "infra"
+   },
+   {
+    "tick": 247,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 246,
+    "kind": "capture",
+    "a": 5,
+    "b": 7,
+    "weight": 1,
+    "detail": "Alzir"
+   },
+   {
+    "tick": 246,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 246,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 4,
+    "detail": "orders"
+   },
+   {
+    "tick": 246,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 245,
+    "kind": "capture",
+    "a": 7,
+    "b": 5,
+    "weight": 1,
+    "detail": "Rasalas"
+   },
+   {
+    "tick": 245,
+    "kind": "capture",
+    "a": 1,
+    "b": 8,
+    "weight": 1,
+    "detail": "Mothallah"
+   },
+   {
+    "tick": 245,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 245,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 7,
+    "detail": "orders"
+   },
+   {
+    "tick": 244,
+    "kind": "tech_trade",
+    "a": 6,
+    "b": 7,
+    "weight": 0.25,
+    "detail": "Range 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 244,
+    "kind": "tech_trade",
+    "a": 6,
+    "b": 2,
+    "weight": 0.25,
+    "detail": "Range 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 244,
+    "kind": "tech_trade",
+    "a": 5,
+    "b": 7,
+    "weight": 0.25,
+    "detail": "Range 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 244,
+    "kind": "tech_trade",
+    "a": 5,
+    "b": 2,
+    "weight": 0.25,
+    "detail": "Range 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 244,
+    "kind": "capture",
+    "a": 7,
+    "b": 5,
+    "weight": 1,
+    "detail": "Alzir"
+   },
+   {
+    "tick": 244,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 7,
+    "detail": "orders"
+   },
+   {
+    "tick": 244,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 243,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 5,
+    "detail": "orders"
+   },
+   {
+    "tick": 242,
+    "kind": "capture",
+    "a": 2,
+    "b": 6,
+    "weight": 1,
+    "detail": "Eltanin"
+   },
+   {
+    "tick": 242,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 5,
+    "detail": "orders"
+   },
+   {
+    "tick": 242,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 5,
+    "detail": "orders"
+   },
+   {
+    "tick": 242,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 242,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 241,
+    "kind": "tech_trade",
+    "a": 5,
+    "b": 8,
+    "weight": 0.5,
+    "detail": "Experimentation 3→4"
+   },
+   {
+    "tick": 241,
+    "kind": "capture",
+    "a": 2,
+    "b": 6,
+    "weight": 1,
+    "detail": "Alphard"
+   },
+   {
+    "tick": 241,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 241,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 241,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 14,
+    "detail": "infra"
+   },
+   {
+    "tick": 241,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 241,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 241,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 5,
+    "detail": "infra"
+   },
+   {
+    "tick": 241,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 26,
+    "detail": "infra"
+   },
+   {
+    "tick": 241,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 10,
+    "detail": "infra"
+   },
+   {
+    "tick": 240,
+    "kind": "capture",
+    "a": 2,
+    "b": 6,
+    "weight": 1,
+    "detail": "Sualocin"
+   },
+   {
+    "tick": 240,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 240,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 240,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 4,
+    "detail": "orders"
+   },
+   {
+    "tick": 240,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 8,
+    "detail": "carriers"
+   },
+   {
+    "tick": 240,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 10,
+    "detail": "carriers"
+   },
+   {
+    "tick": 240,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 239,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 239,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 4,
+    "detail": "orders"
+   },
+   {
+    "tick": 239,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 2,
+    "detail": "carriers"
+   },
+   {
+    "tick": 239,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 15,
+    "detail": "infra"
+   },
+   {
+    "tick": 238,
+    "kind": "capture",
+    "a": 7,
+    "b": 5,
+    "weight": 1,
+    "detail": "Spica"
+   },
+   {
+    "tick": 238,
+    "kind": "capture",
+    "a": 7,
+    "b": 5,
+    "weight": 1,
+    "detail": "Peacock"
+   },
+   {
+    "tick": 238,
+    "kind": "capture",
+    "a": 2,
+    "b": 6,
+    "weight": 1,
+    "detail": "Haedus"
+   },
+   {
+    "tick": 238,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 4,
+    "detail": "orders"
+   },
+   {
+    "tick": 237,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 237,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 4,
+    "detail": "orders"
+   },
+   {
+    "tick": 237,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 7,
+    "detail": "infra"
+   },
+   {
+    "tick": 237,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 3,
+    "detail": "carriers"
+   },
+   {
+    "tick": 237,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 7,
+    "detail": "infra"
+   },
+   {
+    "tick": 236,
+    "kind": "capture",
+    "a": 1,
+    "b": 8,
+    "weight": 1,
+    "detail": "Scheat"
+   },
+   {
+    "tick": 236,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 236,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 6,
+    "detail": "orders"
+   },
+   {
+    "tick": 234,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 6,
+    "detail": "orders"
+   },
+   {
+    "tick": 234,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 5,
+    "detail": "orders"
+   },
+   {
+    "tick": 233,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 6,
+    "detail": "orders"
+   },
+   {
+    "tick": 231,
+    "kind": "capture",
+    "a": 2,
+    "b": 6,
+    "weight": 1,
+    "detail": "Algenib"
+   },
+   {
+    "tick": 231,
+    "kind": "capture",
+    "a": 2,
+    "b": 6,
+    "weight": 1,
+    "detail": "Sadr"
+   },
+   {
+    "tick": 231,
+    "kind": "capture",
+    "a": 7,
+    "b": 5,
+    "weight": 1,
+    "detail": "Alderamin"
+   },
+   {
+    "tick": 231,
+    "kind": "capture",
+    "a": 1,
+    "b": 8,
+    "weight": 1,
+    "detail": "Alcor"
+   },
+   {
+    "tick": 231,
+    "kind": "capture",
+    "a": 2,
+    "b": 6,
+    "weight": 1,
+    "detail": "Wasat"
+   },
+   {
+    "tick": 231,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 231,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 11,
+    "detail": "orders"
+   },
+   {
+    "tick": 228,
+    "kind": "capture",
+    "a": 2,
+    "b": 6,
+    "weight": 1,
+    "detail": "Mi"
+   },
+   {
+    "tick": 228,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 8,
+    "detail": "orders"
+   },
+   {
+    "tick": 228,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 227,
+    "kind": "capture",
+    "a": 1,
+    "b": 8,
+    "weight": 1,
+    "detail": "Gacrux"
+   },
+   {
+    "tick": 227,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 227,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 227,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 2,
+    "detail": "carriers"
+   },
+   {
+    "tick": 227,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 2,
+    "detail": "carriers"
+   },
+   {
+    "tick": 227,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 46,
+    "detail": "infra"
+   },
+   {
+    "tick": 227,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 227,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 37,
+    "detail": "infra"
+   },
+   {
+    "tick": 226,
+    "kind": "tech_trade",
+    "a": 6,
+    "b": 7,
+    "weight": 0.25,
+    "detail": "Manufacturing 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 226,
+    "kind": "tech_trade",
+    "a": 6,
+    "b": 2,
+    "weight": 0.25,
+    "detail": "Manufacturing 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 226,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 7,
+    "weight": 0.25,
+    "detail": "Manufacturing 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 226,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 2,
+    "weight": 0.25,
+    "detail": "Manufacturing 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 226,
+    "kind": "capture",
+    "a": 7,
+    "b": 5,
+    "weight": 1,
+    "detail": "Antares"
+   },
+   {
+    "tick": 226,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 226,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 4,
+    "detail": "orders"
+   },
+   {
+    "tick": 226,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 225,
+    "kind": "capture",
+    "a": 7,
+    "b": 5,
+    "weight": 1,
+    "detail": "Azaleh"
+   },
+   {
+    "tick": 225,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 225,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 224,
+    "kind": "capture",
+    "a": 7,
+    "b": 3,
+    "weight": 1,
+    "detail": "Askella"
+   },
+   {
+    "tick": 224,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 224,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 4,
+    "detail": "orders"
+   },
+   {
+    "tick": 224,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 223,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 223,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 223,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 6,
+    "detail": "orders"
+   },
+   {
+    "tick": 223,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 15,
+    "detail": "infra"
+   },
+   {
+    "tick": 223,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 223,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 4,
+    "detail": "infra"
+   },
+   {
+    "tick": 222,
+    "kind": "tech_trade",
+    "a": 7,
+    "b": 2,
+    "weight": 0.5,
+    "detail": "Weapons 4→5"
+   },
+   {
+    "tick": 222,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 222,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 5,
+    "detail": "orders"
+   },
+   {
+    "tick": 222,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 6,
+    "detail": "carriers"
+   },
+   {
+    "tick": 222,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 9,
+    "detail": "infra"
+   },
+   {
+    "tick": 222,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 11,
+    "detail": "infra"
+   },
+   {
+    "tick": 221,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 5,
+    "detail": "orders"
+   },
+   {
+    "tick": 221,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 221,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 21,
+    "detail": "infra"
+   },
+   {
+    "tick": 220,
+    "kind": "tech_trade",
+    "a": 6,
+    "b": 8,
+    "weight": 0.5,
+    "detail": "Experimentation 3→4"
+   },
+   {
+    "tick": 220,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 4,
+    "detail": "orders"
+   },
+   {
+    "tick": 220,
+    "kind": "activity",
+    "a": 3,
+    "b": 3,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 219,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 219,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 13,
+    "detail": "infra"
+   },
+   {
+    "tick": 218,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 7,
+    "weight": 0.25,
+    "detail": "Banking 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 218,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 2,
+    "weight": 0.25,
+    "detail": "Banking 3→4 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 218,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 218,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 218,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 217,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 217,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 4,
+    "detail": "infra"
+   },
+   {
+    "tick": 216,
+    "kind": "capture",
+    "a": 1,
+    "b": 8,
+    "weight": 1,
+    "detail": "Hamal"
+   },
+   {
+    "tick": 216,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 216,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 215,
+    "kind": "capture",
+    "a": 1,
+    "b": 8,
+    "weight": 1,
+    "detail": "Gianfar"
+   },
+   {
+    "tick": 215,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 5,
+    "detail": "orders"
+   },
+   {
+    "tick": 214,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 5,
+    "detail": "orders"
+   },
+   {
+    "tick": 214,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 6,
+    "detail": "orders"
+   },
+   {
+    "tick": 214,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 8,
+    "detail": "carriers"
+   },
+   {
+    "tick": 214,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 31,
+    "detail": "infra"
+   },
+   {
+    "tick": 214,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 214,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "infra"
+   },
+   {
+    "tick": 213,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 212,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 212,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 211,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 211,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 210,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 21,
+    "detail": "orders"
+   },
+   {
+    "tick": 203,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 202,
+    "kind": "capture",
+    "a": 1,
+    "b": 8,
+    "weight": 1,
+    "detail": "Alkurah"
+   },
+   {
+    "tick": 202,
+    "kind": "capture",
+    "a": 1,
+    "b": 8,
+    "weight": 1,
+    "detail": "Dabih"
+   },
+   {
+    "tick": 201,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 201,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 18,
+    "detail": "infra"
+   },
+   {
+    "tick": 201,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 7,
+    "detail": "infra"
+   },
+   {
+    "tick": 200,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 4,
+    "detail": "orders"
+   },
+   {
+    "tick": 200,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 4,
+    "detail": "orders"
+   },
+   {
+    "tick": 200,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 2,
+    "detail": "infra"
+   },
+   {
+    "tick": 200,
+    "kind": "activity",
+    "a": 3,
+    "b": 3,
+    "weight": 2,
+    "detail": "infra"
+   },
+   {
+    "tick": 200,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 2,
+    "detail": "carriers"
+   },
+   {
+    "tick": 200,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 3,
+    "detail": "infra"
+   },
+   {
+    "tick": 199,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 199,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 5,
+    "detail": "carriers"
+   },
+   {
+    "tick": 198,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 4,
+    "detail": "orders"
+   },
+   {
+    "tick": 197,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 197,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 6,
+    "detail": "infra"
+   },
+   {
+    "tick": 196,
+    "kind": "capture",
+    "a": 1,
+    "b": 8,
+    "weight": 1,
+    "detail": "Becrux"
+   },
+   {
+    "tick": 196,
+    "kind": "capture",
+    "a": 1,
+    "b": 8,
+    "weight": 1,
+    "detail": "Regulus"
+   },
+   {
+    "tick": 196,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 4,
+    "detail": "orders"
+   },
+   {
+    "tick": 196,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 193,
+    "kind": "tech_trade",
+    "a": 2,
+    "b": 7,
+    "weight": 0.5,
+    "detail": "Manufacturing 3→4"
+   },
+   {
+    "tick": 193,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 193,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 192,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 4,
+    "detail": "orders"
+   },
+   {
+    "tick": 192,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "carriers"
+   },
+   {
+    "tick": 192,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 3,
+    "detail": "infra"
+   },
+   {
+    "tick": 191,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 191,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 5,
+    "detail": "orders"
+   },
+   {
+    "tick": 191,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 190,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 5,
+    "detail": "orders"
+   },
+   {
+    "tick": 190,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 4,
+    "detail": "orders"
+   },
+   {
+    "tick": 190,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 189,
+    "kind": "capture",
+    "a": 1,
+    "b": 8,
+    "weight": 1,
+    "detail": "Media"
+   },
+   {
+    "tick": 189,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 188,
+    "kind": "tech_trade",
+    "a": 7,
+    "b": 2,
+    "weight": 0.5,
+    "detail": "Banking 3→4"
+   },
+   {
+    "tick": 188,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 188,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 188,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 6,
+    "detail": "infra"
+   },
+   {
+    "tick": 188,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 188,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 5,
+    "detail": "infra"
+   },
+   {
+    "tick": 187,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 187,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 187,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 7,
+    "detail": "infra"
+   },
+   {
+    "tick": 186,
+    "kind": "capture",
+    "a": 7,
+    "b": 3,
+    "weight": 1,
+    "detail": "Heka"
+   },
+   {
+    "tick": 186,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 186,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 185,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 184,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 8,
+    "detail": "orders"
+   },
+   {
+    "tick": 181,
+    "kind": "capture",
+    "a": 3,
+    "b": 7,
+    "weight": 1,
+    "detail": "Heka"
+   },
+   {
+    "tick": 181,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 6,
+    "detail": "orders"
+   },
+   {
+    "tick": 181,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 8,
+    "detail": "infra"
+   },
+   {
+    "tick": 181,
+    "kind": "activity",
+    "a": 3,
+    "b": 3,
+    "weight": 2,
+    "detail": "infra"
+   },
+   {
+    "tick": 178,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 177,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 177,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 177,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 6,
+    "detail": "infra"
+   },
+   {
+    "tick": 176,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 176,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 176,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 11,
+    "detail": "infra"
+   },
+   {
+    "tick": 175,
+    "kind": "capture",
+    "a": 7,
+    "b": 3,
+    "weight": 1,
+    "detail": "Pug"
+   },
+   {
+    "tick": 175,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 175,
+    "kind": "activity",
+    "a": 3,
+    "b": 3,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 175,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 175,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 175,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 175,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 5,
+    "detail": "infra"
+   },
+   {
+    "tick": 175,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 175,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 7,
+    "detail": "infra"
+   },
+   {
+    "tick": 174,
+    "kind": "activity",
+    "a": 3,
+    "b": 3,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 174,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 10,
+    "detail": "orders"
+   },
+   {
+    "tick": 174,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 174,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 172,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 172,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 4,
+    "detail": "orders"
+   },
+   {
+    "tick": 172,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 171,
+    "kind": "capture",
+    "a": 3,
+    "b": 7,
+    "weight": 1,
+    "detail": "Pug"
+   },
+   {
+    "tick": 171,
+    "kind": "capture",
+    "a": 1,
+    "b": 3,
+    "weight": 1,
+    "detail": "Ankaa"
+   },
+   {
+    "tick": 171,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 170,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 169,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 169,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 2,
+    "detail": "carriers"
+   },
+   {
+    "tick": 168,
+    "kind": "activity",
+    "a": 3,
+    "b": 3,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 167,
+    "kind": "capture",
+    "a": 7,
+    "b": 3,
+    "weight": 1,
+    "detail": "Heka"
+   },
+   {
+    "tick": 167,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 2,
+    "detail": "infra"
+   },
+   {
+    "tick": 165,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 164,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 10,
+    "detail": "infra"
+   },
+   {
+    "tick": 164,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "carriers"
+   },
+   {
+    "tick": 164,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 5,
+    "detail": "infra"
+   },
+   {
+    "tick": 164,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 7,
+    "detail": "infra"
+   },
+   {
+    "tick": 162,
+    "kind": "tech_trade",
+    "a": 8,
+    "b": 6,
+    "weight": 0.25,
+    "detail": "Experimentation 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 162,
+    "kind": "tech_trade",
+    "a": 8,
+    "b": 5,
+    "weight": 0.25,
+    "detail": "Experimentation 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 162,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 162,
+    "kind": "activity",
+    "a": 3,
+    "b": 3,
+    "weight": 5,
+    "detail": "infra"
+   },
+   {
+    "tick": 159,
+    "kind": "capture",
+    "a": 1,
+    "b": 3,
+    "weight": 1,
+    "detail": "Minchir"
+   },
+   {
+    "tick": 159,
+    "kind": "activity",
+    "a": 3,
+    "b": 3,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 159,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 15,
+    "detail": "infra"
+   },
+   {
+    "tick": 156,
+    "kind": "tech_trade",
+    "a": 2,
+    "b": 7,
+    "weight": 0.5,
+    "detail": "Weapons 3→4"
+   },
+   {
+    "tick": 156,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 156,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 14,
+    "detail": "infra"
+   },
+   {
+    "tick": 156,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 155,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 13,
+    "detail": "infra"
+   },
+   {
+    "tick": 153,
+    "kind": "activity",
+    "a": 3,
+    "b": 3,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 151,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 151,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 7,
+    "detail": "infra"
+   },
+   {
+    "tick": 150,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 149,
+    "kind": "capture",
+    "a": 1,
+    "b": 3,
+    "weight": 1,
+    "detail": "Alfirk"
+   },
+   {
+    "tick": 149,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "carriers"
+   },
+   {
+    "tick": 149,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 8,
+    "detail": "infra"
+   },
+   {
+    "tick": 148,
+    "kind": "capture",
+    "a": 7,
+    "b": 3,
+    "weight": 1,
+    "detail": "Pug"
+   },
+   {
+    "tick": 148,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 3,
+    "detail": "infra"
+   },
+   {
+    "tick": 148,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 147,
+    "kind": "capture",
+    "a": 7,
+    "b": 3,
+    "weight": 1,
+    "detail": "Ire"
+   },
+   {
+    "tick": 147,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 144,
+    "kind": "tech_trade",
+    "a": 7,
+    "b": 2,
+    "weight": 0.25,
+    "detail": "Manufacturing 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 144,
+    "kind": "tech_trade",
+    "a": 7,
+    "b": 1,
+    "weight": 0.25,
+    "detail": "Manufacturing 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 144,
+    "kind": "tech_trade",
+    "a": 5,
+    "b": 6,
+    "weight": 0.5,
+    "detail": "Experimentation 2→3"
+   },
+   {
+    "tick": 144,
+    "kind": "capture",
+    "a": 2,
+    "b": 4,
+    "weight": 1,
+    "detail": "Segin"
+   },
+   {
+    "tick": 144,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "carriers"
+   },
+   {
+    "tick": 144,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 7,
+    "detail": "infra"
+   },
+   {
+    "tick": 143,
+    "kind": "tech_trade",
+    "a": 8,
+    "b": 7,
+    "weight": 0.25,
+    "detail": "Banking 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 143,
+    "kind": "tech_trade",
+    "a": 8,
+    "b": 2,
+    "weight": 0.25,
+    "detail": "Banking 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 143,
+    "kind": "tech_trade",
+    "a": 2,
+    "b": 1,
+    "weight": 0.5,
+    "detail": "Manufacturing 2→3"
+   },
+   {
+    "tick": 143,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 11,
+    "detail": "infra"
+   },
+   {
+    "tick": 142,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 3,
+    "detail": "infra"
+   },
+   {
+    "tick": 141,
+    "kind": "tech_trade",
+    "a": 3,
+    "b": 1,
+    "weight": 0.5,
+    "detail": "Manufacturing 2→3"
+   },
+   {
+    "tick": 141,
+    "kind": "capture",
+    "a": 7,
+    "b": 3,
+    "weight": 1,
+    "detail": "Gor"
+   },
+   {
+    "tick": 141,
+    "kind": "capture",
+    "a": 7,
+    "b": 3,
+    "weight": 1,
+    "detail": "Kaus"
+   },
+   {
+    "tick": 141,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 3,
+    "detail": "infra"
+   },
+   {
+    "tick": 141,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 6,
+    "detail": "infra"
+   },
+   {
+    "tick": 140,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 140,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 15,
+    "detail": "infra"
+   },
+   {
+    "tick": 140,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 140,
+    "kind": "activity",
+    "a": 3,
+    "b": 3,
+    "weight": 6,
+    "detail": "carriers"
+   },
+   {
+    "tick": 139,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 3,
+    "detail": "infra"
+   },
+   {
+    "tick": 138,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 137,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 9,
+    "detail": "infra"
+   },
+   {
+    "tick": 132,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 7,
+    "detail": "infra"
+   },
+   {
+    "tick": 130,
+    "kind": "capture",
+    "a": 7,
+    "b": 3,
+    "weight": 1,
+    "detail": "Arided"
+   },
+   {
+    "tick": 130,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 129,
+    "kind": "capture",
+    "a": 2,
+    "b": 3,
+    "weight": 1,
+    "detail": "Alhajoth"
+   },
+   {
+    "tick": 129,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "infra"
+   },
+   {
+    "tick": 128,
+    "kind": "tech_trade",
+    "a": 7,
+    "b": 2,
+    "weight": 0.5,
+    "detail": "Banking 2→3"
+   },
+   {
+    "tick": 128,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 127,
+    "kind": "capture",
+    "a": 2,
+    "b": 3,
+    "weight": 1,
+    "detail": "Yed"
+   },
+   {
+    "tick": 127,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "infra"
+   },
+   {
+    "tick": 125,
+    "kind": "capture",
+    "a": 7,
+    "b": 3,
+    "weight": 1,
+    "detail": "Sasin"
+   },
+   {
+    "tick": 125,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 124,
+    "kind": "capture",
+    "a": 2,
+    "b": 3,
+    "weight": 1,
+    "detail": "Pan"
+   },
+   {
+    "tick": 124,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 123,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 122,
+    "kind": "tech_trade",
+    "a": 7,
+    "b": 2,
+    "weight": 0.5,
+    "detail": "Range 2→3"
+   },
+   {
+    "tick": 122,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 3,
+    "detail": "carriers"
+   },
+   {
+    "tick": 122,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 13,
+    "detail": "infra"
+   },
+   {
+    "tick": 122,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 7,
+    "detail": "infra"
+   },
+   {
+    "tick": 121,
+    "kind": "capture",
+    "a": 7,
+    "b": 3,
+    "weight": 1,
+    "detail": "Rukbat"
+   },
+   {
+    "tick": 121,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 2,
+    "detail": "infra"
+   },
+   {
+    "tick": 121,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 14,
+    "detail": "infra"
+   },
+   {
+    "tick": 121,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 10,
+    "detail": "infra"
+   },
+   {
+    "tick": 120,
+    "kind": "tech_trade",
+    "a": 5,
+    "b": 7,
+    "weight": 0.25,
+    "detail": "Weapons 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 120,
+    "kind": "tech_trade",
+    "a": 5,
+    "b": 2,
+    "weight": 0.25,
+    "detail": "Weapons 2→3 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 120,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 120,
+    "kind": "activity",
+    "a": 3,
+    "b": 3,
+    "weight": 10,
+    "detail": "infra"
+   },
+   {
+    "tick": 120,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 120,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 3,
+    "detail": "infra"
+   },
+   {
+    "tick": 119,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 119,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 118,
+    "kind": "capture",
+    "a": 2,
+    "b": 3,
+    "weight": 1,
+    "detail": "Pux"
+   },
+   {
+    "tick": 118,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 2,
+    "detail": "infra"
+   },
+   {
+    "tick": 118,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 114,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 8,
+    "detail": "infra"
+   },
+   {
+    "tick": 113,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 7,
+    "detail": "infra"
+   },
+   {
+    "tick": 112,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 6,
+    "detail": "infra"
+   },
+   {
+    "tick": 111,
+    "kind": "activity",
+    "a": 3,
+    "b": 3,
+    "weight": 2,
+    "detail": "carriers"
+   },
+   {
+    "tick": 110,
+    "kind": "tech_trade",
+    "a": 2,
+    "b": 7,
+    "weight": 0.5,
+    "detail": "Weapons 2→3"
+   },
+   {
+    "tick": 110,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 4,
+    "detail": "infra"
+   },
+   {
+    "tick": 109,
+    "kind": "capture",
+    "a": 2,
+    "b": 3,
+    "weight": 1,
+    "detail": "Ash"
+   },
+   {
+    "tick": 106,
+    "kind": "capture",
+    "a": 2,
+    "b": 4,
+    "weight": 1,
+    "detail": "Marfark"
+   },
+   {
+    "tick": 106,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 106,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 2,
+    "detail": "infra"
+   },
+   {
+    "tick": 101,
+    "kind": "capture",
+    "a": 2,
+    "b": 3,
+    "weight": 1,
+    "detail": "Albireo"
+   },
+   {
+    "tick": 101,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 101,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 12,
+    "detail": "infra"
+   },
+   {
+    "tick": 101,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 6,
+    "detail": "infra"
+   },
+   {
+    "tick": 100,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 8,
+    "detail": "infra"
+   },
+   {
+    "tick": 100,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 99,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 97,
+    "kind": "activity",
+    "a": 3,
+    "b": 3,
+    "weight": 13,
+    "detail": "infra"
+   },
+   {
+    "tick": 96,
+    "kind": "activity",
+    "a": 4,
+    "b": 4,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 96,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 95,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 6,
+    "detail": "infra"
+   },
+   {
+    "tick": 93,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 3,
+    "detail": "infra"
+   },
+   {
+    "tick": 91,
+    "kind": "capture",
+    "a": 2,
+    "b": 3,
+    "weight": 1,
+    "detail": "Ill"
+   },
+   {
+    "tick": 90,
+    "kind": "capture",
+    "a": 2,
+    "b": 3,
+    "weight": 1,
+    "detail": "Merope"
+   },
+   {
+    "tick": 89,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 89,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 89,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 6,
+    "detail": "infra"
+   },
+   {
+    "tick": 89,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 12,
+    "detail": "infra"
+   },
+   {
+    "tick": 89,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 11,
+    "detail": "infra"
+   },
+   {
+    "tick": 87,
+    "kind": "capture",
+    "a": 3,
+    "b": 7,
+    "weight": 1,
+    "detail": "Ill"
+   },
+   {
+    "tick": 85,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 4,
+    "detail": "infra"
+   },
+   {
+    "tick": 83,
+    "kind": "capture",
+    "a": 2,
+    "b": 4,
+    "weight": 1,
+    "detail": "Menchib"
+   },
+   {
+    "tick": 83,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 6,
+    "detail": "infra"
+   },
+   {
+    "tick": 82,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 10,
+    "detail": "infra"
+   },
+   {
+    "tick": 81,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 81,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 4,
+    "detail": "infra"
+   },
+   {
+    "tick": 81,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 6,
+    "detail": "infra"
+   },
+   {
+    "tick": 80,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 8,
+    "detail": "infra"
+   },
+   {
+    "tick": 76,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 8,
+    "weight": 0.25,
+    "detail": "Manufacturing 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 76,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 4,
+    "weight": 0.25,
+    "detail": "Manufacturing 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 76,
+    "kind": "capture",
+    "a": 2,
+    "b": 3,
+    "weight": 1,
+    "detail": "Mira"
+   },
+   {
+    "tick": 76,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 75,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 75,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 75,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 5,
+    "detail": "infra"
+   },
+   {
+    "tick": 74,
+    "kind": "activity",
+    "a": 3,
+    "b": 3,
+    "weight": 7,
+    "detail": "infra"
+   },
+   {
+    "tick": 73,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 8,
+    "detail": "infra"
+   },
+   {
+    "tick": 73,
+    "kind": "activity",
+    "a": 3,
+    "b": 3,
+    "weight": 2,
+    "detail": "carriers"
+   },
+   {
+    "tick": 73,
+    "kind": "activity",
+    "a": 3,
+    "b": 3,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 72,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 70,
+    "kind": "capture",
+    "a": 2,
+    "b": 4,
+    "weight": 1,
+    "detail": "Avior"
+   },
+   {
+    "tick": 70,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 69,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 8,
+    "detail": "infra"
+   },
+   {
+    "tick": 68,
+    "kind": "tech_trade",
+    "a": 5,
+    "b": 6,
+    "weight": 0.25,
+    "detail": "Range 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 68,
+    "kind": "tech_trade",
+    "a": 5,
+    "b": 2,
+    "weight": 0.25,
+    "detail": "Range 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 68,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 9,
+    "detail": "infra"
+   },
+   {
+    "tick": 68,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "carriers"
+   },
+   {
+    "tick": 68,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 3,
+    "detail": "infra"
+   },
+   {
+    "tick": 67,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 67,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 8,
+    "detail": "infra"
+   },
+   {
+    "tick": 64,
+    "kind": "tech_trade",
+    "a": 7,
+    "b": 5,
+    "weight": 0.25,
+    "detail": "Banking 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 64,
+    "kind": "tech_trade",
+    "a": 7,
+    "b": 1,
+    "weight": 0.25,
+    "detail": "Banking 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 64,
+    "kind": "capture",
+    "a": 3,
+    "b": 7,
+    "weight": 1,
+    "detail": "Mira"
+   },
+   {
+    "tick": 64,
+    "kind": "activity",
+    "a": 3,
+    "b": 3,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 60,
+    "kind": "tech_trade",
+    "a": 8,
+    "b": 4,
+    "weight": 0.5,
+    "detail": "Manufacturing 1→2"
+   },
+   {
+    "tick": 60,
+    "kind": "tech_trade",
+    "a": 7,
+    "b": 8,
+    "weight": 0.25,
+    "detail": "Experimentation 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 60,
+    "kind": "tech_trade",
+    "a": 7,
+    "b": 6,
+    "weight": 0.25,
+    "detail": "Experimentation 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 60,
+    "kind": "tech_trade",
+    "a": 6,
+    "b": 2,
+    "weight": 0.5,
+    "detail": "Range 1→2"
+   },
+   {
+    "tick": 60,
+    "kind": "activity",
+    "a": 3,
+    "b": 3,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 59,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 6,
+    "detail": "infra"
+   },
+   {
+    "tick": 58,
+    "kind": "tech_trade",
+    "a": 1,
+    "b": 5,
+    "weight": 0.5,
+    "detail": "Banking 1→2"
+   },
+   {
+    "tick": 58,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 2,
+    "detail": "infra"
+   },
+   {
+    "tick": 58,
+    "kind": "activity",
+    "a": 3,
+    "b": 3,
+    "weight": 3,
+    "detail": "infra"
+   },
+   {
+    "tick": 56,
+    "kind": "tech_trade",
+    "a": 3,
+    "b": 7,
+    "weight": 0.25,
+    "detail": "Weapons 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 56,
+    "kind": "tech_trade",
+    "a": 3,
+    "b": 2,
+    "weight": 0.25,
+    "detail": "Weapons 1→2 (1 of 2 possible sources)"
+   },
+   {
+    "tick": 56,
+    "kind": "capture",
+    "a": 7,
+    "b": 3,
+    "weight": 1,
+    "detail": "Algol"
+   },
+   {
+    "tick": 56,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 56,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 56,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 3,
+    "detail": "infra"
+   },
+   {
+    "tick": 53,
+    "kind": "capture",
+    "a": 6,
+    "b": 4,
+    "weight": 1,
+    "detail": "Eltanin"
+   },
+   {
+    "tick": 53,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 53,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 8,
+    "detail": "infra"
+   },
+   {
+    "tick": 51,
+    "kind": "capture",
+    "a": 7,
+    "b": 3,
+    "weight": 1,
+    "detail": "Ill"
+   },
+   {
+    "tick": 51,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 50,
+    "kind": "capture",
+    "a": 2,
+    "b": 4,
+    "weight": 1,
+    "detail": "Pax"
+   },
+   {
+    "tick": 50,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 50,
+    "kind": "activity",
+    "a": 3,
+    "b": 3,
+    "weight": 2,
+    "detail": "carriers"
+   },
+   {
+    "tick": 49,
+    "kind": "activity",
+    "a": 3,
+    "b": 3,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 48,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 48,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 47,
+    "kind": "tech_trade",
+    "a": 6,
+    "b": 8,
+    "weight": 0.5,
+    "detail": "Experimentation 1→2"
+   },
+   {
+    "tick": 47,
+    "kind": "activity",
+    "a": 3,
+    "b": 3,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 46,
+    "kind": "tech_trade",
+    "a": 7,
+    "b": 2,
+    "weight": 0.5,
+    "detail": "Weapons 1→2"
+   },
+   {
+    "tick": 46,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 8,
+    "detail": "infra"
+   },
+   {
+    "tick": 46,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 13,
+    "detail": "infra"
+   },
+   {
+    "tick": 45,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 45,
+    "kind": "activity",
+    "a": 3,
+    "b": 3,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 44,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 44,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 44,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 7,
+    "detail": "infra"
+   },
+   {
+    "tick": 44,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 7,
+    "detail": "infra"
+   },
+   {
+    "tick": 43,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 3,
+    "detail": "orders"
+   },
+   {
+    "tick": 42,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 41,
+    "kind": "activity",
+    "a": 3,
+    "b": 3,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 40,
+    "kind": "activity",
+    "a": 3,
+    "b": 3,
+    "weight": 4,
+    "detail": "infra"
+   },
+   {
+    "tick": 39,
+    "kind": "capture",
+    "a": 3,
+    "b": 7,
+    "weight": 1,
+    "detail": "Sasin"
+   },
+   {
+    "tick": 37,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 37,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 37,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 6,
+    "detail": "infra"
+   },
+   {
+    "tick": 36,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 9,
+    "detail": "infra"
+   },
+   {
+    "tick": 33,
+    "kind": "capture",
+    "a": 3,
+    "b": 7,
+    "weight": 1,
+    "detail": "Arided"
+   },
+   {
+    "tick": 33,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 33,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 11,
+    "detail": "infra"
+   },
+   {
+    "tick": 32,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 30,
+    "kind": "capture",
+    "a": 6,
+    "b": 4,
+    "weight": 1,
+    "detail": "Sadr"
+   },
+   {
+    "tick": 30,
+    "kind": "capture",
+    "a": 3,
+    "b": 7,
+    "weight": 1,
+    "detail": "Rukbat"
+   },
+   {
+    "tick": 30,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 27,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 26,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 26,
+    "kind": "activity",
+    "a": 3,
+    "b": 3,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 25,
+    "kind": "capture",
+    "a": 3,
+    "b": 7,
+    "weight": 1,
+    "detail": "Algol"
+   },
+   {
+    "tick": 25,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 3,
+    "detail": "infra"
+   },
+   {
+    "tick": 25,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 4,
+    "detail": "infra"
+   },
+   {
+    "tick": 25,
+    "kind": "activity",
+    "a": 3,
+    "b": 3,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 25,
+    "kind": "activity",
+    "a": 3,
+    "b": 3,
+    "weight": 2,
+    "detail": "infra"
+   },
+   {
+    "tick": 24,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 24,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 3,
+    "detail": "infra"
+   },
+   {
+    "tick": 24,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 7,
+    "detail": "infra"
+   },
+   {
+    "tick": 23,
+    "kind": "activity",
+    "a": 3,
+    "b": 3,
+    "weight": 4,
+    "detail": "infra"
+   },
+   {
+    "tick": 22,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 7,
+    "detail": "infra"
+   },
+   {
+    "tick": 20,
+    "kind": "capture",
+    "a": 8,
+    "b": 1,
+    "weight": 1,
+    "detail": "Becrux"
+   },
+   {
+    "tick": 20,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 20,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 5,
+    "detail": "infra"
+   },
+   {
+    "tick": 20,
+    "kind": "activity",
+    "a": 3,
+    "b": 3,
+    "weight": 15,
+    "detail": "infra"
+   },
+   {
+    "tick": 20,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 8,
+    "detail": "infra"
+   },
+   {
+    "tick": 20,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 3,
+    "detail": "infra"
+   },
+   {
+    "tick": 19,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 2,
+    "detail": "orders"
+   },
+   {
+    "tick": 19,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 8,
+    "detail": "infra"
+   },
+   {
+    "tick": 18,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 15,
+    "detail": "infra"
+   },
+   {
+    "tick": 14,
+    "kind": "capture",
+    "a": 1,
+    "b": 8,
+    "weight": 1,
+    "detail": "Azmidiske"
+   },
+   {
+    "tick": 13,
+    "kind": "activity",
+    "a": 5,
+    "b": 5,
+    "weight": 8,
+    "detail": "infra"
+   },
+   {
+    "tick": 12,
+    "kind": "capture",
+    "a": 4,
+    "b": 6,
+    "weight": 1,
+    "detail": "Eltanin"
+   },
+   {
+    "tick": 12,
+    "kind": "activity",
+    "a": 6,
+    "b": 6,
+    "weight": 10,
+    "detail": "infra"
+   },
+   {
+    "tick": 10,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 10,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 1,
+    "detail": "infra"
+   },
+   {
+    "tick": 10,
+    "kind": "activity",
+    "a": 3,
+    "b": 3,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 9,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 9,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 2,
+    "detail": "infra"
+   },
+   {
+    "tick": 8,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 8,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 4,
+    "detail": "infra"
+   },
+   {
+    "tick": 7,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 7,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 2,
+    "detail": "carriers"
+   },
+   {
+    "tick": 3,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 10,
+    "detail": "infra"
+   },
+   {
+    "tick": 2,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 2,
+    "detail": "carriers"
+   },
+   {
+    "tick": 1,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 1,
+    "detail": "orders"
+   },
+   {
+    "tick": 1,
+    "kind": "activity",
+    "a": 8,
+    "b": 8,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 1,
+    "kind": "activity",
+    "a": 7,
+    "b": 7,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 1,
+    "kind": "activity",
+    "a": 3,
+    "b": 3,
+    "weight": 1,
+    "detail": "carriers"
+   },
+   {
+    "tick": 1,
+    "kind": "activity",
+    "a": 2,
+    "b": 2,
+    "weight": 6,
+    "detail": "carriers"
+   },
+   {
+    "tick": 1,
+    "kind": "activity",
+    "a": 1,
+    "b": 1,
+    "weight": 3,
+    "detail": "carriers"
+   }
+  ]
+ },
+ "exportedAt": "2026-11-19T14:42:12.235Z"
+}
